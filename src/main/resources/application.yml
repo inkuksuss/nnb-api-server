@@ -1,0 +1,17 @@
+spring:
+    datasource:
+        driver-class-name: org.postgresql.Driver
+        url: jdbc:postgresql://localhost:5432/smartfarm
+        username: "inguk"
+        password: "0504"
+
+
+logging.level.com.smartfarm: DEBUG
+
+
+#jwt:
+#    header: Authorization
+#    Secret: sadnnvjdpj2i29fj3iofnjaajsjd029jej2
+#    token-validity-in-seconds: 86400
+
+
