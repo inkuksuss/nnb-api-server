@@ -1,5 +1,6 @@
 package com.smartFarm.was.config;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
@@ -10,7 +11,8 @@ import javax.sql.DataSource;
 import java.sql.Connection;
 
 @Component
-public class PostgreSQLRunner implements ApplicationRunner {
+@Slf4j
+public class PostgreSQLConfig implements ApplicationRunner {
 
     @Autowired
     DataSource dataSource;
@@ -23,9 +25,9 @@ public class PostgreSQLRunner implements ApplicationRunner {
         try (Connection connection = dataSource.getConnection()){
             String url = connection.getMetaData().getURL();
             String userName = connection.getMetaData().getUserName();
-            System.out.println("url = " + url);
-            System.out.println("connection = " + connection);
-            System.out.println("userName = " + userName);
+            log.info("url = " + url);
+            log.info("connection = " + connection);
+            log.info("userName = " + userName);
         }
     }
 }

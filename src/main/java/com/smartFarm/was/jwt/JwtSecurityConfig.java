@@ -1,4 +1,4 @@
-//package com.smartfarm.was.jwt;
+//package com.smartFarm.was.jwt;
 //
 //import org.springframework.security.config.annotation.SecurityConfigurerAdapter;
 //import org.springframework.security.config.annotation.web.builders.HttpSecurity;
