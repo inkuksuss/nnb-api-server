@@ -1,19 +1,36 @@
 package com.smartFarm.was.domain.model;
 
+import com.smartFarm.was.web.dto.request.AddBoardDto;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+import lombok.Setter;
+
 import java.sql.Timestamp;
 
+
+@Getter @Setter
+@RequiredArgsConstructor
 public class Board {
 
-    private Integer boardId;
-    private Integer memberId;
-    private Integer categoryId;
+    private Long boardId;
+    private Long memberId;
+    private Long categoryId;
+    private Integer boardView;
     private String boardTitle;
     private String boardContent;
-    private String secret;
-    private String status;
+    private String boardSecret;
+    private String boardStatus;
     private Timestamp boardCreated;
     private Timestamp boardLastUpdated;
-    private Integer boardView;
 
-
+    public Board(AddBoardDto addBoardDto, Long memberId, Timestamp now) {
+        this.memberId = memberId;
+        this.categoryId = addBoardDto.getCategoryId();
+        this.boardTitle = addBoardDto.getBoardTitle();
+        this.boardContent = addBoardDto.getBoardContent();
+        this.boardSecret = addBoardDto.getBoardSecret();
+        this.boardStatus = "a";
+        this.boardCreated = now;
+        this.boardView = 0;
+    }
 }

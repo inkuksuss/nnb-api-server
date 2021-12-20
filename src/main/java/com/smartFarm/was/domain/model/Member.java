@@ -1,6 +1,6 @@
 package com.smartFarm.was.domain.model;
 
-import com.smartFarm.was.dto.request.JoinDTO;
+import com.smartFarm.was.web.dto.request.JoinDto;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -9,13 +9,13 @@ import org.springframework.security.core.userdetails.UserDetails;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Optional;
 
 @RequiredArgsConstructor
 @Getter @Setter
 public class Member implements UserDetails {
     @Override
-    public String
-    toString() {
+    public String toString() {
         return "Member{" +
                 "memberId=" + memberId +
                 ", memberName='" + memberName + '\'' +
@@ -24,11 +24,11 @@ public class Member implements UserDetails {
                 ", memberPhone='" + memberPhone + '\'' +
                 ", memberAddress='" + memberAddress + '\'' +
                 ", privacyConsent='" + privacyConsent + '\'' +
+                ", memberAuthority='" + memberAuthority + '\'' +
                 ", memberBirthday=" + memberBirthday +
                 ", memberCreated=" + memberCreated +
                 ", memberLastUpdated=" + memberLastUpdated +
                 ", memberLastAccessed=" + memberLastAccessed +
-                ", memberAuthority='" + memberAuthority + '\'' +
                 '}';
     }
 
@@ -39,13 +39,13 @@ public class Member implements UserDetails {
     private String memberPhone;
     private String memberAddress;
     private String privacyConsent;
+    private String memberAuthority;
     private Timestamp memberBirthday;
     private Timestamp memberCreated;
     private Timestamp memberLastUpdated;
     private Timestamp memberLastAccessed;
-    private String memberAuthority;
 
-    public Member(JoinDTO joinDTO, String authority) {
+    public Member(JoinDto joinDTO, String authority) {
         this.memberName = joinDTO.getMemberName();
         this.memberPassword = joinDTO.getMemberPassword();
         this.memberEmail = joinDTO.getMemberEmail();
@@ -57,6 +57,21 @@ public class Member implements UserDetails {
         this.memberCreated = new Timestamp(System.currentTimeMillis());
         this.memberLastUpdated = new Timestamp(System.currentTimeMillis());
         this.memberLastAccessed = new Timestamp(System.currentTimeMillis());
+    }
+
+    public Member(Optional<Member> member) {
+        this.memberId = member.get().getMemberId();
+        this.memberName = member.get().getMemberName();
+        this.memberPassword = member.get().getMemberPassword();
+        this.memberEmail = member.get().getMemberEmail();
+        this.memberPhone = member.get().getMemberPhone();
+        this.memberAddress = member.get().getMemberAddress();
+        this.privacyConsent = member.get().getPrivacyConsent();
+        this.memberBirthday = member.get().getMemberBirthday();
+        this.memberAuthority = member.get().getMemberAuthority();
+        this.memberCreated = member.get().getMemberCreated();
+        this.memberLastUpdated = member.get().getMemberLastUpdated();
+        this.memberLastAccessed = member.get().getMemberLastAccessed();
     }
 
     @Override

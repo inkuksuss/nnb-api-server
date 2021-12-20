@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.smartFarm.was.domain.repository.BoardRepository">
+
+    <select id="getAll" resultType="com.smartFarm.was.web.dto.response.BoardDto">
+        SELECT
+            category_value,
+            board_title,
+            board_content,
+            board_last_updated,
+            board_view,
+            member_name
+
+        FROM board
+                 INNER JOIN member
+                        ON board.member_id = member.member_id
+                 INNER JOIN board_category
+                        ON board.category_id = board_category.category_id
+    </select>
+
+    <insert id="add" parameterType="com.smartFarm.was.domain.model.Board">
+        INSERT INTO board
+            (
+             member_id,
+             category_id,
+             board_title,
+             board_content,
+             board_created,
+             board_view,
+             board_secret,
+             board_status
+            ) VALUES (
+                      #{memberId},
+                      #{categoryId},
+                      #{boardTitle},
+                      #{boardContent},
+                      #{boardCreated},
+                      #{boardView},
+                      #{boardSecret},
+                      #{boardStatus}
+                    )
+    </insert>
+</mapper>

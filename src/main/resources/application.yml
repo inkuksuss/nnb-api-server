@@ -5,6 +5,9 @@ spring:
         url: jdbc:log4jdbc:postgresql://localhost:5432/smartfarm?charSet=UTF-8&prepareThreshold=1
         username: "inguk"
         password: "0504"
+    redis:
+        host: localhost
+        port: 6379
 
 jwt:
     header: Authorization
@@ -12,4 +15,6 @@ jwt:
     token-validity-in-seconds: 86400
 
 logging:level.com.smartfarm: DEBUG
+
+
 
