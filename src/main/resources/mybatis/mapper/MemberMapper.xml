@@ -3,9 +3,9 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="com.smartFarm.was.domain.repository.MemberRepository">
+<mapper namespace="com.smartFarm.was.web.repository.MemberRepository">
 
-    <insert id="save" parameterType="com.smartFarm.was.domain.model.Member">
+    <insert id="saveMember" parameterType="com.smartFarm.was.domain.model.Member">
         INSERT INTO MEMBER (member_authority,
                             member_name,
                             member_email,

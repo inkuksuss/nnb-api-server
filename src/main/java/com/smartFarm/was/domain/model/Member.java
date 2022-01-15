@@ -1,36 +1,14 @@
 package com.smartFarm.was.domain.model;
 
-import com.smartFarm.was.web.dto.request.JoinDto;
+import com.smartFarm.was.domain.dto.request.JoinForm;
 import lombok.*;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
 
+import java.io.Serializable;
 import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Optional;
 
+@Getter
 @RequiredArgsConstructor
-@Getter @Setter
-public class Member implements UserDetails {
-    @Override
-    public String toString() {
-        return "Member{" +
-                "memberId=" + memberId +
-                ", memberName='" + memberName + '\'' +
-                ", memberPassword='" + memberPassword + '\'' +
-                ", memberEmail='" + memberEmail + '\'' +
-                ", memberPhone='" + memberPhone + '\'' +
-                ", memberAddress='" + memberAddress + '\'' +
-                ", privacyConsent='" + privacyConsent + '\'' +
-                ", memberAuthority='" + memberAuthority + '\'' +
-                ", memberBirthday=" + memberBirthday +
-                ", memberCreated=" + memberCreated +
-                ", memberLastUpdated=" + memberLastUpdated +
-                ", memberLastAccessed=" + memberLastAccessed +
-                '}';
-    }
+public class Member implements Serializable {
 
     private Long memberId;
     private String memberName;
@@ -45,7 +23,7 @@ public class Member implements UserDetails {
     private Timestamp memberLastUpdated;
     private Timestamp memberLastAccessed;
 
-    public Member(JoinDto joinDTO, String authority) {
+    public Member(JoinForm joinDTO) {
         this.memberName = joinDTO.getMemberName();
         this.memberPassword = joinDTO.getMemberPassword();
         this.memberEmail = joinDTO.getMemberEmail();
@@ -53,62 +31,22 @@ public class Member implements UserDetails {
         this.memberAddress = joinDTO.getMemberAddress();
         this.privacyConsent = joinDTO.getPrivacyConsent();
         this.memberBirthday = joinDTO.getMemberBirthday();
-        this.memberAuthority = authority;
+        this.memberAuthority = joinDTO.getMemberAuthority();
         this.memberCreated = new Timestamp(System.currentTimeMillis());
         this.memberLastUpdated = new Timestamp(System.currentTimeMillis());
         this.memberLastAccessed = new Timestamp(System.currentTimeMillis());
     }
 
-    public Member(Optional<Member> member) {
-        this.memberId = member.get().getMemberId();
-        this.memberName = member.get().getMemberName();
-        this.memberPassword = member.get().getMemberPassword();
-        this.memberEmail = member.get().getMemberEmail();
-        this.memberPhone = member.get().getMemberPhone();
-        this.memberAddress = member.get().getMemberAddress();
-        this.privacyConsent = member.get().getPrivacyConsent();
-        this.memberBirthday = member.get().getMemberBirthday();
-        this.memberAuthority = member.get().getMemberAuthority();
-        this.memberCreated = member.get().getMemberCreated();
-        this.memberLastUpdated = member.get().getMemberLastUpdated();
-        this.memberLastAccessed = member.get().getMemberLastAccessed();
+    public String getMemberAuthority() {
+        return memberAuthority;
     }
 
-    @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        ArrayList<GrantedAuthority> auth = new ArrayList<>();
-        auth.add(new SimpleGrantedAuthority(memberAuthority));
-        return auth;
-    }
-
-    @Override
-    public String getPassword() {
-        return memberPassword;
-    }
-
-    @Override
-    public String getUsername() {
+    public String getMemberEmail() {
         return memberEmail;
     }
 
-    @Override
-    public boolean isAccountNonExpired() {
-        return true;
-    }
-
-    @Override
-    public boolean isAccountNonLocked() {
-        return true;
-    }
-
-    @Override
-    public boolean isCredentialsNonExpired() {
-        return true;
-    }
-
-    @Override
-    public boolean isEnabled() {
-        return true;
+    public String getMemberPassword() {
+        return memberPassword;
     }
 }
 

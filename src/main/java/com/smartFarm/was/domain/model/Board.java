@@ -1,6 +1,6 @@
 package com.smartFarm.was.domain.model;
 
-import com.smartFarm.was.web.dto.request.AddBoardDto;
+import com.smartFarm.was.domain.dto.request.AddBoardForm;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
@@ -23,7 +23,7 @@ public class Board {
     private Timestamp boardCreated;
     private Timestamp boardLastUpdated;
 
-    public Board(AddBoardDto addBoardDto, Long memberId, Timestamp now) {
+    public Board(AddBoardForm addBoardDto, Long memberId, Timestamp now) {
         this.memberId = memberId;
         this.categoryId = addBoardDto.getCategoryId();
         this.boardTitle = addBoardDto.getBoardTitle();

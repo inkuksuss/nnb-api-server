@@ -1,5 +1,6 @@
 package com.smartFarm.was.web.logtrace;
 
+import com.smartFarm.was.web.aop.Pointcuts;
 import com.smartFarm.was.web.logtrace.code.FieldService;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;

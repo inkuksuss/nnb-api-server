@@ -1,6 +1,7 @@
 package com.smartFarm.was.web.exception.custom;
 
 public class ExistMemberException extends RuntimeException {
+
     public ExistMemberException() {
     }
 
