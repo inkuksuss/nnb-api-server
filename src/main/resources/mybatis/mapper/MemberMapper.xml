@@ -3,9 +3,32 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="com.smartFarm.was.repository.MemberRepository">
+<mapper namespace="com.smartFarm.was.web.repository.MemberRepository">
 
-    <insert id="addMember" parameterType="com.smartFarm.was.dto.JoinDTO">
-        INSERT INTO TEST (name, password) VALUES (#{name}, #{password})
+    <insert id="saveMember" parameterType="com.smartFarm.was.domain.model.Member">
+        INSERT INTO MEMBER (member_authority,
+                            member_name,
+                            member_email,
+                            member_phone,
+                            member_birthday,
+                            member_password,
+                            member_address,
+                            member_created,
+                            member_last_updated,
+                            member_last_accessed)
+                            VALUES (#{memberAuthority},
+                                    #{memberName},
+                                    #{memberEmail},
+                                    #{memberPhone},
+                                    #{memberBirthday},
+                                    #{memberPassword},
+                                    #{memberAddress},
+                                    #{memberCreated},
+                                    #{memberLastUpdated},
+                                    #{memberLastAccessed})
     </insert>
+
+    <select id="findByEmail" parameterType="String" resultType="com.smartFarm.was.domain.model.Member">
+        SELECT * FROM MEMBER WHERE member_email = #{memberEmail}
+    </select>
 </mapper>

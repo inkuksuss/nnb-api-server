@@ -1,40 +1,58 @@
 package com.smartFarm.was.domain.model;
 
-import com.smartFarm.was.domain.model.sub.Authority;
-import lombok.Getter;
-import lombok.Setter;
+import com.smartFarm.was.domain.dto.request.JoinForm;
+import lombok.*;
 
+import java.io.Serializable;
 import java.sql.Timestamp;
 
-@Getter @Setter
-public class Member {
+@Getter
+@RequiredArgsConstructor
+public class Member implements Serializable {
 
-    private Integer memberId;
+    private Long memberId;
     private String memberName;
     private String memberPassword;
     private String memberEmail;
     private String memberPhone;
     private String memberAddress;
     private String privacyConsent;
+    private String memberAuthority;
     private Timestamp memberBirthday;
     private Timestamp memberCreated;
     private Timestamp memberLastUpdated;
     private Timestamp memberLastAccessed;
-    private Authority authority;
 
+    public Member(JoinForm joinDTO) {
+        this.memberName = joinDTO.getMemberName();
+        this.memberPassword = joinDTO.getMemberPassword();
+        this.memberEmail = joinDTO.getMemberEmail();
+        this.memberPhone = joinDTO.getMemberPhone();
+        this.memberAddress = joinDTO.getMemberAddress();
+        this.privacyConsent = joinDTO.getPrivacyConsent();
+        this.memberBirthday = joinDTO.getMemberBirthday();
+        this.memberAuthority = joinDTO.getMemberAuthority();
+        this.memberCreated = new Timestamp(System.currentTimeMillis());
+        this.memberLastUpdated = new Timestamp(System.currentTimeMillis());
+        this.memberLastAccessed = new Timestamp(System.currentTimeMillis());
+    }
 
-    public Member(Integer memberId, String memberName, String memberPassword, String memberEmail, String memberPhone, String memberAddress, String privacyConsent, Timestamp memberBirthday, Timestamp memberCreated, Timestamp memberLastUpdated, Timestamp memberLastAccessed, Authority authority) {
-        this.memberId = memberId;
-        this.memberName = memberName;
-        this.memberPassword = memberPassword;
-        this.memberEmail = memberEmail;
-        this.memberPhone = memberPhone;
-        this.memberAddress = memberAddress;
-        this.privacyConsent = privacyConsent;
-        this.memberBirthday = memberBirthday;
-        this.memberCreated = memberCreated;
-        this.memberLastUpdated = memberLastUpdated;
-        this.memberLastAccessed = memberLastAccessed;
-        this.authority = authority;
+    public String getMemberAuthority() {
+        return memberAuthority;
+    }
+
+    public String getMemberEmail() {
+        return memberEmail;
+    }
+
+    public String getMemberPassword() {
+        return memberPassword;
     }
 }
+
+// "memberPhone": "01026727162",
+// "memberAddress": "상동",
+// "memberBirthday": "2020-10-11T01:01:01Z",
+// "memberAuthority": ["USER"],
+// "privacyConsent": "true",
+// "memberPassword": "123"
