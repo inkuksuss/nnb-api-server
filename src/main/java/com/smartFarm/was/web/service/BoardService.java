@@ -8,6 +8,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
+import java.util.List;
 
 @Service
 @Slf4j
@@ -20,11 +21,12 @@ public class BoardService {
     }
 
     public void addBoard(AddBoardForm addBoardDto, Long memberId) {
-
         Timestamp now = new Timestamp(System.currentTimeMillis());
         Board board = new Board(addBoardDto, memberId, now);
-        boardRepository.add(board);
+        boardRepository.save(board);
     }
 
-
+    public List<Board> getAllBoard() {
+        return boardRepository.getAll();
+    }
 }

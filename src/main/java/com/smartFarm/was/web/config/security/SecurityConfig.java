@@ -116,18 +116,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter implements WebM
                 .exceptionHandling()
                 .authenticationEntryPoint(jwtAuthenticationEntryPoint)
                 .accessDeniedHandler(jwtAccessDeniedHandler);
-
-//                .and()
-//                .logout()
-//                .logoutUrl("/logout")
-////                .logoutSuccessUrl("/")
-//                .invalidateHttpSession(true)
-//                .deleteCookies("JSESSIONID", "SESSION")
-//                .clearAuthentication(true)
-//                .permitAll()
-
-//                .and()
-//                .addFilterBefore(ajaxLoginProcessingFilter(), UsernamePasswordAuthenticationFilter.class);
     }
     @Override
     public void addCorsMappings(CorsRegistry registry) {
@@ -135,8 +123,4 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter implements WebM
                 .allowedOrigins("http://192.168.0.49:8080")
                 .allowCredentials(true);
     }
-
-//    public AccessDeniedHandler accessDeniedHandler() {
-//        return new AjaxAccessDeniedHandler();
-//    }
 }

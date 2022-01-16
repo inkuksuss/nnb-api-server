@@ -5,10 +5,11 @@ import com.smartFarm.was.domain.model.Board;
 import org.apache.ibatis.annotations.Mapper;
 import org.springframework.stereotype.Repository;
 
-@Mapper
+import java.util.List;
+
 @Repository
 public interface BoardRepository {
 
-//    BoardDto getAll();
-    void add(Board board);
+    List<Board> getAll();
+    void save(Board board);
 }
