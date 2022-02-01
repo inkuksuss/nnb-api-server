@@ -8,7 +8,6 @@ import com.smartFarm.was.domain.dto.request.AddBoardForm;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
-import java.sql.Timestamp;
 import java.util.List;
 
 @Service
@@ -21,10 +20,9 @@ public class BoardService {
         this.boardRepository = boardRepository;
     }
 
-    public void addBoard(AddBoardForm addBoardDto, Long memberId) {
-        Timestamp now = new Timestamp(System.currentTimeMillis());
-        Board board = new Board(addBoardDto, memberId, now);
-        boardRepository.save(board);
+    public void addBoard(AddBoardForm addBoardForm, Long memberId) {
+        Board board = Board.ofAddBoardFormAndMemberId(addBoardForm, memberId);
+        boardRepository.add(board);
     }
 
     public List<boardsDto> getNoticeBoards() {

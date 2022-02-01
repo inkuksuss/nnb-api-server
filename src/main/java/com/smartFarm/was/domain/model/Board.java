@@ -8,8 +8,7 @@ import lombok.Setter;
 import java.sql.Timestamp;
 
 
-@Getter @Setter
-@RequiredArgsConstructor
+@Getter
 public class Board {
 
     private Long boardId;
@@ -23,16 +22,19 @@ public class Board {
     private Timestamp boardCreated;
     private Timestamp boardLastUpdated;
 
-    public Board(AddBoardForm addBoardDto, Long memberId, Timestamp now) {
-        this.memberId = memberId;
-        this.categoryId = addBoardDto.getCategoryId();
-        this.boardTitle = addBoardDto.getBoardTitle();
-        this.boardContent = addBoardDto.getBoardContent();
-        this.boardSecret = addBoardDto.getBoardSecret();
-        this.boardStatus = "a";
-        this.boardCreated = now;
-        this.boardView = 0;
+    public static Board ofAddBoardFormAndMemberId(AddBoardForm addBoardForm, Long memberId) {
+        Board board = new Board();
+        board.memberId = memberId;
+        board.categoryId = addBoardForm.getCategoryId();
+        board.boardTitle = addBoardForm.getBoardTitle();
+        board.boardContent = addBoardForm.getBoardContent();
+        board.boardSecret = addBoardForm.getBoardSecret();
+        board.boardStatus = "a";
+        board.boardView = 0;
+        board.boardCreated = new Timestamp(System.currentTimeMillis());
+        return board;
     }
 
-    public
+    private Board() {
+    }
 }

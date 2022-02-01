@@ -1,5 +1,6 @@
 package com.smartFarm.was.web.controller;
 
+import com.smartFarm.was.domain.dto.request.AddBoardForm;
 import com.smartFarm.was.domain.dto.response.Result;
 import com.smartFarm.was.domain.model.Board;
 import com.smartFarm.was.web.repository.BoardRepository;
@@ -24,17 +25,18 @@ public class BoardController {
 
     private final MemberService memberService;
     private final MemberRepository memberRepository;
-    private final BoardRepository boardRepository;
     private final BoardService boardService;
 
     @GetMapping("/boards/notice")
     public ResponseEntity<Result<List<Board>>> noticeBoards() {
         boardService.getNoticeBoards();
-        return new ResponseEntity<>(new Result<>(allBoard), HttpStatus.OK);
+        return new ResponseEntity<>(new Result<>(), HttpStatus.OK);
     }
 
     @PostMapping("/boards/add")
-    public ResponseEntity<Result<String>> addBoard() {
+    public ResponseEntity<Result<String>> addBoard(AddBoardForm addBoardForm) {
+        Long memberId = 1L;
+        boardService.addBoard(addBoardForm, memberId);
         return new ResponseEntity<>(new Result<>("success"), HttpStatus.OK);
     }
 }

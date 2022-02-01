@@ -7,7 +7,6 @@ import java.io.Serializable;
 import java.sql.Timestamp;
 
 @Getter
-@RequiredArgsConstructor
 public class Member implements Serializable {
 
     private Long memberId;
@@ -39,6 +38,7 @@ public class Member implements Serializable {
         member.memberLastAccessed = now;
         return member;
     }
+    private Member() {}
 
     public String getMemberAuthority() {
         return memberAuthority;
@@ -51,6 +51,25 @@ public class Member implements Serializable {
     public String getMemberPassword() {
         return memberPassword;
     }
+
+    @Override
+    public String toString() {
+        return "Member{" +
+                "memberId=" + memberId +
+                ", memberName='" + memberName + '\'' +
+                ", memberPassword='" + memberPassword + '\'' +
+                ", memberEmail='" + memberEmail + '\'' +
+                ", memberPhone='" + memberPhone + '\'' +
+                ", memberAddress='" + memberAddress + '\'' +
+                ", privacyConsent='" + privacyConsent + '\'' +
+                ", memberAuthority='" + memberAuthority + '\'' +
+                ", memberBirthday=" + memberBirthday +
+                ", memberCreated=" + memberCreated +
+                ", memberLastUpdated=" + memberLastUpdated +
+                ", memberLastAccessed=" + memberLastAccessed +
+                '}';
+    }
+
 }
 
 // "memberPhone": "01026727162",

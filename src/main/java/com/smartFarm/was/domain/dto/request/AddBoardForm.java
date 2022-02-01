@@ -1,11 +1,10 @@
 package com.smartFarm.was.domain.dto.request;
 
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
-@RequiredArgsConstructor
-@Getter @Setter
+@AllArgsConstructor
+@Getter
+@Builder
 public class AddBoardForm {
 
     private String boardTitle;

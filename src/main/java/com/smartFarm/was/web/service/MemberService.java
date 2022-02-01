@@ -55,7 +55,7 @@ public class MemberService implements UserDetailsService {
             throw new ExistMemberException("이미 존재하는 회원입니다.");
         }
 
-        Member member = new Member().from(joinForm);
+        Member member = Member.from(joinForm);
         memberRepository.saveMember(member);
     }
 }
