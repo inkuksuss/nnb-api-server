@@ -33,4 +33,6 @@ public class Board {
         this.boardCreated = now;
         this.boardView = 0;
     }
+
+    public
 }

@@ -27,9 +27,9 @@ public class BoardController {
     private final BoardRepository boardRepository;
     private final BoardService boardService;
 
-    @GetMapping("/boards")
-    public ResponseEntity<Result<List<Board>>> boards() {
-        List<Board> allBoard = boardService.getAllBoard();
+    @GetMapping("/boards/notice")
+    public ResponseEntity<Result<List<Board>>> noticeBoards() {
+        boardService.getNoticeBoards();
         return new ResponseEntity<>(new Result<>(allBoard), HttpStatus.OK);
     }
 

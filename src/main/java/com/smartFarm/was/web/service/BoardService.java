@@ -1,6 +1,7 @@
 package com.smartFarm.was.web.service;
 
 
+import com.smartFarm.was.domain.dto.response.boardsDto;
 import com.smartFarm.was.domain.model.Board;
 import com.smartFarm.was.web.repository.BoardRepository;
 import com.smartFarm.was.domain.dto.request.AddBoardForm;
@@ -26,7 +27,10 @@ public class BoardService {
         boardRepository.save(board);
     }
 
-    public List<Board> getAllBoard() {
-        return boardRepository.getAll();
+    public List<boardsDto> getNoticeBoards() {
+        return boardRepository.getAllNotice();
+    }
+    public List<boardsDto> getFAQBoards() {
+        return boardRepository.getAllFAQ();
     }
 }

@@ -40,14 +40,14 @@ public class MemberService implements UserDetailsService {
         List<GrantedAuthority> roles = new ArrayList<>();
         roles.add(new SimpleGrantedAuthority(existedMember.getMemberAuthority()));
 
-        MemberContext memberDto = new MemberContext(existedMember, roles);
-        return memberDto;
+        MemberContext memberContext = new MemberContext(existedMember, roles);
+        return memberContext;
     }
 
-    public void addMember(JoinForm joinDTO) {
-        Member existedMember = memberRepository.findByEmail(joinDTO.getMemberEmail());
+    public void addMember(JoinForm joinForm) {
+        Member existedMember = memberRepository.findByEmail(joinForm.getMemberEmail());
 
-        if (!(USER_AUTHORITY.equals(joinDTO.getMemberAuthority()) || ADMIN_AUTHORITY.equals(joinDTO.getMemberAuthority()))) {
+        if (!(USER_AUTHORITY.equals(joinForm.getMemberAuthority()) || ADMIN_AUTHORITY.equals(joinForm.getMemberAuthority()))) {
             throw new IllegalArgumentException("존재하지 않는 권한입니다.");
         }
 
@@ -55,12 +55,8 @@ public class MemberService implements UserDetailsService {
             throw new ExistMemberException("이미 존재하는 회원입니다.");
         }
 
-        Member member = new Member(joinDTO);
+        Member member = new Member().from(joinForm);
         memberRepository.saveMember(member);
-    }
-
-    public void addToken(String token, String memberEmail) {
-        memberRepository.saveToken(token, memberEmail);
     }
 }
 

@@ -10,5 +10,4 @@ public interface MemberRepository {
 
     void saveMember(Member member);
     Member findByEmail(String memberEmail);
-    void saveToken(String token, String memberEmail);
 }

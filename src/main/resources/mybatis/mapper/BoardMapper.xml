@@ -5,7 +5,19 @@
 
 <mapper namespace="com.smartFarm.was.web.repository.BoardRepository">
 
-    <select id="getAll" resultType="com.smartFarm.was.domain.dto.response.BoardDto">
+    <select id="getAllNotice" resultType="com.smartFarm.was.domain.dto.response.boardsDto">
+        SELECT
+            board_title,
+            board_created,
+            board_view,
+            member_name
+        FROM board
+                 INNER JOIN member
+                        ON board.member_id = member.member_id
+        WHERE category_id
+    </select>
+
+    <select id="getAllFAQ" resultType="com.smartFarm.was.domain.dto.response.boardsDto">
         SELECT
             category_value,
             board_title,
@@ -16,9 +28,9 @@
 
         FROM board
                  INNER JOIN member
-                        ON board.member_id = member.member_id
+                            ON board.member_id = member.member_id
                  INNER JOIN board_category
-                        ON board.category_id = board_category.category_id
+                            ON board.category_id = board_category.category_id
     </select>
 
     <insert id="add" parameterType="com.smartFarm.was.domain.model.Board">

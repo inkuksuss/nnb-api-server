@@ -10,7 +10,6 @@ import com.smartFarm.was.web.config.security.provider.TokenProvider;
 import com.smartFarm.was.web.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -33,29 +32,27 @@ public class MemberController {
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
     private final TokenProvider tokenProvider;
 
-
     // 회원가입
     @PostMapping("/join")
-    public ResponseEntity<Result<String>> join(@RequestBody @Validated JoinForm joinDto) {
+    public ResponseEntity<Result<String>> join(@RequestBody @Validated JoinForm joinForm) {
 
-        joinDto.setMemberPassword(passwordEncoder.encode(joinDto.getMemberPassword()));
-        memberService.addMember(joinDto);
+        joinForm.setMemberPassword(passwordEncoder.encode(joinForm.getMemberPassword()));
+        memberService.addMember(joinForm);
 
         return ResponseEntity.ok().body(new Result<>("success"));
     }
 
     // 로그인
     @PostMapping("/login")
-    public ResponseEntity<Result<MemberDto>> login(@RequestBody @Validated LoginForm loginDto) {
+    public ResponseEntity<Result<MemberDto>> login(@RequestBody @Validated LoginForm loginForm) {
 
         UsernamePasswordAuthenticationToken authenticationToken =
-                new UsernamePasswordAuthenticationToken(loginDto.getMemberEmail(), loginDto.getMemberPassword());
+                new UsernamePasswordAuthenticationToken(loginForm.getMemberEmail(), loginForm.getMemberPassword());
 
         Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
         String token = tokenProvider.createToken(authentication);
-        memberService.addToken(token, loginDto.getMemberEmail());
 
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.add(JwtFilter.AUTHORIZATION_HEADER, "Bearer " + token);
@@ -64,12 +61,4 @@ public class MemberController {
 
         return new ResponseEntity<>(new Result<>(memberDto), httpHeaders, HttpStatus.OK);
     }
-
-//    @GetMapping("/logout")
-//    public String logout(HttpServletRequest request, HttpServletResponse response, HttpSession session) {
-//
-//        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-//        session.invalidate();
-//        return "logout";
-//    }
 }

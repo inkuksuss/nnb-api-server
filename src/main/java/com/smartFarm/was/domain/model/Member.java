@@ -23,18 +23,21 @@ public class Member implements Serializable {
     private Timestamp memberLastUpdated;
     private Timestamp memberLastAccessed;
 
-    public Member(JoinForm joinDTO) {
-        this.memberName = joinDTO.getMemberName();
-        this.memberPassword = joinDTO.getMemberPassword();
-        this.memberEmail = joinDTO.getMemberEmail();
-        this.memberPhone = joinDTO.getMemberPhone();
-        this.memberAddress = joinDTO.getMemberAddress();
-        this.privacyConsent = joinDTO.getPrivacyConsent();
-        this.memberBirthday = joinDTO.getMemberBirthday();
-        this.memberAuthority = joinDTO.getMemberAuthority();
-        this.memberCreated = new Timestamp(System.currentTimeMillis());
-        this.memberLastUpdated = new Timestamp(System.currentTimeMillis());
-        this.memberLastAccessed = new Timestamp(System.currentTimeMillis());
+    public static Member from(JoinForm joinForm) {
+        Member member = new Member();
+        Timestamp now = new Timestamp(System.currentTimeMillis());
+        member.memberName = joinForm.getMemberName();
+        member.memberPassword = joinForm.getMemberPassword();
+        member.memberEmail = joinForm.getMemberEmail();
+        member.memberPhone = joinForm.getMemberPhone();
+        member.memberAddress = joinForm.getMemberAddress();
+        member.privacyConsent = joinForm.getPrivacyConsent();
+        member.memberBirthday = joinForm.getMemberBirthday();
+        member.memberAuthority = joinForm.getMemberAuthority();
+        member.memberCreated = now;
+        member.memberLastUpdated = now;
+        member.memberLastAccessed = now;
+        return member;
     }
 
     public String getMemberAuthority() {
