@@ -14,23 +14,21 @@
         FROM board
                  INNER JOIN member
                         ON board.member_id = member.member_id
-        WHERE category_id
+        WHERE category_id = 1
+        ORDER BY board_created DESC
     </select>
 
     <select id="getAllFAQ" resultType="com.smartFarm.was.domain.dto.response.boardsDto">
         SELECT
-            category_value,
             board_title,
-            board_content,
-            board_last_updated,
+            board_created,
             board_view,
             member_name
-
         FROM board
                  INNER JOIN member
                             ON board.member_id = member.member_id
-                 INNER JOIN board_category
-                            ON board.category_id = board_category.category_id
+        WHERE category_id = 2
+        ORDER BY board_created DESC
     </select>
 
     <insert id="add" parameterType="com.smartFarm.was.domain.model.Board">
