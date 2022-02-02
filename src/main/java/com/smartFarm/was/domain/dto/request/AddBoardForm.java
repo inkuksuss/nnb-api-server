@@ -5,6 +5,7 @@ import lombok.*;
 @AllArgsConstructor
 @Getter
 @Builder
+@ToString
 public class AddBoardForm {
 
     private String boardTitle;

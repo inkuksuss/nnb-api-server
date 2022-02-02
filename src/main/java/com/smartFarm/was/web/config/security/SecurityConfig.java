@@ -37,61 +37,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter implements WebM
         return new JwtFilter(tokenProvider);
     }
 
-//    @Bean
-//    public AjaxAuthenticationProvider ajaxAuthenticationProvider() {
-//        return new AjaxAuthenticationProvider(userDetailsService, passwordEncoder());
-//    }
-//
-//    @Bean
-//    public AuthenticationProvider authenticationProvider() {
-//        return new FormAuthenticationProvider();
-//    }
-//
-//    @Bean
-//    public AuthenticationSuccessHandler ajaxAuthenticationSuccessHandler() {
-//        return new AjaxAuthenticationSuccessHandler();
-//    }
-//
-//    @Bean
-//    public AuthenticationFailureHandler ajaxAuthenticationFailureHandler() {
-//        return new AjaxAuthenticationFailHandler();
-//    }
-//
-//    @Bean
-//    public AuthenticationSuccessHandler authenticationSuccessHandler() {
-//        return new FormAuthenticationSuccessHandler();
-//    }
-//
-//    @Bean
-//    public AuthenticationFailureHandler authenticationFailureHandler() {
-//        return new FormAuthenticationFailureHandler();
-//    }
-//
-//    @Bean
-//    public LogoutSuccessHandler logoutSuccessHandler() {
-//        return new CommonLogoutSuccessHandler();
-//    }
-//
-//    @Bean
-//    public AjaxLoginProcessingFilter ajaxLoginProcessingFilter() throws Exception {
-//        AjaxLoginProcessingFilter ajaxLoginProcessingFilter = new AjaxLoginProcessingFilter();
-//        ajaxLoginProcessingFilter.setAuthenticationManager(authenticationManagerBean());
-//        ajaxLoginProcessingFilter.setAuthenticationSuccessHandler(ajaxAuthenticationSuccessHandler());
-//        ajaxLoginProcessingFilter.setAuthenticationFailureHandler(ajaxAuthenticationFailureHandler());
-//        return ajaxLoginProcessingFilter;
-//    }
-//
-//    @Override
-//    public AuthenticationManager authenticationManagerBean() throws Exception {
-//        return super.authenticationManagerBean();
-//    }
-
-//    @Override
-//    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-//        auth.authenticationProvider(ajaxAuthenticationProvider());
-//        auth.authenticationProvider(authenticationProvider());
-//    }
-
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http

@@ -45,7 +45,6 @@ public class TokenProvider implements InitializingBean {
     }
 
     public String createToken(Authentication authentication) {
-        Object principal = authentication.getPrincipal();
         String authorities = authentication.getAuthorities().stream()
                 .map(GrantedAuthority::getAuthority)
                 .collect(Collectors.joining(","));
@@ -74,7 +73,7 @@ public class TokenProvider implements InitializingBean {
                         .map(SimpleGrantedAuthority::new)
                         .collect(Collectors.toList());
 
-        MemberContext principal = (MemberContext) new User(claims.getSubject(), null, authorities);
+        User principal = new User(claims.getSubject(), "", authorities);
 
         return new UsernamePasswordAuthenticationToken(principal, token, authorities);
     }

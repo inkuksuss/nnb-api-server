@@ -3,10 +3,8 @@ package com.smartFarm.was.web.config.security.filter;
 import com.smartFarm.was.web.config.security.provider.TokenProvider;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
 import javax.servlet.*;
@@ -19,9 +17,6 @@ import java.io.IOException;
 public class JwtFilter extends GenericFilter {
 
     public static final String AUTHORIZATION_HEADER = "Authorization";
-    private final String XMLHTTPREQUEST = "XMLHttpRequest";
-    private final String X_REQUEST = "X-Requested-With";
-
     private final TokenProvider tokenProvider;
 
     @Override
@@ -29,18 +24,12 @@ public class JwtFilter extends GenericFilter {
         HttpServletRequest httpServletRequest = (HttpServletRequest) request;
         String jwt = resolveToken(httpServletRequest);
         String requestURI = httpServletRequest.getRequestURI();
-
-        if(!isAjax(httpServletRequest)) {
-            throw new IllegalStateException("지원하지 않는 규약입니다.");
-        }
-
         if (StringUtils.hasText(jwt) && tokenProvider.validateToken(jwt)) {
             Authentication authentication = tokenProvider.getAuthentication(jwt);
             SecurityContextHolder.getContext().setAuthentication(authentication);
-            log.debug("Security Context {} 저장, URI: {}", authentication.getName(), requestURI);
+            log.info("Security Context {} 저장, URI: {}", authentication.getName(), requestURI);
         } else {
-
-            log.debug("유효한 JWT 토큰이 없습니다, URI: {}", requestURI);
+            log.info("유효한 JWT 토큰이 없습니다, URI: {}", requestURI);
         }
         chain.doFilter(request, response);
     }
@@ -51,13 +40,5 @@ public class JwtFilter extends GenericFilter {
             return bearerToken.substring(7);
         }
         return null;
-    }
-
-    private boolean isAjax(HttpServletRequest request) {
-        if (XMLHTTPREQUEST.equals(request.getHeader(X_REQUEST))) {
-            return true;
-        } else {
-            return false;
-        }
     }
 }

@@ -57,7 +57,7 @@ public class MemberController {
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.add(JwtFilter.AUTHORIZATION_HEADER, "Bearer " + token);
         MemberContext memberContext = (MemberContext) authentication.getPrincipal();
-        MemberDto memberDto = MemberDto.from(memberContext);
+        MemberDto memberDto = MemberDto.from(memberContext, token);
 
         return new ResponseEntity<>(new Result<>(memberDto), httpHeaders, HttpStatus.OK);
     }
