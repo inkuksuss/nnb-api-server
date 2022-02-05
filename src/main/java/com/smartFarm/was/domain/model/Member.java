@@ -38,6 +38,23 @@ public class Member implements Serializable {
         member.memberLastAccessed = now;
         return member;
     }
+    public static Member removePasswordFrom(Member member) {
+        Member removePasswordMember = new Member();
+        Timestamp now = new Timestamp(System.currentTimeMillis());
+        removePasswordMember.memberId = member.getMemberId();
+        removePasswordMember.memberName = member.getMemberName();
+        removePasswordMember.memberEmail = member.getMemberEmail();
+        removePasswordMember.memberPhone = member.getMemberPhone();
+        removePasswordMember.memberAddress = member.getMemberAddress();
+        removePasswordMember.privacyConsent = member.getPrivacyConsent();
+        removePasswordMember.memberBirthday = member.getMemberBirthday();
+        removePasswordMember.memberAuthority = member.getMemberAuthority();
+        removePasswordMember.memberCreated = now;
+        removePasswordMember.memberLastUpdated = now;
+        removePasswordMember.memberLastAccessed = now;
+        removePasswordMember.memberPassword = null;
+        return removePasswordMember;
+    }
     private Member() {}
 
     public String getMemberAuthority() {

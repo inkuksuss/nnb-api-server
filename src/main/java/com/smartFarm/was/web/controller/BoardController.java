@@ -4,6 +4,7 @@ import com.smartFarm.was.domain.dto.request.AddBoardForm;
 import com.smartFarm.was.domain.dto.response.Result;
 import com.smartFarm.was.domain.dto.response.boardsDto;
 import com.smartFarm.was.domain.model.Board;
+import com.smartFarm.was.web.config.security.context.MemberContext;
 import com.smartFarm.was.web.config.security.provider.TokenProvider;
 import com.smartFarm.was.web.repository.BoardRepository;
 import com.smartFarm.was.web.repository.MemberRepository;
@@ -65,20 +66,9 @@ public class BoardController {
     }
     // TODO 유저 아이디 값 가져오기
     @PostMapping("/test")
-    public Optional test(HttpServletRequest request) {
-        final Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication == null) {
-            log.debug("Security Context에 인증 정보가 없습니다.");
-            return Optional.empty();
-        }
-
-        String username = null;
-        if (authentication.getPrincipal() instanceof UserDetails) {
-            UserDetails springSecurityUser = (UserDetails) authentication.getPrincipal();
-            username = springSecurityUser.getUsername();
-        } else if (authentication.getPrincipal() instanceof String) {
-            username = (String) authentication.getPrincipal();
-        }
-        return Optional.ofNullable(username);
+    public Object test(HttpServletRequest request) {
+        Object id = request.getAttribute("id");
+        System.out.println(id);
+        return id;
     }
 }

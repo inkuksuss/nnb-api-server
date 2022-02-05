@@ -20,7 +20,7 @@ public class MemberRepositoryImpl implements MemberRepository {
 
     @Override
     public void saveMember(Member member) {
-        sqlSession.insert(mapperLocation + "MemberRepository.save", member);
+        sqlSession.insert(mapperLocation + "MemberRepository.saveMember", member);
     }
 
     @Override

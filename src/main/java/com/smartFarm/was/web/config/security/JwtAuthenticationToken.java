@@ -12,7 +12,6 @@ public class JwtAuthenticationToken extends AbstractAuthenticationToken {
     private static final long serialVersionUID = SpringSecurityCoreVersion.SERIAL_VERSION_UID;
 
     private final Object principal;
-
     private Object credentials;
 
 

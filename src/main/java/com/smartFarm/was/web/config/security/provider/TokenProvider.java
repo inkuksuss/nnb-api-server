@@ -1,6 +1,7 @@
 package com.smartFarm.was.web.config.security.provider;
 
 
+import com.smartFarm.was.web.config.security.JwtAuthenticationToken;
 import com.smartFarm.was.web.config.security.context.MemberContext;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
@@ -13,6 +14,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
 import java.security.Key;
@@ -26,6 +28,7 @@ import java.util.stream.Collectors;
 public class TokenProvider implements InitializingBean {
 
     private static final String AUTHORITIES_KEY = "auth";
+    private static final String MEMBER = "member";
 
     private final String secret;
     private final long tokenValidityInMilliSeconds;
@@ -51,9 +54,13 @@ public class TokenProvider implements InitializingBean {
 
         long now = (new Date()).getTime();
         Date validity = new Date(now + this.tokenValidityInMilliSeconds);
-
+//        MemberContext memberContext = (MemberContext) authentication.getPrincipal();
+//        Long memberId = memberContext.getMember().getMemberId();
+        UserDetails principal = (UserDetails) authentication.getPrincipal();
+//        log.info("member = {}", memberContext.getMember());
         return Jwts.builder()
-                .setSubject(authentication.getName())
+                .setSubject(principal.getUsername())
+//                .setId(memberId.toString())
                 .claim(AUTHORITIES_KEY, authorities)
                 .signWith(key, SignatureAlgorithm.HS512)
                 .setExpiration(validity)
@@ -73,9 +80,8 @@ public class TokenProvider implements InitializingBean {
                         .map(SimpleGrantedAuthority::new)
                         .collect(Collectors.toList());
 
-        User principal = new User(claims.getSubject(), "", authorities);
-
-        return new UsernamePasswordAuthenticationToken(principal, token, authorities);
+        log.info("aa = {}",claims.getId());
+        return new JwtAuthenticationToken(claims.getId(), token, authorities);
     }
 
     public boolean validateToken(String token) {

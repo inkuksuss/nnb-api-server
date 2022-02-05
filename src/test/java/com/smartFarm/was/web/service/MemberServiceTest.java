@@ -24,7 +24,7 @@ public class MemberServiceTest {
     void addMember() {
         JoinForm build = JoinForm.builder().
                 memberAddress("상동").
-                memberEmail("1113@naver.com").
+                memberEmail("1114@naver.com").
                 memberName("inguk").
                 memberAuthority("ROLE_ADMIN").
                 memberPhone("010").
