@@ -13,8 +13,6 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
 import java.security.Key;
@@ -28,7 +26,7 @@ import java.util.stream.Collectors;
 public class TokenProvider implements InitializingBean {
 
     private static final String AUTHORITIES_KEY = "auth";
-    private static final String MEMBER = "member";
+    private static final String MEMBER_ID = "memberId";
 
     private final String secret;
     private final long tokenValidityInMilliSeconds;
@@ -54,13 +52,11 @@ public class TokenProvider implements InitializingBean {
 
         long now = (new Date()).getTime();
         Date validity = new Date(now + this.tokenValidityInMilliSeconds);
-//        MemberContext memberContext = (MemberContext) authentication.getPrincipal();
-//        Long memberId = memberContext.getMember().getMemberId();
-        UserDetails principal = (UserDetails) authentication.getPrincipal();
-//        log.info("member = {}", memberContext.getMember());
+        MemberContext memberContext = (MemberContext) authentication.getPrincipal();
+
         return Jwts.builder()
-                .setSubject(principal.getUsername())
-//                .setId(memberId.toString())
+                .setSubject(memberContext.getUsername())
+                .claim(MEMBER_ID, memberContext.getMember().getMemberId())
                 .claim(AUTHORITIES_KEY, authorities)
                 .signWith(key, SignatureAlgorithm.HS512)
                 .setExpiration(validity)
@@ -80,8 +76,7 @@ public class TokenProvider implements InitializingBean {
                         .map(SimpleGrantedAuthority::new)
                         .collect(Collectors.toList());
 
-        log.info("aa = {}",claims.getId());
-        return new JwtAuthenticationToken(claims.getId(), token, authorities);
+        return new JwtAuthenticationToken(claims.get(MEMBER_ID), token, authorities);
     }
 
     public boolean validateToken(String token) {

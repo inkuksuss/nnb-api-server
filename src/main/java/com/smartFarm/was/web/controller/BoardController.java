@@ -66,9 +66,9 @@ public class BoardController {
     }
     // TODO 유저 아이디 값 가져오기
     @PostMapping("/test")
-    public Object test(HttpServletRequest request) {
-        Object id = request.getAttribute("id");
-        System.out.println(id);
-        return id;
+    public void test(HttpServletRequest request) {
+        Integer memberId = (Integer) request.getAttribute("memberId");
+        log.info("memid={}", memberId);
+        return;
     }
 }

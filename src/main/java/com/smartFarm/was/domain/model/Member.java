@@ -9,7 +9,7 @@ import java.sql.Timestamp;
 @Getter
 public class Member implements Serializable {
 
-    private Long memberId;
+    private long memberId;
     private String memberName;
     private String memberPassword;
     private String memberEmail;
@@ -57,18 +57,6 @@ public class Member implements Serializable {
     }
     private Member() {}
 
-    public String getMemberAuthority() {
-        return memberAuthority;
-    }
-
-    public String getMemberEmail() {
-        return memberEmail;
-    }
-
-    public String getMemberPassword() {
-        return memberPassword;
-    }
-
     @Override
     public String toString() {
         return "Member{" +
@@ -86,7 +74,6 @@ public class Member implements Serializable {
                 ", memberLastAccessed=" + memberLastAccessed +
                 '}';
     }
-
 }
 
 // "memberPhone": "01026727162",

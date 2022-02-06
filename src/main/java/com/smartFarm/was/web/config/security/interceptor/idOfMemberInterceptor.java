@@ -4,6 +4,8 @@ import com.smartFarm.was.domain.model.Member;
 import com.smartFarm.was.web.config.security.context.MemberContext;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -13,13 +15,22 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.security.Principal;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.LinkedHashMap;
+import java.util.stream.Collectors;
 
 @Slf4j
 public class idOfMemberInterceptor implements HandlerInterceptor {
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-//        final UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        Integer memberId = (Integer) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        request.setAttribute("memberId", memberId);
+        return true;
+
+//        UserDetails principal = (UserDetails) authentication.getPrincipal();
+
 //        if (authentication == null) {
 //            log.debug("Security Context에 인증 정보가 없습니다.");
 //            return false;
@@ -35,7 +46,7 @@ public class idOfMemberInterceptor implements HandlerInterceptor {
 //            log.info("username = {}", username);
 //        }
 //        request.setAttribute("id", 1);
-        return true;
+
     }
 
     @Override
