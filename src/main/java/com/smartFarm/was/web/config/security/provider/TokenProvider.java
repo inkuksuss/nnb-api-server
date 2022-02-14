@@ -76,7 +76,8 @@ public class TokenProvider implements InitializingBean {
                         .map(SimpleGrantedAuthority::new)
                         .collect(Collectors.toList());
 
-        return new JwtAuthenticationToken(claims.get(MEMBER_ID), token, authorities);
+        return new JwtAuthenticationToken(claims.getSubject(), claims.get(MEMBER_ID), authorities);
+//        return new JwtAuthenticationToken(claims.get(MEMBER_ID), token, authorities);
     }
 
     public boolean validateToken(String token) {

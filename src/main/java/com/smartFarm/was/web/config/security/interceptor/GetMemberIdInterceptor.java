@@ -21,13 +21,11 @@ import java.util.LinkedHashMap;
 import java.util.stream.Collectors;
 
 @Slf4j
-public class idOfMemberInterceptor implements HandlerInterceptor {
+public class GetMemberIdInterceptor implements HandlerInterceptor {
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-        Integer memberId = (Integer) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        request.setAttribute("memberId", memberId);
-        return true;
+
 
 //        UserDetails principal = (UserDetails) authentication.getPrincipal();
 

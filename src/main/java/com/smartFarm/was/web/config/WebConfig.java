@@ -1,7 +1,7 @@
 package com.smartFarm.was.web.config;
 
 
-import com.smartFarm.was.web.config.security.interceptor.idOfMemberInterceptor;
+import com.smartFarm.was.web.config.security.interceptor.GetMemberIdInterceptor;
 import com.smartFarm.was.web.logtrace.LogTrace;
 import com.smartFarm.was.web.logtrace.ThreadLocalLogTrace;
 import org.springframework.context.annotation.Bean;
@@ -19,7 +19,7 @@ public class WebConfig implements WebMvcConfigurer {
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        registry.addInterceptor(new idOfMemberInterceptor())
+        registry.addInterceptor(new GetMemberIdInterceptor())
                 .addPathPatterns("/**")
                 .excludePathPatterns("/css/**", "/*.ico", "/error");
     }

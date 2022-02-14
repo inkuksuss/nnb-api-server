@@ -4,6 +4,7 @@ import com.smartFarm.was.domain.dto.request.AddBoardForm;
 import com.smartFarm.was.domain.dto.response.Result;
 import com.smartFarm.was.domain.dto.response.boardsDto;
 import com.smartFarm.was.domain.model.Board;
+import com.smartFarm.was.web.aop.annotation.GetMemberId;
 import com.smartFarm.was.web.config.security.context.MemberContext;
 import com.smartFarm.was.web.config.security.provider.TokenProvider;
 import com.smartFarm.was.web.repository.BoardRepository;
@@ -64,11 +65,10 @@ public class BoardController {
         boardService.addBoard(addBoardForm, memberId);
         return new ResponseEntity<>(new Result<>("success"), HttpStatus.OK);
     }
-    // TODO 유저 아이디 값 가져오기
+
     @PostMapping("/test")
-    public void test(HttpServletRequest request) {
-        Integer memberId = (Integer) request.getAttribute("memberId");
-        log.info("memid={}", memberId);
-        return;
+    @GetMemberId
+    public long test(HttpServletRequest request) {
+        return 1l;
     }
 }
