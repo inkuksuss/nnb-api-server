@@ -38,23 +38,24 @@ public class Member implements Serializable {
         member.memberLastAccessed = now;
         return member;
     }
-    public static Member removePasswordFrom(Member member) {
-        Member removePasswordMember = new Member();
-        Timestamp now = new Timestamp(System.currentTimeMillis());
-        removePasswordMember.memberId = member.getMemberId();
-        removePasswordMember.memberName = member.getMemberName();
-        removePasswordMember.memberEmail = member.getMemberEmail();
-        removePasswordMember.memberPhone = member.getMemberPhone();
-        removePasswordMember.memberAddress = member.getMemberAddress();
-        removePasswordMember.privacyConsent = member.getPrivacyConsent();
-        removePasswordMember.memberBirthday = member.getMemberBirthday();
-        removePasswordMember.memberAuthority = member.getMemberAuthority();
-        removePasswordMember.memberCreated = now;
-        removePasswordMember.memberLastUpdated = now;
-        removePasswordMember.memberLastAccessed = now;
-        removePasswordMember.memberPassword = null;
-        return removePasswordMember;
+
+    public static Member of(long memberId, String memberName, String memberPassword, String memberEmail, String memberPhone, String memberAddress, String privacyConsent, String memberAuthority, Timestamp memberBirthday, Timestamp memberCreated, Timestamp memberLastUpdated, Timestamp memberLastAccessed) {
+        Member member = new Member();
+        member.memberId = memberId;
+        member.memberName = memberName;
+        member.memberPassword = memberPassword;
+        member.memberEmail = memberEmail;
+        member.memberPhone = memberPhone;
+        member.memberAddress = memberAddress;
+        member.privacyConsent = privacyConsent;
+        member.memberBirthday = memberBirthday;
+        member.memberAuthority = memberAuthority;
+        member.memberCreated = memberCreated;
+        member.memberLastUpdated = memberLastUpdated;
+        member.memberLastAccessed = memberLastAccessed;
+        return member;
     }
+
     private Member() {}
 
     @Override

@@ -14,11 +14,11 @@ public class MemberContext implements UserDetails {
         this.member = member;
         this.authorities = authorities;
     }
-    public long getMemberId() { return member.getMemberId(); }
-
     public Member getMember() {
         return member;
     }
+
+    public long getMemberId() { return member.getMemberId(); }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

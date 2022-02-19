@@ -9,7 +9,6 @@ import io.jsonwebtoken.security.Keys;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -26,7 +25,7 @@ import java.util.stream.Collectors;
 public class TokenProvider implements InitializingBean {
 
     private static final String AUTHORITIES_KEY = "auth";
-    private static final String MEMBER_ID = "memberId";
+    private static final String MEMBER = "member";
 
     private final String secret;
     private final long tokenValidityInMilliSeconds;
@@ -56,7 +55,7 @@ public class TokenProvider implements InitializingBean {
 
         return Jwts.builder()
                 .setSubject(memberContext.getUsername())
-                .claim(MEMBER_ID, memberContext.getMember().getMemberId())
+                .claim(MEMBER, memberContext.getMember())
                 .claim(AUTHORITIES_KEY, authorities)
                 .signWith(key, SignatureAlgorithm.HS512)
                 .setExpiration(validity)
@@ -76,8 +75,7 @@ public class TokenProvider implements InitializingBean {
                         .map(SimpleGrantedAuthority::new)
                         .collect(Collectors.toList());
 
-        return new JwtAuthenticationToken(claims.getSubject(), claims.get(MEMBER_ID), authorities);
-//        return new JwtAuthenticationToken(claims.get(MEMBER_ID), token, authorities);
+        return new JwtAuthenticationToken(claims.get(MEMBER), "", authorities);
     }
 
     public boolean validateToken(String token) {
