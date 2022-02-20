@@ -1,10 +1,8 @@
-package com.smartFarm.was.domain.dto.response;
+package com.smartFarm.was.domain.dto.response.member;
 
 import com.smartFarm.was.web.config.security.context.MemberContext;
 import lombok.Getter;
 import lombok.Setter;
-
-import java.sql.Timestamp;
 
 @Getter
 @Setter

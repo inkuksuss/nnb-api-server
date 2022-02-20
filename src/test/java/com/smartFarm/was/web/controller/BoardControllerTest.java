@@ -1,7 +1,8 @@
 package com.smartFarm.was.web.controller;
 
 import com.smartFarm.was.domain.dto.request.AddBoardForm;
-import com.smartFarm.was.domain.dto.response.boardsDto;
+import com.smartFarm.was.domain.dto.response.board.boardDetailDto;
+import com.smartFarm.was.domain.dto.response.board.boardsDto;
 import com.smartFarm.was.web.service.BoardService;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
@@ -9,8 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.List;
-
-import static org.junit.jupiter.api.Assertions.*;
+import java.util.Optional;
 
 
 @Slf4j
@@ -34,13 +34,19 @@ class BoardControllerTest {
 
     @Test
     void addBoard() {
-        Long memberId = 19L;
+        Long memberId = 34l;
         AddBoardForm addBoardForm = AddBoardForm.builder()
                 .boardTitle("hello3")
                 .boardContent("안녕3")
-                .boardSecret("p")
+                .boardStatus("public")
                 .categoryId(2L)
                 .build();
         boardService.addBoard(addBoardForm, memberId);
+    }
+
+    @Test
+    void getDetail() {
+        Optional<boardDetailDto> boardDetail = boardService.findBoardDetail(28l, 34l);
+        log.info("boardDetail={}", boardDetail.toString());
     }
 }

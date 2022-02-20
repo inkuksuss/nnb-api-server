@@ -5,7 +5,7 @@
 
 <mapper namespace="com.smartFarm.was.web.repository.BoardRepository">
 
-    <select id="getAllNotice" resultType="com.smartFarm.was.domain.dto.response.boardsDto">
+    <select id="getAllNotice" resultType="com.smartFarm.was.domain.dto.response.board.boardsDto">
         SELECT
             board_title,
             board_created,
@@ -14,11 +14,11 @@
         FROM board
                  INNER JOIN member
                         ON board.member_id = member.member_id
-        WHERE category_id = 1
+        WHERE category_id = 1 AND board_status = 'public'
         ORDER BY board_created DESC
     </select>
 
-    <select id="getAllFAQ" resultType="com.smartFarm.was.domain.dto.response.boardsDto">
+    <select id="getAllFAQ" resultType="com.smartFarm.was.domain.dto.response.board.boardsDto">
         SELECT
             board_title,
             board_created,
@@ -27,7 +27,7 @@
         FROM board
                  INNER JOIN member
                             ON board.member_id = member.member_id
-        WHERE category_id = 2
+        WHERE category_id = 2 AND board_status = 'public'
         ORDER BY board_created DESC
     </select>
 
@@ -40,7 +40,6 @@
              board_content,
              board_created,
              board_view,
-             board_secret,
              board_status
             ) VALUES (
                       #{memberId},
@@ -49,8 +48,27 @@
                       #{boardContent},
                       #{boardCreated},
                       #{boardView},
-                      #{boardSecret},
                       #{boardStatus}
                     )
     </insert>
+
+    <select id="findByIdDetail" parameterType="long" resultType="com.smartFarm.was.domain.dto.response.board.boardDetailDto">
+        SELECT
+            board_title,
+            board_content,
+            board_created,
+            board_last_updated,
+            board_status,
+            board_view,
+            board.member_id,
+            member_name,
+            category_value
+        FROM board
+                 INNER JOIN member
+                            ON board.member_id = member.member_id
+                 INNER JOIN board_category
+                            ON board.category_id = board_category.category_id
+        WHERE board_id = #{boardId}
+        LIMIT 1;
+    </select>
 </mapper>

@@ -18,12 +18,12 @@ class BoardServiceTest {
         long memberId = 34l;
         String boardTitle = "안녕";
         String boardContent = "내용입니다.";
-        String boardSecret = "N";
+        String boardSecret = "public";
         long categoryId = 1l;
         AddBoardForm boardForm = AddBoardForm.builder()
                 .boardTitle(boardTitle)
                 .boardContent(boardContent)
-                .boardSecret(boardSecret)
+                .boardStatus(boardSecret)
                 .categoryId(categoryId)
                 .build();
 
@@ -37,12 +37,12 @@ class BoardServiceTest {
         long memberId = 34l;
         String boardTitle = "안녕하세요";
         String boardContent = "질문 게시판입니다.";
-        String boardSecret = "N";
+        String boardSecret = "public";
         long categoryId = 2l;
         AddBoardForm boardForm = AddBoardForm.builder()
                 .boardTitle(boardTitle)
                 .boardContent(boardContent)
-                .boardSecret(boardSecret)
+                .boardStatus(boardSecret)
                 .categoryId(categoryId)
                 .build();
 

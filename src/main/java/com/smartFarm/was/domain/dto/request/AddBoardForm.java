@@ -10,6 +10,6 @@ public class AddBoardForm {
 
     private String boardTitle;
     private String boardContent;
-    private String boardSecret;
+    private String boardStatus;
     private Long categoryId;
 }

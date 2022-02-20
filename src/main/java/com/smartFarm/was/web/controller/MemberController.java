@@ -1,7 +1,7 @@
 package com.smartFarm.was.web.controller;
 
 import com.smartFarm.was.domain.dto.request.LoginForm;
-import com.smartFarm.was.domain.dto.response.MemberDto;
+import com.smartFarm.was.domain.dto.response.member.MemberDto;
 import com.smartFarm.was.web.config.security.context.MemberContext;
 import com.smartFarm.was.domain.dto.response.Result;
 import com.smartFarm.was.domain.dto.request.JoinForm;

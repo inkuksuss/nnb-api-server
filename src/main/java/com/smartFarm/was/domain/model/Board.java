@@ -2,8 +2,6 @@ package com.smartFarm.was.domain.model;
 
 import com.smartFarm.was.domain.dto.request.AddBoardForm;
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-import lombok.Setter;
 
 import java.sql.Timestamp;
 
@@ -17,7 +15,6 @@ public class Board {
     private long boardView;
     private String boardTitle;
     private String boardContent;
-    private String boardSecret;
     private String boardStatus;
     private Timestamp boardCreated;
     private Timestamp boardLastUpdated;
@@ -28,8 +25,7 @@ public class Board {
         board.categoryId = addBoardForm.getCategoryId();
         board.boardTitle = addBoardForm.getBoardTitle();
         board.boardContent = addBoardForm.getBoardContent();
-        board.boardSecret = addBoardForm.getBoardSecret();
-        board.boardStatus = "a";
+        board.boardStatus = addBoardForm.getBoardStatus();
         board.boardView = 0;
         board.boardCreated = new Timestamp(System.currentTimeMillis());
         return board;

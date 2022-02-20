@@ -2,8 +2,10 @@ package com.smartFarm.was.web.controller;
 
 import com.smartFarm.was.domain.dto.request.AddBoardForm;
 import com.smartFarm.was.domain.dto.response.Result;
-import com.smartFarm.was.domain.dto.response.boardsDto;
+import com.smartFarm.was.domain.dto.response.board.boardDetailDto;
+import com.smartFarm.was.domain.dto.response.board.boardsDto;
 import com.smartFarm.was.domain.model.Member;
+import com.smartFarm.was.web.exception.custom.DataNotFoundException;
 import com.smartFarm.was.web.service.BoardService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -15,6 +17,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 
 @Slf4j
@@ -46,5 +49,12 @@ public class BoardController {
         Member member = (Member) httpServletRequest.getAttribute("member");
         boardService.addBoard(addBoardForm, member.getMemberId());
         return new ResponseEntity<>(new Result<>("success"), HttpStatus.OK);
+    }
+
+    @GetMapping("/detail/{id}")
+    public ResponseEntity<Result<boardDetailDto>> boardDetails(HttpServletRequest httpServletRequest, @PathVariable("id") long boardId) throws DataNotFoundException {
+        Member member = (Member) httpServletRequest.getAttribute("member");
+        boardDetailDto boardDetailDto = boardService.findBoardDetail(boardId, member.getMemberId()).orElseThrow(() -> new DataNotFoundException("게시물이 존재하지 않습니다."));
+        return new ResponseEntity<>(new Result<>(boardDetailDto), HttpStatus.OK);
     }
 }
