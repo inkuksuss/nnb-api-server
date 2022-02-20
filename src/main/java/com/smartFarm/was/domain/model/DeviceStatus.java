@@ -4,10 +4,10 @@ import java.sql.Timestamp;
 
 public class DeviceStatus {
 
-    private Integer deviceId;
-    private Integer deviceOIType;
-    private Integer deviceAuto;
-    private Integer deviceIntValue;
+    private long deviceId;
+    private long deviceOIType;
+    private long deviceAuto;
+    private int deviceIntValue;
     private String deviceBoolValue;
     private Timestamp deviceCreated;
     private String status;

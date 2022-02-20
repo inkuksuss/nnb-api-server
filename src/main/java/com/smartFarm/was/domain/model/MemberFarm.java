@@ -4,8 +4,8 @@ import java.sql.Timestamp;
 
 public class MemberFarm {
 
-    private Integer farmId;
-    private Integer memberId;
+    private long farmId;
+    private long memberId;
     private Timestamp fmCreated;
     private String status;
     private String authority;

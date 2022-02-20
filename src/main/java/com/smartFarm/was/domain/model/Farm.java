@@ -4,8 +4,8 @@ import java.sql.Timestamp;
 
 public class Farm {
 
-    private Integer farmId;
-    private Integer typeId;
+    private long farmId;
+    private long typeId;
     private String farmName;
     private String farmAddress;
     private Timestamp farmCreated;

@@ -6,15 +6,15 @@ import java.sql.Timestamp;
 public class boardsDto {
 
     private String memberName;
-    private Integer boardView;
     private String boardTitle;
+    private long boardView;
     private Timestamp boardCreated;
 
     public String getMemberName() {
         return memberName;
     }
 
-    public Integer getBoardView() {
+    public long getBoardView() {
         return boardView;
     }
 

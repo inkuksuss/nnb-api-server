@@ -4,9 +4,9 @@ import java.sql.Timestamp;
 
 public class Data {
 
-    private Integer deviceId;
-    private Integer deviceOIId;
-    private Timestamp dataCreated;
-    private Integer dataIntValue;
+    private long deviceId;
+    private long deviceOIId;
+    private long dataIntValue;
     private String deviceBoolValue;
+    private Timestamp dataCreated;
 }

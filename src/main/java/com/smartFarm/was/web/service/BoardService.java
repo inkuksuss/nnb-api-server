@@ -10,8 +10,8 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-@Service
 @Slf4j
+@Service
 public class BoardService {
 
     private final BoardRepository boardRepository;
@@ -21,7 +21,7 @@ public class BoardService {
     }
 
     public void addBoard(AddBoardForm addBoardForm, Long memberId) {
-        Board board = Board.ofAddBoardFormAndMemberId(addBoardForm, memberId);
+        Board board = Board.of(addBoardForm, memberId);
         boardRepository.add(board);
     }
 
@@ -32,3 +32,4 @@ public class BoardService {
         return boardRepository.getAllFAQ();
     }
 }
+

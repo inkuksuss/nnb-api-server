@@ -4,8 +4,8 @@ import java.sql.Timestamp;
 
 public class FarmDevice {
 
-    private Integer farmId;
-    private Integer deviceId;
+    private long farmId;
+    private long deviceId;
     private Timestamp fdCreated;
     private String authority;
     private String status;

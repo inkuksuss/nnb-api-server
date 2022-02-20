@@ -14,7 +14,7 @@ public class Board {
     private long boardId;
     private long memberId;
     private long categoryId;
-    private Integer boardView;
+    private long boardView;
     private String boardTitle;
     private String boardContent;
     private String boardSecret;
@@ -22,7 +22,7 @@ public class Board {
     private Timestamp boardCreated;
     private Timestamp boardLastUpdated;
 
-    public static Board ofAddBoardFormAndMemberId(AddBoardForm addBoardForm, long memberId) {
+    public static Board of(AddBoardForm addBoardForm, long memberId) {
         Board board = new Board();
         board.memberId = memberId;
         board.categoryId = addBoardForm.getCategoryId();

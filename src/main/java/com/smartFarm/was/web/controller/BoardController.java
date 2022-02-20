@@ -42,9 +42,9 @@ public class BoardController {
     }
 
     @PostMapping("/add")
-    public ResponseEntity<Result<String>> addBoard(@RequestBody AddBoardForm addBoardForm) {
-        Long memberId = 18L;
-        boardService.addBoard(addBoardForm, memberId);
+    public ResponseEntity<Result<String>> addBoard(HttpServletRequest httpServletRequest, @RequestBody AddBoardForm addBoardForm) {
+        Member member = (Member) httpServletRequest.getAttribute("member");
+        boardService.addBoard(addBoardForm, member.getMemberId());
         return new ResponseEntity<>(new Result<>("success"), HttpStatus.OK);
     }
 }

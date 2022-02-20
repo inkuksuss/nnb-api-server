@@ -4,11 +4,11 @@ import java.sql.Timestamp;
 
 public class Comment {
 
-    private Integer commentId;
-    private Integer boardId;
-    private Integer memberId;
+    private long commentId;
+    private long boardId;
+    private long memberId;
     private String commentContent;
+    private String status;
     private Timestamp commentCreated;
     private Timestamp commentLastUpdated;
-    private String status;
 }
