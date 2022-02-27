@@ -5,7 +5,7 @@
 
 <mapper namespace="com.smartFarm.was.web.repository.BoardRepository">
 
-    <select id="getAllNotice" resultType="com.smartFarm.was.domain.dto.response.board.boardsDto">
+    <select id="findAllNotice" resultType="com.smartFarm.was.domain.dto.response.board.BoardsDto">
         SELECT
             board_title,
             board_created,
@@ -18,7 +18,7 @@
         ORDER BY board_created DESC
     </select>
 
-    <select id="getAllFAQ" resultType="com.smartFarm.was.domain.dto.response.board.boardsDto">
+    <select id="findAllFAQ" resultType="com.smartFarm.was.domain.dto.response.board.BoardsDto">
         SELECT
             board_title,
             board_created,
@@ -52,7 +52,7 @@
                     )
     </insert>
 
-    <select id="findByIdDetail" parameterType="long" resultType="com.smartFarm.was.domain.dto.response.board.boardDetailDto">
+    <select id="findByIdDetail" parameterType="long" resultType="com.smartFarm.was.domain.dto.response.board.BoardDetailDto">
         SELECT
             board_title,
             board_content,
@@ -71,4 +71,42 @@
         WHERE board_id = #{boardId}
         LIMIT 1;
     </select>
+    
+    <delete id="deleteByIds" parameterType="long">
+        DELETE
+        FROM
+             board
+        WHERE
+              board_id = #{boardId} AND member_id = #{memberId}
+    </delete>
+
+    <update id="updateByUpdateForm" parameterType="com.smartFarm.was.domain.dto.request.board.UpdateBoardForm">
+        UPDATE
+            board
+        SET
+            category_id = #{categoryId},
+            board_title = #{boardTitle},
+            board_content = #{boardContent},
+            board_status = #{boardStatus},
+            board_last_updated = #{boardLastUpdated}
+        WHERE
+            board_id = #{boardId} AND member_id = #{memberId}
+        <selectKey keyColumn="board_id" resultType="com.smartFarm.was.domain.dto.response.board.BoardDetailDto">
+            SELECT
+                board_title,
+                board_content,
+                board_created,
+                board_last_updated,
+                board_status,
+                board_view,
+                board.member_id,
+                member_name,
+                category_value
+            FROM board
+                INNER JOIN member
+                    ON board.member_id = member.member_id
+                INNER JOIN board_category
+                    ON board.category_id = board_category.category_id
+        </selectKey>
+    </update>
 </mapper>

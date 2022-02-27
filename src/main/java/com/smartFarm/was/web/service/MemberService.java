@@ -1,7 +1,7 @@
 package com.smartFarm.was.web.service;
 
 import com.smartFarm.was.domain.model.Member;
-import com.smartFarm.was.domain.dto.request.JoinForm;
+import com.smartFarm.was.domain.dto.request.member.JoinForm;
 import com.smartFarm.was.web.repository.MemberRepository;
 import com.smartFarm.was.web.exception.custom.ExistMemberException;
 import com.smartFarm.was.web.config.security.context.MemberContext;
@@ -12,6 +12,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,14 +23,15 @@ public class MemberService implements UserDetailsService {
 
     private final MemberRepository memberRepository;
 
-    private final String USER_AUTHORITY = "ROLE_USER";
-    private final String ADMIN_AUTHORITY = "ROLE_ADMIN";
+    private final static String USER_AUTHORITY = "ROLE_USER";
+    private final static String ADMIN_AUTHORITY = "ROLE_ADMIN";
 
     public MemberService(MemberRepository memberRepository) {
         this.memberRepository = memberRepository;
     }
 
     @Override
+    @Transactional(readOnly = true)
     public UserDetails loadUserByUsername(String memberEmail) throws UsernameNotFoundException {
         Member existedMember = memberRepository.findByEmail(memberEmail);
 
@@ -44,6 +46,7 @@ public class MemberService implements UserDetailsService {
         return memberContext;
     }
 
+    @Transactional
     public void addMember(JoinForm joinForm) {
         Member existedMember = memberRepository.findByEmail(joinForm.getMemberEmail());
 

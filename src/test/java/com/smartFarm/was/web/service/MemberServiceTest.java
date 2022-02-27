@@ -1,6 +1,6 @@
 package com.smartFarm.was.web.service;
 
-import com.smartFarm.was.domain.dto.request.JoinForm;
+import com.smartFarm.was.domain.dto.request.member.JoinForm;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,8 +24,8 @@ public class MemberServiceTest {
     void addMember() {
         JoinForm build = JoinForm.builder().
                 memberAddress("상동").
-                memberEmail("1@naver.com").
-                memberName("inguk").
+                memberEmail("3@naver.com").
+                memberName("sua").
                 memberAuthority("ROLE_USER").
                 memberPhone("010").
                 memberBirthday(new Timestamp(System.currentTimeMillis())).

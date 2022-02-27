@@ -1,8 +1,9 @@
 package com.smartFarm.was.web.repository;
 
 
-import com.smartFarm.was.domain.dto.response.board.boardDetailDto;
-import com.smartFarm.was.domain.dto.response.board.boardsDto;
+import com.smartFarm.was.domain.dto.request.board.UpdateBoardForm;
+import com.smartFarm.was.domain.dto.response.board.BoardDetailDto;
+import com.smartFarm.was.domain.dto.response.board.BoardsDto;
 import com.smartFarm.was.domain.model.Board;
 import org.apache.ibatis.annotations.Mapper;
 import org.springframework.stereotype.Repository;
@@ -14,8 +15,15 @@ import java.util.Optional;
 @Repository
 public interface BoardRepository {
 
-    List<boardsDto> findAllNotice();
-    List<boardsDto> findAllFAQ();
+    List<BoardsDto> findAllNotice();
+
+    List<BoardsDto> findAllFAQ();
+
     void add(Board board);
-    Optional<boardDetailDto> findByIdDetail(long boardId);
+
+    Optional<BoardDetailDto> findByIdDetail(long boardId);
+
+    int deleteByIds(long boardId, long memberId);
+
+    int updateByUpdateForm(UpdateBoardForm updateBoardForm);
 }

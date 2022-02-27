@@ -1,16 +1,15 @@
 package com.smartFarm.was.web.controller;
 
-import com.smartFarm.was.domain.dto.request.AddBoardForm;
-import com.smartFarm.was.domain.dto.response.board.boardDetailDto;
-import com.smartFarm.was.domain.dto.response.board.boardsDto;
+import com.smartFarm.was.domain.dto.request.board.AddBoardForm;
+import com.smartFarm.was.domain.dto.response.board.BoardsDto;
 import com.smartFarm.was.web.service.BoardService;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.ibatis.javassist.NotFoundException;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.List;
-import java.util.Optional;
 
 
 @Slf4j
@@ -22,13 +21,13 @@ class BoardControllerTest {
 
     @Test
     void noticeBoards() {
-        List<boardsDto> noticeBoards = boardService.getNoticeBoards();
+        List<BoardsDto> noticeBoards = boardService.getNoticeBoards();
         log.info("boards = {}", noticeBoards.toString());
     }
 
     @Test
     void faqBoards() {
-        List<boardsDto> faqBoards = boardService.getFAQBoards();
+        List<BoardsDto> faqBoards = boardService.getFAQBoards();
         log.info("boards = {}", faqBoards.toString());
     }
 
@@ -45,8 +44,8 @@ class BoardControllerTest {
     }
 
     @Test
-    void getDetail() {
-        Optional<boardDetailDto> boardDetail = boardService.findBoardDetail(28l, 34l);
+    void getDetail() throws NotFoundException {
+        BoardService.DetailResult boardDetail = boardService.findBoardDetail(28l, 34l);
         log.info("boardDetail={}", boardDetail.toString());
     }
 }

@@ -1,10 +1,10 @@
 package com.smartFarm.was.web.controller;
 
-import com.smartFarm.was.domain.dto.request.LoginForm;
+import com.smartFarm.was.domain.dto.request.member.LoginForm;
 import com.smartFarm.was.domain.dto.response.member.MemberDto;
 import com.smartFarm.was.web.config.security.context.MemberContext;
 import com.smartFarm.was.domain.dto.response.Result;
-import com.smartFarm.was.domain.dto.request.JoinForm;
+import com.smartFarm.was.domain.dto.request.member.JoinForm;
 import com.smartFarm.was.web.config.security.filter.JwtFilter;
 import com.smartFarm.was.web.config.security.provider.TokenProvider;
 import com.smartFarm.was.web.service.MemberService;

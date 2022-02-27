@@ -19,7 +19,11 @@ public class MemberFromAuthenticationInterceptor implements HandlerInterceptor {
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-            Map<String, Object> principal = (LinkedHashMap) authentication.getPrincipal();
+
+            if (authentication == null)  return false;
+            if (!(authentication.getPrincipal() instanceof Map)) return false;
+
+            Map<String, ? extends Object> principal = (LinkedHashMap) authentication.getPrincipal();
             Integer memberId = (Integer) principal.get("memberId");
             Member member = Member.of(
                     memberId.longValue(),
