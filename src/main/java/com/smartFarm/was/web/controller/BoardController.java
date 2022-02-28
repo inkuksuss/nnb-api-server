@@ -6,6 +6,7 @@ import com.smartFarm.was.domain.dto.response.Result;
 import com.smartFarm.was.domain.dto.response.board.BoardDetailDto;
 import com.smartFarm.was.domain.dto.response.board.BoardsDto;
 import com.smartFarm.was.domain.model.Member;
+import com.smartFarm.was.web.exception.ErrorResult;
 import com.smartFarm.was.web.service.BoardService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -19,6 +20,7 @@ import java.sql.Timestamp;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 
 @Slf4j
@@ -71,20 +73,21 @@ public class BoardController {
     }
 
     @GetMapping("/delete/{id}")
-    public ResponseEntity<Result<String>> deleteBoard(HttpServletRequest httpServletRequest, @PathVariable("id") long boardId) {
+    public void deleteBoard(HttpServletRequest httpServletRequest, @PathVariable("id") long boardId) {
         Member member = (Member) httpServletRequest.getAttribute("member");
 
         boardService.delete(boardId, member.getMemberId());
+
+        return;
     }
 
     @PostMapping("/update/{id}")
-    public ResponseEntity<Result<String>> updateBoard(HttpServletRequest httpServletRequest,
+    public ResponseEntity<Result<Map<String, ? extends BoardDetailDto>>> updateBoard(HttpServletRequest httpServletRequest,
                                                       @RequestParam("categoryId") long categoryId,
                                                       @RequestParam("boardTitle") String boardTitle,
                                                       @RequestParam("boardContent") String boardContent,
                                                       @RequestParam("boardStatus") String boardStatus,
-                                                      @PathVariable("id") long boardId)
-    {
+                                                      @PathVariable("id") long boardId) throws NotFoundException {
         Member member = (Member) httpServletRequest.getAttribute("member");
         UpdateBoardForm updateBoardForm = UpdateBoardForm.builder()
                 .boardId(boardId)
@@ -96,8 +99,10 @@ public class BoardController {
                 .boardLastUpdated(new Timestamp(System.currentTimeMillis()))
                 .build();
 
-        boardService.update(updateBoardForm);
-        return new ResponseEntity<>()
-    }
 
+        Optional<BoardDetailDto> updatedDetail = boardService.update(updateBoardForm);
+        Map<String, BoardDetailDto> mapper = new HashMap<>();
+        mapper.put("detail", updatedDetail.get());
+        return new ResponseEntity<>(new Result(mapper), HttpStatus.OK);
+    }
 }

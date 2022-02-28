@@ -91,22 +91,5 @@
             board_last_updated = #{boardLastUpdated}
         WHERE
             board_id = #{boardId} AND member_id = #{memberId}
-        <selectKey keyColumn="board_id" resultType="com.smartFarm.was.domain.dto.response.board.BoardDetailDto">
-            SELECT
-                board_title,
-                board_content,
-                board_created,
-                board_last_updated,
-                board_status,
-                board_view,
-                board.member_id,
-                member_name,
-                category_value
-            FROM board
-                INNER JOIN member
-                    ON board.member_id = member.member_id
-                INNER JOIN board_category
-                    ON board.category_id = board_category.category_id
-        </selectKey>
     </update>
 </mapper>

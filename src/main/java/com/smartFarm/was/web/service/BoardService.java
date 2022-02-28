@@ -57,12 +57,17 @@ public class BoardService {
 
     @Transactional
     public void delete(long boardId, long memberId) {
-        boardRepository.deleteByIds(boardId, memberId);
+        int result = boardRepository.deleteByIds(boardId, memberId);
+        if (result == 0) throw new IllegalArgumentException();
     }
 
     @Transactional
-    public void update(UpdateBoardForm updateBoardForm) {
-        boardRepository.updateByUpdateForm(updateBoardForm);
+    public Optional<BoardDetailDto> update(UpdateBoardForm updateBoardForm) throws NotFoundException {
+        long boardId = updateBoardForm.getBoardId();
+
+        if (boardRepository.updateByUpdateForm(updateBoardForm) != 1) return Optional.empty();
+
+        return Optional.of(boardRepository.findByIdDetail(boardId).orElseThrow(() -> new NotFoundException("게시물을 찾을 수 없습니다.")));
     }
 
     @Getter

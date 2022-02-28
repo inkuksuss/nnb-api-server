@@ -38,10 +38,10 @@ public class ExControllerAdvice {
     }
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    @ExceptionHandler(NotFoundException.class)
+    @ExceptionHandler(AccessDeniedException.class)
     public ErrorResult Access(AccessDeniedException e) {
         log.error("[exceptionHandle] ex", e);
-        return new ErrorResult(HttpStatus.BAD_REQUEST, e.getMessage());
+        return new ErrorResult(HttpStatus.FORBIDDEN, e.getMessage());
     }
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)

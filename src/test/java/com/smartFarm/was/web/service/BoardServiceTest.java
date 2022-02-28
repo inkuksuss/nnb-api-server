@@ -1,6 +1,7 @@
 package com.smartFarm.was.web.service;
 
 import com.smartFarm.was.domain.dto.request.board.AddBoardForm;
+import com.smartFarm.was.web.repository.BoardRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.javassist.NotFoundException;
 import org.junit.jupiter.api.Test;
@@ -14,6 +15,9 @@ class BoardServiceTest {
 
     @Autowired
     BoardService boardService;
+
+    @Autowired
+    BoardRepository boardRepository;
 
     @Test
     void addNoticeBoard() {
@@ -62,7 +66,9 @@ class BoardServiceTest {
     }
 
     @Test
-    void getNoticeBoards() {
+    void deleteBoards() {
+        int i = boardRepository.deleteByIds(32l, 34l);
+        System.out.println(i);
     }
 
     @Test
