@@ -1,6 +1,6 @@
 package com.smartFarm.was.domain.model;
 
-import com.smartFarm.was.domain.dto.request.board.AddBoardForm;
+import com.smartFarm.was.domain.request.board.AddBoardForm;
 import lombok.Getter;
 
 import java.sql.Timestamp;

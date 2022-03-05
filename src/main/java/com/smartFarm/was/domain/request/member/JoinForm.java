@@ -1,9 +1,8 @@
-package com.smartFarm.was.domain.dto.request.member;
+package com.smartFarm.was.domain.request.member;
 
 
 import lombok.Builder;
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;

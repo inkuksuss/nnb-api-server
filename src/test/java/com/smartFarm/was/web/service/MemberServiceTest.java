@@ -1,6 +1,6 @@
 package com.smartFarm.was.web.service;
 
-import com.smartFarm.was.domain.dto.request.member.JoinForm;
+import com.smartFarm.was.domain.request.member.JoinForm;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

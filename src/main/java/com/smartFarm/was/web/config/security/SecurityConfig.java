@@ -56,7 +56,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter implements WebM
                 .sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 
-
         http
                 .exceptionHandling()
                 .authenticationEntryPoint(jwtAuthenticationEntryPoint)

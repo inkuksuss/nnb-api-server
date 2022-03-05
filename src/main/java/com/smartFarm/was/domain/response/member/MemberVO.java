@@ -1,12 +1,12 @@
-package com.smartFarm.was.domain.dto.response.member;
+package com.smartFarm.was.domain.response.member;
 
-import com.smartFarm.was.web.config.security.context.MemberContext;
+import com.smartFarm.was.domain.dto.member.MemberDto;
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter
 @Setter
-public class MemberDto {
+public class MemberVO {
 
     private String memberName;
     private String memberEmail;
@@ -15,8 +15,8 @@ public class MemberDto {
     private String memberAuthority;
     private String token;
 
-    public static MemberDto from(MemberContext memberContext, String token) {
-        MemberDto memberDto = new MemberDto();
+    public static MemberVO from(MemberDto memberContext, String token) {
+        MemberVO memberDto = new MemberVO();
         memberDto.memberName = memberContext.getMember().getMemberName();
         memberDto.memberAddress = memberContext.getMember().getMemberAddress();
         memberDto.memberAuthority = memberContext.getMember().getMemberAuthority();

@@ -1,16 +1,18 @@
-package com.smartFarm.was.web.config.security.context;
+package com.smartFarm.was.domain.dto.member;
 
 import com.smartFarm.was.domain.model.Member;
+import lombok.ToString;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import java.util.Collection;
 
-public class MemberContext implements UserDetails {
+@ToString
+public class MemberDto implements UserDetails {
 
     private final Member member;
     private final Collection<? extends GrantedAuthority> authorities;
 
-    public MemberContext(Member member, Collection<? extends GrantedAuthority> authorities) {
+    public MemberDto(Member member, Collection<? extends GrantedAuthority> authorities) {
         this.member = member;
         this.authorities = authorities;
     }
@@ -54,12 +56,5 @@ public class MemberContext implements UserDetails {
     @Override
     public boolean isEnabled() {
         return true;
-    }
-
-    @Override
-    public String toString() {
-        return "MemberContext{" +
-                "member=" + member +
-                '}';
     }
 }

@@ -1,18 +1,17 @@
 package com.smartFarm.was.web.controller;
 
-import com.smartFarm.was.domain.dto.request.member.LoginForm;
-import com.smartFarm.was.domain.dto.response.member.MemberDto;
-import com.smartFarm.was.web.config.security.context.MemberContext;
-import com.smartFarm.was.domain.dto.response.Result;
-import com.smartFarm.was.domain.dto.request.member.JoinForm;
+import com.smartFarm.was.domain.request.member.LoginForm;
+import com.smartFarm.was.domain.response.ResultCode;
+import com.smartFarm.was.domain.response.member.MemberVO;
+import com.smartFarm.was.domain.dto.member.MemberDto;
+import com.smartFarm.was.domain.response.ResultVO;
+import com.smartFarm.was.domain.request.member.JoinForm;
 import com.smartFarm.was.web.config.security.filter.JwtFilter;
 import com.smartFarm.was.web.config.security.provider.TokenProvider;
 import com.smartFarm.was.web.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.core.Authentication;
@@ -20,6 +19,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+
 
 
 @Slf4j
@@ -34,17 +34,17 @@ public class MemberController {
 
     // 회원가입
     @PostMapping("/join")
-    public ResponseEntity<Result<String>> join(@RequestBody @Validated JoinForm joinForm) {
+    public ResultVO join(@RequestBody @Validated JoinForm joinForm) {
 
         joinForm.setMemberPassword(passwordEncoder.encode(joinForm.getMemberPassword()));
         memberService.addMember(joinForm);
 
-        return ResponseEntity.ok().body(new Result<>("success"));
+        return new ResultVO<>(ResultCode.SUCCESS.getCode(), ResultCode.SUCCESS.getMessage(), null);
     }
 
     // 로그인
     @PostMapping("/login")
-    public ResponseEntity<Result<MemberDto>> login(@RequestBody @Validated LoginForm loginForm) {
+    public ResultVO login(@RequestBody @Validated LoginForm loginForm) {
 
         UsernamePasswordAuthenticationToken authenticationToken =
                 new UsernamePasswordAuthenticationToken(loginForm.getMemberEmail(), loginForm.getMemberPassword());
@@ -56,9 +56,10 @@ public class MemberController {
 
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.add(JwtFilter.AUTHORIZATION_HEADER, "Bearer " + token);
-        MemberContext memberContext = (MemberContext) authentication.getPrincipal();
-        MemberDto memberDto = MemberDto.from(memberContext, token);
 
-        return new ResponseEntity<>(new Result<>(memberDto), httpHeaders, HttpStatus.OK);
+        MemberDto memberDto = (MemberDto) authentication.getPrincipal();
+        MemberVO memberVO = MemberVO.from(memberDto, token);
+
+        return new ResultVO<>(ResultCode.SUCCESS.getCode(), ResultCode.SUCCESS.getMessage(), memberVO);
     }
 }

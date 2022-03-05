@@ -1,6 +1,5 @@
-package com.smartFarm.was.domain.dto.response.board;
+package com.smartFarm.was.domain.dto.board;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.ToString;

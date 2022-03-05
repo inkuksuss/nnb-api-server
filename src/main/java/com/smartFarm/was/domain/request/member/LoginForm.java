@@ -1,4 +1,4 @@
-package com.smartFarm.was.domain.dto.request.member;
+package com.smartFarm.was.domain.request.member;
 
 
 import lombok.Getter;

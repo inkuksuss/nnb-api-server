@@ -1,10 +1,10 @@
 package com.smartFarm.was.web.service;
 
 import com.smartFarm.was.domain.model.Member;
-import com.smartFarm.was.domain.dto.request.member.JoinForm;
+import com.smartFarm.was.domain.request.member.JoinForm;
 import com.smartFarm.was.web.repository.MemberRepository;
 import com.smartFarm.was.web.exception.custom.ExistMemberException;
-import com.smartFarm.was.web.config.security.context.MemberContext;
+import com.smartFarm.was.domain.dto.member.MemberDto;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -42,7 +42,7 @@ public class MemberService implements UserDetailsService {
         List<GrantedAuthority> roles = new ArrayList<>();
         roles.add(new SimpleGrantedAuthority(existedMember.getMemberAuthority()));
 
-        MemberContext memberContext = new MemberContext(existedMember, roles);
+        MemberDto memberContext = new MemberDto(existedMember, roles);
         return memberContext;
     }
 

@@ -1,4 +1,4 @@
-package com.smartFarm.was.domain.dto.request.board;
+package com.smartFarm.was.domain.request.board;
 
 import lombok.*;
 

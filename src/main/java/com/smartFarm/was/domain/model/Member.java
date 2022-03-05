@@ -1,6 +1,6 @@
 package com.smartFarm.was.domain.model;
 
-import com.smartFarm.was.domain.dto.request.member.JoinForm;
+import com.smartFarm.was.domain.request.member.JoinForm;
 import lombok.*;
 
 import java.io.Serializable;

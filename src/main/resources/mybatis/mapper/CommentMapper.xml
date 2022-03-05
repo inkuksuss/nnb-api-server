@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.smartFarm.was.web.repository.CommentRepository">
+
+    <insert id="add" parameterType="com.smartFarm.was.domain.model.Comment">
+        INSERT INTO comment (
+                            board_id,
+                            member_id,
+                            comment_content,
+                            comment_status,
+                            comment_created
+                            )
+        VALUES (
+                #{boardId},
+                #{memberId},
+                #{commentContent},
+                #{commentStatus},
+                #{commentCreated}
+                )
+        <selectKey keyProperty="commentId,boardId,memberId,commentContent,commentCreated,commentLastUpdated,commentStatus" order="AFTER" resultType="com.smartFarm.was.domain.model.Comment">
+            SELECT
+                   comment_id,
+                   board_id,
+                   member_id,
+                   comment_content,
+                   comment_created,
+                   comment_last_updated,
+                   comment_status
+            FROM comment
+            WHERE comment_created = #{commentCreated}
+        </selectKey>
+    </insert>
+</mapper>
+<!--        keyColumn="comment_id,board_id,member_id,comment_content,comment_created,comment_last_updated,comment_status"-->

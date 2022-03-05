@@ -1,7 +1,7 @@
 package com.smartFarm.was.web.controller;
 
-import com.smartFarm.was.domain.dto.request.board.AddBoardForm;
-import com.smartFarm.was.domain.dto.response.board.BoardsDto;
+import com.smartFarm.was.domain.request.board.AddBoardForm;
+import com.smartFarm.was.domain.response.board.BoardVO;
 import com.smartFarm.was.web.service.BoardService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.javassist.NotFoundException;
@@ -21,13 +21,13 @@ class BoardControllerTest {
 
     @Test
     void noticeBoards() {
-        List<BoardsDto> noticeBoards = boardService.getNoticeBoards();
+        List<BoardVO> noticeBoards = boardService.getNoticeBoards();
         log.info("boards = {}", noticeBoards.toString());
     }
 
     @Test
     void faqBoards() {
-        List<BoardsDto> faqBoards = boardService.getFAQBoards();
+        List<BoardVO> faqBoards = boardService.getFAQBoards();
         log.info("boards = {}", faqBoards.toString());
     }
 
@@ -45,7 +45,7 @@ class BoardControllerTest {
 
     @Test
     void getDetail() throws NotFoundException {
-        BoardService.DetailResult boardDetail = boardService.findBoardDetail(28l, 34l);
-        log.info("boardDetail={}", boardDetail.toString());
+//        BoardService.DetailResult boardDetail = boardService.findBoardDetail(28l, 34l);
+//        log.info("boardDetail={}", boardDetail.toString());
     }
 }

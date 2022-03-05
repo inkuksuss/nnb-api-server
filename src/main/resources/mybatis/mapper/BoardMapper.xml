@@ -5,7 +5,7 @@
 
 <mapper namespace="com.smartFarm.was.web.repository.BoardRepository">
 
-    <select id="findAllNotice" resultType="com.smartFarm.was.domain.dto.response.board.BoardsDto">
+    <select id="findAllNotice" resultType="com.smartFarm.was.domain.response.board.BoardVO">
         SELECT
             board_title,
             board_created,
@@ -18,7 +18,7 @@
         ORDER BY board_created DESC
     </select>
 
-    <select id="findAllFAQ" resultType="com.smartFarm.was.domain.dto.response.board.BoardsDto">
+    <select id="findAllFAQ" resultType="com.smartFarm.was.domain.response.board.BoardVO">
         SELECT
             board_title,
             board_created,
@@ -52,7 +52,7 @@
                     )
     </insert>
 
-    <select id="findByIdDetail" parameterType="long" resultType="com.smartFarm.was.domain.dto.response.board.BoardDetailDto">
+    <select id="findByIdDetail" parameterType="long" resultType="com.smartFarm.was.domain.dto.board.BoardDetailDto">
         SELECT
             board_title,
             board_content,
@@ -68,6 +68,8 @@
                             ON board.member_id = member.member_id
                  INNER JOIN board_category
                             ON board.category_id = board_category.category_id
+                 INNER JOIN comment
+                            ON board.board_id = comment.board_id
         WHERE board_id = #{boardId}
         LIMIT 1;
     </select>
@@ -80,7 +82,7 @@
               board_id = #{boardId} AND member_id = #{memberId}
     </delete>
 
-    <update id="updateByUpdateForm" parameterType="com.smartFarm.was.domain.dto.request.board.UpdateBoardForm">
+    <update id="updateByUpdateForm" parameterType="com.smartFarm.was.domain.request.board.UpdateBoardForm">
         UPDATE
             board
         SET

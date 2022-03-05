@@ -1,16 +1,14 @@
 package com.smartFarm.was.web.service;
 
 
-import com.smartFarm.was.domain.dto.request.board.UpdateBoardForm;
-import com.smartFarm.was.domain.dto.response.board.BoardDetailDto;
-import com.smartFarm.was.domain.dto.response.board.BoardsDto;
+import com.smartFarm.was.domain.model.sub.Status;
+import com.smartFarm.was.domain.response.board.BoardDetailVO;
+import com.smartFarm.was.domain.dto.board.UpdateBoardDetailDto;
+import com.smartFarm.was.domain.dto.board.BoardDetailDto;
+import com.smartFarm.was.domain.response.board.BoardVO;
 import com.smartFarm.was.domain.model.Board;
-import com.smartFarm.was.domain.model.sub.BoardStatus;
 import com.smartFarm.was.web.repository.BoardRepository;
-import com.smartFarm.was.domain.dto.request.board.AddBoardForm;
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-import lombok.ToString;
+import com.smartFarm.was.domain.request.board.AddBoardForm;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.javassist.NotFoundException;
 import org.springframework.stereotype.Service;
@@ -35,23 +33,23 @@ public class BoardService {
     }
 
     @Transactional(readOnly = true)
-    public List<BoardsDto> getNoticeBoards() {
+    public List<BoardVO> getNoticeBoards() {
         return boardRepository.findAllNotice();
     }
 
     @Transactional(readOnly = true)
-    public List<BoardsDto> getFAQBoards() {
+    public List<BoardVO> getFAQBoards() {
         return boardRepository.findAllFAQ();
     }
 
     @Transactional
-    public DetailResult findBoardDetail(long boardId, long memberId) throws NotFoundException {
-        BoardDetailDto boardDetailDto = boardRepository.findByIdDetail(boardId).orElseThrow(() -> new NotFoundException("게시물을 찾을 수 없습니다."));
+    public BoardDetailVO findBoardDetail(long boardId, long memberId) throws NotFoundException {
+        BoardDetailDto boardDetailVO = boardRepository.findByIdDetail(boardId).orElseThrow(() -> new NotFoundException("게시물을 찾을 수 없습니다."));
 
-        if (boardDetailDto.getBoardStatus().equals(BoardStatus.DELETE.getStatusValue())) return new DetailResult(BoardStatus.DELETE, Optional.empty());
-        else if (boardDetailDto.getMemberId() == memberId) return new DetailResult(BoardStatus.OWNER, Optional.ofNullable(boardDetailDto));
-        else if (boardDetailDto.getBoardStatus().equals(BoardStatus.PUBLIC.getStatusValue())) return new DetailResult(BoardStatus.PUBLIC, Optional.ofNullable(boardDetailDto));
-        else if (boardDetailDto.getBoardStatus().equals(BoardStatus.PRIVATE.getStatusValue())) return new DetailResult(BoardStatus.PRIVATE, Optional.empty());
+        if (boardDetailVO.getBoardStatus().equals(Status.DELETE.getStatusValue())) return new BoardDetailVO(Status.DELETE, Optional.empty());
+        else if (boardDetailVO.getMemberId() == memberId) return new BoardDetailVO(Status.OWNER, Optional.ofNullable(boardDetailVO));
+        else if (boardDetailVO.getBoardStatus().equals(Status.PUBLIC.getStatusValue())) return new BoardDetailVO(Status.PUBLIC, Optional.ofNullable(boardDetailVO));
+        else if (boardDetailVO.getBoardStatus().equals(Status.PRIVATE.getStatusValue())) return new BoardDetailVO(Status.PRIVATE, Optional.empty());
         else throw new IllegalArgumentException("잘못된 데이터입니다.");
     }
 
@@ -62,20 +60,12 @@ public class BoardService {
     }
 
     @Transactional
-    public Optional<BoardDetailDto> update(UpdateBoardForm updateBoardForm) throws NotFoundException {
-        long boardId = updateBoardForm.getBoardId();
+    public Optional<BoardDetailDto> update(UpdateBoardDetailDto updateBoardDetail) throws NotFoundException {
+        long boardId = updateBoardDetail.getBoardId();
 
-        if (boardRepository.updateByUpdateForm(updateBoardForm) != 1) return Optional.empty();
+        if (boardRepository.updateByUpdateForm(updateBoardDetail) != 1) return Optional.empty();
 
         return Optional.of(boardRepository.findByIdDetail(boardId).orElseThrow(() -> new NotFoundException("게시물을 찾을 수 없습니다.")));
-    }
-
-    @Getter
-    @ToString
-    @RequiredArgsConstructor
-    public static class DetailResult {
-        private final BoardStatus boardStatus;
-        private final Optional<BoardDetailDto> boardDetailDto;
     }
 }
 

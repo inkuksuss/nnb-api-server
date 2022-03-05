@@ -1,4 +1,4 @@
-package com.smartFarm.was.domain.dto.response.board;
+package com.smartFarm.was.domain.response.board;
 
 import lombok.Getter;
 
@@ -6,7 +6,7 @@ import java.sql.Timestamp;
 
 
 @Getter
-public class BoardsDto {
+public class BoardVO {
 
     private long boardView;
     private String memberName;

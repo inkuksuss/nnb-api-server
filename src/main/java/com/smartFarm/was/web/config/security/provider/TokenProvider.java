@@ -2,7 +2,7 @@ package com.smartFarm.was.web.config.security.provider;
 
 
 import com.smartFarm.was.web.config.security.JwtAuthenticationToken;
-import com.smartFarm.was.web.config.security.context.MemberContext;
+import com.smartFarm.was.domain.dto.member.MemberDto;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
@@ -51,7 +51,7 @@ public class TokenProvider implements InitializingBean {
 
         long now = (new Date()).getTime();
         Date validity = new Date(now + this.tokenValidityInMilliSeconds);
-        MemberContext memberContext = (MemberContext) authentication.getPrincipal();
+        MemberDto memberContext = (MemberDto) authentication.getPrincipal();
 
         return Jwts.builder()
                 .setSubject(memberContext.getUsername())
