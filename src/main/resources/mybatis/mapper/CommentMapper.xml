@@ -5,7 +5,7 @@
 
 <mapper namespace="com.smartFarm.was.web.repository.CommentRepository">
 
-    <insert id="add" parameterType="com.smartFarm.was.domain.model.Comment">
+    <insert id="add" parameterType="com.smartFarm.was.domain.dto.comment.AddCommentDto">
         INSERT INTO comment (
                             board_id,
                             member_id,
@@ -20,17 +20,24 @@
                 #{commentStatus},
                 #{commentCreated}
                 )
-        <selectKey keyProperty="commentId,boardId,memberId,commentContent,commentCreated,commentLastUpdated,commentStatus" order="AFTER" resultType="com.smartFarm.was.domain.model.Comment">
+        <selectKey keyProperty="commentId,boardId,memberId,memberName,commentContent,commentCreated,commentLastUpdated,commentStatus" order="AFTER" resultType="com.smartFarm.was.domain.dto.comment.AddCommentDto">
             SELECT
                    comment_id,
                    board_id,
-                   member_id,
+                   comment.member_id,
+                   member_name,
                    comment_content,
                    comment_created,
                    comment_last_updated,
                    comment_status
             FROM comment
-            WHERE comment_created = #{commentCreated}
+                INNER JOIN member
+                    ON member.member_id = comment.member_id
+            WHERE
+                  board_id = #{boardId}
+                  AND comment.member_id = #{memberId}
+                  AND comment_created = #{commentCreated}
+
         </selectKey>
     </insert>
 </mapper>

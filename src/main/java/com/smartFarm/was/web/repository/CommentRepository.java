@@ -1,6 +1,6 @@
 package com.smartFarm.was.web.repository;
 
-import com.smartFarm.was.domain.model.Comment;
+import com.smartFarm.was.domain.dto.comment.AddCommentDto;
 import org.apache.ibatis.annotations.Mapper;
 import org.springframework.stereotype.Repository;
 
@@ -8,6 +8,6 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface CommentRepository {
 
-    void add(Comment comment);
+    void add(AddCommentDto comment);
 }
 

@@ -14,6 +14,7 @@ import org.apache.ibatis.javassist.NotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.sql.SQLException;
 import java.util.*;
 
 @Slf4j
@@ -43,7 +44,7 @@ public class BoardService {
     }
 
     @Transactional
-    public BoardDetailVO findBoardDetail(long boardId, long memberId) throws NotFoundException {
+    public BoardDetailVO findBoardDetail(long boardId, long memberId) throws NotFoundException{
         BoardDetailDto boardDetailVO = boardRepository.findByIdDetail(boardId).orElseThrow(() -> new NotFoundException("게시물을 찾을 수 없습니다."));
 
         if (boardDetailVO.getBoardStatus().equals(Status.DELETE.getStatusValue())) return new BoardDetailVO(Status.DELETE, Optional.empty());

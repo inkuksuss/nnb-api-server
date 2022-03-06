@@ -53,6 +53,8 @@ public class DBConfig implements ApplicationRunner {
         sessionFactoryBean.setMapperLocations(resolver.getResources("classpath:mybatis/mapper/*.xml"));
         sessionFactoryBean.setTypeAliasesPackage("com.smartFarm.was.domain.model");
         sessionFactoryBean.setTypeAliasesPackage("com.smartFarm.was.domain.dto");
+        sessionFactoryBean.setTypeAliasesPackage("com.smartFarm.was.domain.request");
+        sessionFactoryBean.setTypeAliasesPackage("com.smartFarm.was.domain.response");
         return sessionFactoryBean.getObject();
     }
 

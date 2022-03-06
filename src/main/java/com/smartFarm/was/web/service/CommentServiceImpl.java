@@ -1,6 +1,6 @@
 package com.smartFarm.was.web.service;
 
-import com.smartFarm.was.domain.model.Comment;
+import com.smartFarm.was.domain.dto.comment.AddCommentDto;
 import com.smartFarm.was.domain.request.comment.AddCommentForm;
 import com.smartFarm.was.web.repository.CommentRepository;
 import lombok.RequiredArgsConstructor;
@@ -13,9 +13,9 @@ public class CommentServiceImpl implements CommentService {
     private final CommentRepository commentRepository;
 
     @Override
-    public void addComment(AddCommentForm addCommentDto, long boardId, long memberId) {
-        Comment comment = Comment.of(addCommentDto, boardId, memberId);
-        commentRepository.add(comment);
-        return;
+    public AddCommentDto addComment(AddCommentForm addCommentDto, long boardId, long memberId) {
+        AddCommentDto commentDto = AddCommentDto.of(addCommentDto, boardId, memberId);
+        commentRepository.add(commentDto);
+        return commentDto;
     }
 }

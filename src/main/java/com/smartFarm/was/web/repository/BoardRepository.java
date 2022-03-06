@@ -8,6 +8,7 @@ import com.smartFarm.was.domain.model.Board;
 import org.apache.ibatis.annotations.Mapper;
 import org.springframework.stereotype.Repository;
 
+import java.sql.SQLException;
 import java.util.List;
 import java.util.Optional;
 

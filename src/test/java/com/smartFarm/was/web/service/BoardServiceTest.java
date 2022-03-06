@@ -1,6 +1,7 @@
 package com.smartFarm.was.web.service;
 
 import com.smartFarm.was.domain.request.board.AddBoardForm;
+import com.smartFarm.was.domain.response.board.BoardDetailVO;
 import com.smartFarm.was.web.repository.BoardRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.javassist.NotFoundException;
@@ -60,13 +61,13 @@ class BoardServiceTest {
     @Test
     void getDetails() throws NotFoundException {
         //given
-//        BoardService.DetailResult boardDetail = boardService.findBoardDetail(37l, 34l);
-//        log.info("test = {}", boardDetail.toString());
+        BoardDetailVO boardDetail = boardService.findBoardDetail(33l, 35l);
+        log.info("test = {}", boardDetail.toString());
     }
 
     @Test
     void deleteBoards() {
-        int i = boardRepository.deleteByIds(32l, 34l);
+        int i = boardRepository.deleteByIds(33l, 35l);
         System.out.println(i);
     }
 

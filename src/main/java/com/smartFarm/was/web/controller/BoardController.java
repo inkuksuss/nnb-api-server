@@ -17,6 +17,7 @@ import org.apache.ibatis.javassist.NotFoundException;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.HashMap;
 import java.util.List;
@@ -67,7 +68,7 @@ public class BoardController {
         mapper.put("result", boardDetailDto.getBoardStatus().getStatusValue());
         mapper.put("detail", boardDetail);
 
-        return new ResultVO<>(ResultCode.SUCCESS.getCode(), ResultCode.SUCCESS.getMessage(), null);
+        return new ResultVO<>(ResultCode.SUCCESS.getCode(), ResultCode.SUCCESS.getMessage(), mapper);
     }
 
     @GetMapping("/delete/{id}")
