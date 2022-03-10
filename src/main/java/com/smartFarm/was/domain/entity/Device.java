@@ -1,4 +1,4 @@
-package com.smartFarm.was.domain.model;
+package com.smartFarm.was.domain.entity;
 
 public class Device {
 

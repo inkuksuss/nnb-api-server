@@ -5,7 +5,7 @@
 
 <mapper namespace="com.smartFarm.was.web.repository.BoardRepository">
 
-    <select id="findAllNotice" resultType="com.smartFarm.was.domain.response.board.BoardVO">
+    <select id="findAllNotice" resultType="com.smartFarm.was.domain.response.board.BoardResponse">
         SELECT
             board_title,
             board_created,
@@ -18,7 +18,7 @@
         ORDER BY board_created DESC
     </select>
 
-    <select id="findAllFAQ" resultType="com.smartFarm.was.domain.response.board.BoardVO">
+    <select id="findAllFAQ" resultType="com.smartFarm.was.domain.response.board.BoardResponse">
         SELECT
             board_title,
             board_created,
@@ -31,7 +31,7 @@
         ORDER BY board_created DESC
     </select>
 
-    <insert id="add" parameterType="com.smartFarm.was.domain.model.Board">
+    <insert id="add" parameterType="com.smartFarm.was.domain.entity.Board">
         INSERT INTO board
             (
              member_id,
@@ -63,10 +63,10 @@
         <result property="categoryValue" column="category_value" />
         <result property="boardCreated" column="board_created" />
         <result property="boardLastUpdated" column="board_last_updated" />
-        <collection property="commentDtoList" resultMap="CommentsMap" />
+        <collection property="commentDtoList" resultMap="CommentsMap" notNullColumn="comment_id" />
     </resultMap>
 
-    <resultMap id="CommentsMap" type="com.smartFarm.was.domain.dto.comment.CommentDto">
+    <resultMap id="CommentsMap" type="com.smartFarm.was.domain.dto.comment.CommentDto" >
         <id property="commentId" column="comment_id" />
         <result property="memberId" column="member_id" />
         <result property="memberName" column="member_name" />
@@ -93,14 +93,13 @@
                comment.comment_created,
                comment.comment_status
         FROM board
-                 LEFT JOIN comment
-                           ON board.board_id = comment.board_id
                  LEFT JOIN board_category
                            ON board.category_id = board_category.category_id
                  LEFT JOIN member
                            ON board.member_id = member.member_id
+                 LEFT JOIN comment
+                           ON board.board_id = comment.board_id
         WHERE board.board_id = #{boardId}
---         LIMIT 1;
     </select>
 
     <update id="updateByUpdateForm" parameterType="com.smartFarm.was.domain.request.board.UpdateBoardForm">

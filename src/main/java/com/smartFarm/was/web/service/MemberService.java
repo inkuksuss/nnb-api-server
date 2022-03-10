@@ -1,9 +1,9 @@
 package com.smartFarm.was.web.service;
 
-import com.smartFarm.was.domain.model.Member;
+import com.smartFarm.was.domain.entity.Member;
 import com.smartFarm.was.domain.request.member.JoinForm;
 import com.smartFarm.was.web.repository.MemberRepository;
-import com.smartFarm.was.web.exception.custom.ExistMemberException;
+import com.smartFarm.was.web.exception.custom.ExistedMemberException;
 import com.smartFarm.was.domain.dto.member.MemberDto;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.GrantedAuthority;
@@ -14,6 +14,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -32,8 +33,14 @@ public class MemberService implements UserDetailsService {
 
     @Override
     @Transactional(readOnly = true)
-    public UserDetails loadUserByUsername(String memberEmail) throws UsernameNotFoundException {
-        Member existedMember = memberRepository.findByEmail(memberEmail);
+    public UserDetails loadUserByUsername(String memberEmail) {
+        Member existedMember = null;
+
+        try {
+            existedMember = memberRepository.findByEmail(memberEmail);
+        } catch (SQLException e) {
+            log.error("에러 발생 = {}", e.getMessage());
+        }
 
         if (existedMember == null) {
             throw new UsernameNotFoundException("사용자를 찾을 수 없습니다.");
@@ -42,12 +49,12 @@ public class MemberService implements UserDetailsService {
         List<GrantedAuthority> roles = new ArrayList<>();
         roles.add(new SimpleGrantedAuthority(existedMember.getMemberAuthority()));
 
-        MemberDto memberContext = new MemberDto(existedMember, roles);
-        return memberContext;
+        MemberDto memberDto = new MemberDto(existedMember, roles);
+        return memberDto;
     }
 
     @Transactional
-    public void addMember(JoinForm joinForm) {
+    public void addMember(JoinForm joinForm) throws SQLException {
         Member existedMember = memberRepository.findByEmail(joinForm.getMemberEmail());
 
         if (!(USER_AUTHORITY.equals(joinForm.getMemberAuthority()) || ADMIN_AUTHORITY.equals(joinForm.getMemberAuthority()))) {
@@ -55,7 +62,7 @@ public class MemberService implements UserDetailsService {
         }
 
         if (existedMember != null) {
-            throw new ExistMemberException("이미 존재하는 회원입니다.");
+            throw new ExistedMemberException("이미 존재하는 회원입니다.");
         }
 
         Member member = Member.from(joinForm);

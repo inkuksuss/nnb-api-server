@@ -5,7 +5,7 @@
 
 <mapper namespace="com.smartFarm.was.web.repository.MemberRepository">
 
-    <insert id="saveMember" parameterType="com.smartFarm.was.domain.model.Member">
+    <insert id="saveMember" parameterType="com.smartFarm.was.domain.entity.Member">
         INSERT INTO MEMBER (member_authority,
                             member_name,
                             member_email,
@@ -28,7 +28,7 @@
                                     #{memberLastAccessed})
     </insert>
 
-    <select id="findByEmail" parameterType="String" resultType="com.smartFarm.was.domain.model.Member">
+    <select id="findByEmail" parameterType="String" resultType="com.smartFarm.was.domain.entity.Member">
         SELECT * FROM MEMBER WHERE member_email = #{memberEmail}
     </select>
 </mapper>

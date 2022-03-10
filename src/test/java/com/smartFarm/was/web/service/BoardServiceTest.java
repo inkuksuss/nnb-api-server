@@ -1,13 +1,15 @@
 package com.smartFarm.was.web.service;
 
 import com.smartFarm.was.domain.request.board.AddBoardForm;
-import com.smartFarm.was.domain.response.board.BoardDetailVO;
+import com.smartFarm.was.domain.response.board.BoardDetailResponse;
 import com.smartFarm.was.web.repository.BoardRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.javassist.NotFoundException;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+
+import java.sql.SQLException;
 
 
 @Slf4j
@@ -21,7 +23,7 @@ class BoardServiceTest {
     BoardRepository boardRepository;
 
     @Test
-    void addNoticeBoard() {
+    void addNoticeBoard() throws SQLException {
         //given
         long memberId = 36l;
         String boardTitle = "테스트 비공개.";
@@ -40,7 +42,7 @@ class BoardServiceTest {
     }
 
     @Test
-    void addFaqBoard() {
+    void addFaqBoard() throws SQLException {
         //given
         long memberId = 34l;
         String boardTitle = "테스트2 비공개";
@@ -59,14 +61,14 @@ class BoardServiceTest {
     }
 
     @Test
-    void getDetails() throws NotFoundException {
+    void getDetails() throws Exception {
         //given
-        BoardDetailVO boardDetail = boardService.findBoardDetail(33l, 35l);
+        BoardDetailResponse boardDetail = boardService.findBoardDetail(33l, 35l);
         log.info("test = {}", boardDetail.toString());
     }
 
     @Test
-    void deleteBoards() {
+    void deleteBoards() throws SQLException {
         int i = boardRepository.deleteByIds(33l, 35l);
         System.out.println(i);
     }

@@ -1,4 +1,4 @@
-package com.smartFarm.was.domain.model;
+package com.smartFarm.was.domain.entity;
 
 import com.smartFarm.was.domain.request.member.JoinForm;
 import lombok.*;

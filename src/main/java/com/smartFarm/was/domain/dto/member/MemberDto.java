@@ -1,6 +1,6 @@
 package com.smartFarm.was.domain.dto.member;
 
-import com.smartFarm.was.domain.model.Member;
+import com.smartFarm.was.domain.entity.Member;
 import lombok.ToString;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;

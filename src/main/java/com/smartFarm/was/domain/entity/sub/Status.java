@@ -1,4 +1,4 @@
-package com.smartFarm.was.domain.model.sub;
+package com.smartFarm.was.domain.entity.sub;
 
 
 import lombok.Getter;

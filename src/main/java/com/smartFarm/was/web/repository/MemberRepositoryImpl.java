@@ -1,9 +1,11 @@
 package com.smartFarm.was.web.repository;
 
-import com.smartFarm.was.domain.model.Member;
+import com.smartFarm.was.domain.entity.Member;
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Repository;
+
+import java.sql.SQLException;
 
 @Repository
 public class MemberRepositoryImpl implements MemberRepository {

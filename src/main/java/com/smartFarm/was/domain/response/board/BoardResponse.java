@@ -6,7 +6,7 @@ import java.sql.Timestamp;
 
 
 @Getter
-public class BoardVO {
+public class BoardResponse {
 
     private long boardView;
     private String memberName;

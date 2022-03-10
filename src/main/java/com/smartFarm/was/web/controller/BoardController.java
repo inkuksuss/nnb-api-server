@@ -1,23 +1,23 @@
 package com.smartFarm.was.web.controller;
 
+import com.smartFarm.was.domain.entity.sub.Status;
 import com.smartFarm.was.domain.response.ResultCode;
-import com.smartFarm.was.domain.response.board.BoardDetailVO;
+import com.smartFarm.was.domain.response.board.BoardDetailResponse;
 import com.smartFarm.was.domain.request.board.AddBoardForm;
 import com.smartFarm.was.domain.dto.board.UpdateBoardDetailDto;
 import com.smartFarm.was.domain.request.board.UpdateBoardForm;
-import com.smartFarm.was.domain.response.ResultVO;
+import com.smartFarm.was.domain.response.ResultResponse;
 import com.smartFarm.was.domain.dto.board.BoardDetailDto;
-import com.smartFarm.was.domain.response.board.BoardVO;
-import com.smartFarm.was.domain.model.Member;
+import com.smartFarm.was.domain.response.board.BoardResponse;
+import com.smartFarm.was.domain.entity.Member;
 import com.smartFarm.was.web.service.BoardService;
 import com.smartFarm.was.web.service.CommentService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.ibatis.javassist.NotFoundException;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
-import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.HashMap;
 import java.util.List;
@@ -35,55 +35,63 @@ public class BoardController {
     private final CommentService commentService;
 
     @GetMapping("/notice")
-    public ResultVO noticeBoards() {
-        List<BoardVO> noticeBoards = boardService.getNoticeBoards();
+    public ResultResponse noticeBoards() throws Exception {
+        List<BoardResponse> boardResponsesList = boardService.getNoticeBoards();
 
-        return new ResultVO(ResultCode.SUCCESS.getCode(), ResultCode.SUCCESS.getMessage(), noticeBoards);
+        return new ResultResponse(HttpStatus.OK, ResultCode.SUCCESS.getCode(), ResultCode.SUCCESS.getMessage(), boardResponsesList);
     }
 
     @GetMapping("/faq")
-    public ResultVO faqBoards() {
-        List<BoardVO> faqBoards = boardService.getFAQBoards();
+    public ResultResponse faqBoards() throws Exception {
+        List<BoardResponse> boardResponsesList = boardService.getFAQBoards();
 
-        return new ResultVO(ResultCode.SUCCESS.getCode(), ResultCode.SUCCESS.getMessage(), faqBoards);
+        return new ResultResponse(HttpStatus.OK, ResultCode.SUCCESS.getCode(), ResultCode.SUCCESS.getMessage(), boardResponsesList);
     }
 
     @PostMapping("/add")
-    public ResultVO addBoard(HttpServletRequest httpServletRequest, @RequestBody AddBoardForm addBoardForm) {
+    public ResultResponse addBoard(HttpServletRequest httpServletRequest, @RequestBody AddBoardForm addBoardForm) throws Exception {
         Member member = (Member) httpServletRequest.getAttribute("member");
 
         boardService.addBoard(addBoardForm, member.getMemberId());
 
-        return new ResultVO(ResultCode.SUCCESS.getCode(), ResultCode.SUCCESS.getMessage(), null);
+        return new ResultResponse(HttpStatus.OK, ResultCode.SUCCESS.getCode(), ResultCode.SUCCESS.getMessage(), null);
     }
 
     @GetMapping("/detail/{id}")
-    public ResultVO boardDetails(HttpServletRequest httpServletRequest, @PathVariable("id") long boardId) throws NotFoundException {
+    public ResultResponse boardDetails(HttpServletRequest httpServletRequest, @PathVariable("id") long boardId) throws Exception {
         Member member = (Member) httpServletRequest.getAttribute("member");
 
-        BoardDetailVO boardDetailDto = boardService.findBoardDetail(boardId, member.getMemberId());
+        BoardDetailResponse boardDetailDto = boardService.findBoardDetail(boardId, member.getMemberId());
         BoardDetailDto boardDetail = boardDetailDto.getBoardDetailDto().orElse(new BoardDetailDto());
+
+        if (boardDetailDto.getBoardStatus().getStatusValue().equals(Status.DELETE.getStatusValue())) {
+            return new ResultResponse<>(HttpStatus.BAD_REQUEST, ResultCode.DENIED.getCode(), "삭제된 게시물입니다.", null);
+        }
+
+        if (boardDetailDto.getBoardStatus().getStatusValue().equals(Status.PRIVATE.getStatusValue())) {
+            return new ResultResponse<>(HttpStatus.BAD_REQUEST, ResultCode.DENIED.getCode(), "비공개 게시물입니다.", null);
+        }
 
         Map<String, Object> mapper = new HashMap<>();
         mapper.put("result", boardDetailDto.getBoardStatus().getStatusValue());
         mapper.put("detail", boardDetail);
 
-        return new ResultVO<>(ResultCode.SUCCESS.getCode(), ResultCode.SUCCESS.getMessage(), mapper);
+        return new ResultResponse<>(HttpStatus.OK, ResultCode.SUCCESS.getCode(), ResultCode.SUCCESS.getMessage(), mapper);
     }
 
     @GetMapping("/delete/{id}")
-    public ResultVO deleteBoard(HttpServletRequest httpServletRequest, @PathVariable("id") long boardId) {
+    public ResultResponse deleteBoard(HttpServletRequest httpServletRequest, @PathVariable("id") long boardId) throws Exception {
         Member member = (Member) httpServletRequest.getAttribute("member");
 
         boardService.delete(boardId, member.getMemberId());
 
-        return new ResultVO(ResultCode.SUCCESS.getCode(), ResultCode.SUCCESS.getMessage(), null);
+        return new ResultResponse(HttpStatus.OK, ResultCode.SUCCESS.getCode(), ResultCode.SUCCESS.getMessage(), null);
     }
 
     @PostMapping("/update/{id}")
-    public ResultVO updateBoard(HttpServletRequest httpServletRequest,
-                                @RequestBody UpdateBoardForm updateBoardForm,
-                                @PathVariable("id") long boardId) throws NotFoundException
+    public ResultResponse updateBoard(HttpServletRequest httpServletRequest,
+                                      @RequestBody UpdateBoardForm updateBoardForm,
+                                      @PathVariable("id") long boardId) throws Exception
     {
         Member member = (Member) httpServletRequest.getAttribute("member");
         UpdateBoardDetailDto updateBoardDetail = UpdateBoardDetailDto.builder()
@@ -97,8 +105,10 @@ public class BoardController {
                 .build();
 
         Optional<BoardDetailDto> updatedDetail = boardService.update(updateBoardDetail);
+
         Map<String, BoardDetailDto> mapper = new HashMap<>();
         mapper.put("detail", updatedDetail.get());
-        return new ResultVO(ResultCode.SUCCESS.getCode(), ResultCode.SUCCESS.getMessage(), null);
+
+        return new ResultResponse(HttpStatus.OK, ResultCode.SUCCESS.getCode(), ResultCode.SUCCESS.getMessage(), null);
     }
 }

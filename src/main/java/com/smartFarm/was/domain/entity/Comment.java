@@ -1,6 +1,5 @@
-package com.smartFarm.was.domain.model;
+package com.smartFarm.was.domain.entity;
 
-import com.smartFarm.was.domain.request.comment.AddCommentForm;
 import lombok.Getter;
 import lombok.ToString;
 

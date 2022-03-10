@@ -1,6 +1,6 @@
-package com.smartFarm.was.domain.model;
+package com.smartFarm.was.domain.entity;
 
-import com.smartFarm.was.domain.model.sub.TypeProduct;
+import com.smartFarm.was.domain.entity.sub.TypeProduct;
 
 public class FarmType {
 
