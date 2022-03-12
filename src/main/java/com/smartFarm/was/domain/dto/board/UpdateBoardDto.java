@@ -8,7 +8,7 @@ import java.sql.Timestamp;
 
 @Getter
 @Builder
-public class UpdateBoardDetailDto {
+public class UpdateBoardDto {
 
     private final long boardId;
     private final long memberId;

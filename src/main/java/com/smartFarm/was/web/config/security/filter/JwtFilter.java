@@ -17,6 +17,7 @@ import java.io.IOException;
 public class JwtFilter extends GenericFilter {
 
     public static final String AUTHORIZATION_HEADER = "Authorization";
+
     private final TokenProvider tokenProvider;
 
     @Override

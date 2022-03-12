@@ -2,9 +2,10 @@ package com.smartFarm.was.web.controller;
 
 import com.smartFarm.was.domain.entity.sub.Status;
 import com.smartFarm.was.domain.response.ResultCode;
+import com.smartFarm.was.domain.response.board.AddBoardResponse;
 import com.smartFarm.was.domain.response.board.BoardDetailResponse;
 import com.smartFarm.was.domain.request.board.AddBoardForm;
-import com.smartFarm.was.domain.dto.board.UpdateBoardDetailDto;
+import com.smartFarm.was.domain.dto.board.UpdateBoardDto;
 import com.smartFarm.was.domain.request.board.UpdateBoardForm;
 import com.smartFarm.was.domain.response.ResultResponse;
 import com.smartFarm.was.domain.dto.board.BoardDetailDto;
@@ -52,31 +53,26 @@ public class BoardController {
     public ResultResponse addBoard(HttpServletRequest httpServletRequest, @RequestBody AddBoardForm addBoardForm) throws Exception {
         Member member = (Member) httpServletRequest.getAttribute("member");
 
-        boardService.addBoard(addBoardForm, member.getMemberId());
+        long boardId = boardService.addBoard(addBoardForm, member.getMemberId());
 
-        return new ResultResponse(HttpStatus.OK, ResultCode.SUCCESS.getCode(), ResultCode.SUCCESS.getMessage(), null);
+        return new ResultResponse(HttpStatus.OK, ResultCode.SUCCESS.getCode(), ResultCode.SUCCESS.getMessage(), new AddBoardResponse(boardId));
     }
 
     @GetMapping("/detail/{id}")
     public ResultResponse boardDetails(HttpServletRequest httpServletRequest, @PathVariable("id") long boardId) throws Exception {
         Member member = (Member) httpServletRequest.getAttribute("member");
 
-        BoardDetailResponse boardDetailDto = boardService.findBoardDetail(boardId, member.getMemberId());
-        BoardDetailDto boardDetail = boardDetailDto.getBoardDetailDto().orElse(new BoardDetailDto());
+        BoardDetailResponse boardDetailResponse = boardService.findBoardDetail(boardId, member.getMemberId());
 
-        if (boardDetailDto.getBoardStatus().getStatusValue().equals(Status.DELETE.getStatusValue())) {
-            return new ResultResponse<>(HttpStatus.BAD_REQUEST, ResultCode.DENIED.getCode(), "삭제된 게시물입니다.", null);
+        if (boardDetailResponse.getBoardStatus().equals(Status.DELETE.getStatusValue())) {
+            return new ResultResponse<>(HttpStatus.BAD_REQUEST, ResultCode.DENIED.getCode(), "삭제된 게시물입니다.");
         }
 
-        if (boardDetailDto.getBoardStatus().getStatusValue().equals(Status.PRIVATE.getStatusValue())) {
-            return new ResultResponse<>(HttpStatus.BAD_REQUEST, ResultCode.DENIED.getCode(), "비공개 게시물입니다.", null);
+        if (boardDetailResponse.getBoardStatus().equals(Status.PRIVATE.getStatusValue())) {
+            return new ResultResponse<>(HttpStatus.BAD_REQUEST, ResultCode.DENIED.getCode(), "비공개 게시물입니다.");
         }
 
-        Map<String, Object> mapper = new HashMap<>();
-        mapper.put("result", boardDetailDto.getBoardStatus().getStatusValue());
-        mapper.put("detail", boardDetail);
-
-        return new ResultResponse<>(HttpStatus.OK, ResultCode.SUCCESS.getCode(), ResultCode.SUCCESS.getMessage(), mapper);
+        return new ResultResponse<>(HttpStatus.OK, ResultCode.SUCCESS.getCode(), ResultCode.SUCCESS.getMessage(), boardDetailResponse);
     }
 
     @GetMapping("/delete/{id}")
@@ -85,7 +81,7 @@ public class BoardController {
 
         boardService.delete(boardId, member.getMemberId());
 
-        return new ResultResponse(HttpStatus.OK, ResultCode.SUCCESS.getCode(), ResultCode.SUCCESS.getMessage(), null);
+        return new ResultResponse(HttpStatus.OK, ResultCode.SUCCESS.getCode(), ResultCode.SUCCESS.getMessage());
     }
 
     @PostMapping("/update/{id}")
@@ -94,7 +90,8 @@ public class BoardController {
                                       @PathVariable("id") long boardId) throws Exception
     {
         Member member = (Member) httpServletRequest.getAttribute("member");
-        UpdateBoardDetailDto updateBoardDetail = UpdateBoardDetailDto.builder()
+
+        UpdateBoardDto updateBoardDto = UpdateBoardDto.builder()
                 .boardId(boardId)
                 .memberId(member.getMemberId())
                 .categoryId(updateBoardForm.getCategoryId())
@@ -104,7 +101,7 @@ public class BoardController {
                 .boardLastUpdated(new Timestamp(System.currentTimeMillis()))
                 .build();
 
-        Optional<BoardDetailDto> updatedDetail = boardService.update(updateBoardDetail);
+        Optional<BoardDetailDto> updatedDetail = boardService.update(updateBoardDto);
 
         Map<String, BoardDetailDto> mapper = new HashMap<>();
         mapper.put("detail", updatedDetail.get());

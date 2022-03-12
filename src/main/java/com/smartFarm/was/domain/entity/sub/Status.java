@@ -8,10 +8,12 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public enum Status {
 
-    OWNER("owner"),
-    PUBLIC("public"),
-    PRIVATE("private"),
-    DELETE("delete");
+    OWNER("owner", true),
+    PUBLIC("public", false),
+    PRIVATE("private", false),
+    DELETE("delete", false);
+
 
     private final String statusValue;
+    private final boolean isOwner;
 }

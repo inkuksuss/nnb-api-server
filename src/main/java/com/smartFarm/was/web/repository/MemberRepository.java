@@ -3,10 +3,11 @@ package com.smartFarm.was.web.repository;
 import com.smartFarm.was.domain.entity.Member;
 
 import java.sql.SQLException;
+import java.util.Optional;
 
 public interface MemberRepository {
 
     void saveMember(Member member) throws SQLException;
 
-    Member findByEmail(String memberEmail) throws SQLException;
+    Optional<Member> findByEmail(String memberEmail);
 }

@@ -9,22 +9,17 @@ import org.apache.ibatis.javassist.NotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+
+import java.sql.SQLException;
 
 
 @Slf4j
 @RestControllerAdvice
 public class ExControllerAdvice {
-
-
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    @ExceptionHandler(IllegalArgumentException.class)
-    public ResultResponse illegalExHandle(IllegalArgumentException e) {
-        log.error("[exceptionHandle] ex", e);
-        return new ResultResponse(HttpStatus.BAD_REQUEST, ResultCode.INVALID_PARAMETER.getCode(), e.getMessage());
-    }
 
     @ResponseStatus(HttpStatus.UNAUTHORIZED)
     @ExceptionHandler(IllegalStateException.class)
@@ -34,10 +29,25 @@ public class ExControllerAdvice {
     }
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    @ExceptionHandler(UsernameNotFoundException.class)
-    public ResultResponse userNotFoundExHandle(UsernameNotFoundException e) {
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResultResponse illegalExHandle(IllegalArgumentException e) {
         log.error("[exceptionHandle] ex", e);
-        return new ResultResponse(HttpStatus.BAD_REQUEST, ResultCode.USER_NOT_FOUND.getCode(), e.getMessage());
+        return new ResultResponse(HttpStatus.BAD_REQUEST, ResultCode.INVALID_PARAMETER.getCode(), e.getMessage());
+    }
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResultResponse methodArgsNotNullExHandle(MethodArgumentNotValidException e) {
+        log.error("[exceptionHandle] ex", e);
+        String errorMessage = e.getBindingResult().getAllErrors().get(0).getDefaultMessage();
+        return new ResultResponse(HttpStatus.BAD_REQUEST, ResultCode.INVALID_PARAMETER.getCode(), errorMessage);
+    }
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(UsernameNotFoundException.class)
+    public ResultResponse memberNotFoundExHandle(UsernameNotFoundException e) {
+        log.error("[exceptionHandle] ex", e);
+        return new ResultResponse(HttpStatus.BAD_REQUEST, ResultCode.MEMBER_NOT_FOUND.getCode(), e.getMessage());
     }
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
@@ -47,11 +57,25 @@ public class ExControllerAdvice {
         return new ResultResponse(HttpStatus.BAD_REQUEST, ResultCode.EXISTED_MEMBER.getCode(), e.getMessage());
     }
 
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(SQLException.class)
+    public ResultResponse sqlExHandle(SQLException e) {
+        log.error("[exceptionHandle] ex", e);
+        return new ResultResponse(HttpStatus.BAD_REQUEST, ResultCode.DB_ERROR.getCode(), e.getMessage());
+    }
+
     @ResponseStatus(HttpStatus.NOT_FOUND)
     @ExceptionHandler(NotFoundException.class)
     public ResultResponse notFoundExHandle(NotFoundException e) {
         log.error("[exceptionHandle] ex", e);
         return new ResultResponse(HttpStatus.NOT_FOUND, ResultCode.PAGE_NOT_FOUND.getCode(), e.getMessage());
+    }
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(RuntimeException.class)
+    public ResultResponse runTimeExHandle(RuntimeException e) {
+        log.error("[exceptionHandle] ex", e);
+        return new ResultResponse(HttpStatus.BAD_REQUEST, ResultCode.FAIL.getCode(), e.getMessage());
     }
 
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)

@@ -1,11 +1,15 @@
 package com.smartFarm.was.web.service;
 
 import com.smartFarm.was.domain.entity.Member;
+import com.smartFarm.was.domain.entity.sub.Authority;
 import com.smartFarm.was.domain.request.member.JoinForm;
 import com.smartFarm.was.web.repository.MemberRepository;
 import com.smartFarm.was.web.exception.custom.ExistedMemberException;
 import com.smartFarm.was.domain.dto.member.MemberDto;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.MessageSource;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -20,49 +24,33 @@ import java.util.List;
 
 @Slf4j
 @Service
+@RequiredArgsConstructor
 public class MemberService implements UserDetailsService {
 
     private final MemberRepository memberRepository;
+    private final MessageSource messageSource;
 
-    private final static String USER_AUTHORITY = "ROLE_USER";
-    private final static String ADMIN_AUTHORITY = "ROLE_ADMIN";
-
-    public MemberService(MemberRepository memberRepository) {
-        this.memberRepository = memberRepository;
-    }
 
     @Override
     @Transactional(readOnly = true)
-    public UserDetails loadUserByUsername(String memberEmail) {
-        Member existedMember = null;
+    public UserDetails loadUserByUsername(String memberEmail) throws UsernameNotFoundException {
 
-        try {
-            existedMember = memberRepository.findByEmail(memberEmail);
-        } catch (SQLException e) {
-            log.error("에러 발생 = {}", e.getMessage());
-        }
-
-        if (existedMember == null) {
-            throw new UsernameNotFoundException("사용자를 찾을 수 없습니다.");
-        }
+        Member member = memberRepository.findByEmail(memberEmail)
+                .orElseThrow(() -> new UsernameNotFoundException("사용자를 찾을 수 없습니다."));
 
         List<GrantedAuthority> roles = new ArrayList<>();
-        roles.add(new SimpleGrantedAuthority(existedMember.getMemberAuthority()));
+        roles.add(new SimpleGrantedAuthority(member.getMemberAuthority()));
 
-        MemberDto memberDto = new MemberDto(existedMember, roles);
+        MemberDto memberDto = new MemberDto(member, roles);
+
         return memberDto;
     }
 
     @Transactional
-    public void addMember(JoinForm joinForm) throws SQLException {
-        Member existedMember = memberRepository.findByEmail(joinForm.getMemberEmail());
+    public void addMember(JoinForm joinForm) throws Exception {
 
-        if (!(USER_AUTHORITY.equals(joinForm.getMemberAuthority()) || ADMIN_AUTHORITY.equals(joinForm.getMemberAuthority()))) {
-            throw new IllegalArgumentException("존재하지 않는 권한입니다.");
-        }
-
-        if (existedMember != null) {
-            throw new ExistedMemberException("이미 존재하는 회원입니다.");
+        if (memberRepository.findByEmail(joinForm.getMemberEmail()).isEmpty()) {
+            throw new ExistedMemberException(messageSource.getMessage("duplicate.parameter", new Object[]{"이메일"}, null));
         }
 
         Member member = Member.from(joinForm);

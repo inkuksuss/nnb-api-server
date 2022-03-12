@@ -8,6 +8,7 @@ import java.sql.Timestamp;
 @Getter
 public class BoardResponse {
 
+    private long boardId;
     private long boardView;
     private String memberName;
     private String boardTitle;

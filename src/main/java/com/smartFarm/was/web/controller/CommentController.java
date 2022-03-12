@@ -29,6 +29,6 @@ public class CommentController {
         Member member = (Member) httpServletRequest.getAttribute("member");
 
         commentService.addComment(addCommentForm, boardId, member.getMemberId());
-        return new ResultResponse(HttpStatus.OK, ResultCode.SUCCESS.getCode(), ResultCode.SUCCESS.getMessage(), null);
+        return new ResultResponse(HttpStatus.OK, ResultCode.SUCCESS.getCode(), ResultCode.SUCCESS.getMessage());
     }
 }

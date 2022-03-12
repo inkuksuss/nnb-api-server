@@ -31,7 +31,7 @@
         ORDER BY board_created DESC
     </select>
 
-    <insert id="add" parameterType="com.smartFarm.was.domain.entity.Board">
+    <insert id="add" parameterType="com.smartFarm.was.domain.entity.Board" useGeneratedKeys="true" keyProperty="boardId">
         INSERT INTO board
             (
              member_id,
@@ -101,6 +101,15 @@
                            ON board.board_id = comment.board_id
         WHERE board.board_id = #{boardId}
     </select>
+
+    <update id="deleteByDeleteBoardDto" parameterType="com.smartFarm.was.domain.dto.board.DeleteBoardDto">
+        UPDATE
+            board
+        SET
+            board_status = #{boardStatus}
+        WHERE
+            board_id = #{boardId} AND member_id = #{memberId}
+    </update>
 
     <update id="updateByUpdateForm" parameterType="com.smartFarm.was.domain.request.board.UpdateBoardForm">
         UPDATE

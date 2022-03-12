@@ -10,7 +10,6 @@ spring:
         namespace: spring:session
         flush-mode: on-save
 
-
 jwt:
     header: Authorization
     secret: dai3hufh92h9ueh09333huud3hc8822jajsdi223d4342342fsdnufhsudfy123123y78fe784f9h49273yfihow9dw933984uhfs8dyft4w8

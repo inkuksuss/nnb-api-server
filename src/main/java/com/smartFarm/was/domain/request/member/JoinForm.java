@@ -5,6 +5,7 @@ import lombok.Builder;
 import lombok.Getter;
 
 import javax.validation.constraints.Email;
+import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import java.sql.Timestamp;
 
@@ -12,28 +13,29 @@ import java.sql.Timestamp;
 @Builder
 public class JoinForm {
 
-    @NotNull
+    @NotEmpty(message = "이름을 입력해주세요.")
     private String memberName;
 
-    @NotNull @Email
+    @NotEmpty(message = "이메일을 입력해주세요.")
+    @Email
     private String memberEmail;
 
-    @NotNull
+    @NotEmpty(message = "비밀번호를 입력해주세요.")
     private String memberPassword;
 
-    @NotNull
+    @NotEmpty(message = "전화번호를 입력해주세요.")
     private String memberPhone;
 
-    @NotNull
+    @NotEmpty(message = "주소를 입력해주세요.")
     private String memberAddress;
 
-    @NotNull
+    @NotEmpty(message = "개인정보동의 해주세요.")
     private String privacyConsent;
 
-    @NotNull
+    @NotEmpty(message = "생년월일을 입력해주세요.")
     private Timestamp memberBirthday;
 
-    @NotNull
+    @NotEmpty(message = "권한이 올바르지 않습니다.")
     private String memberAuthority;
 
     public void setMemberPassword(String memberPassword) {

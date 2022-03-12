@@ -1,8 +1,9 @@
 package com.smartFarm.was.web.controller;
 
+import com.smartFarm.was.domain.entity.sub.Authority;
 import com.smartFarm.was.domain.request.member.LoginForm;
 import com.smartFarm.was.domain.response.ResultCode;
-import com.smartFarm.was.domain.response.member.MemberResponse;
+import com.smartFarm.was.domain.response.member.LoginResponse;
 import com.smartFarm.was.domain.dto.member.MemberDto;
 import com.smartFarm.was.domain.response.ResultResponse;
 import com.smartFarm.was.domain.request.member.JoinForm;
@@ -11,6 +12,7 @@ import com.smartFarm.was.web.config.security.provider.TokenProvider;
 import com.smartFarm.was.web.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.MessageSource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -32,12 +34,19 @@ public class MemberController {
     private final PasswordEncoder passwordEncoder;
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
     private final TokenProvider tokenProvider;
+    private final MessageSource messageSource;
 
     // 회원가입
     @PostMapping("/join")
     public ResultResponse join(@RequestBody @Validated JoinForm joinForm) throws Exception {
 
         joinForm.setMemberPassword(passwordEncoder.encode(joinForm.getMemberPassword()));
+
+        String memberAuthority = joinForm.getMemberAuthority();
+
+        if (!(Authority.ADMIN.getRole().equals(memberAuthority) || Authority.MEMBER.getRole().equals(memberAuthority))) {
+            throw new IllegalArgumentException(messageSource.getMessage("illegal.parameter", new Object[]{"권한"}, null));
+        }
 
         memberService.addMember(joinForm);
 
@@ -46,13 +55,15 @@ public class MemberController {
 
     // 로그인
     @PostMapping("/login")
-    public ResultResponse login(@RequestBody @Validated LoginForm loginForm) {
+    public ResultResponse login(@RequestBody @Validated LoginForm loginForm) throws Exception {
 
-        UsernamePasswordAuthenticationToken authenticationToken =
-                new UsernamePasswordAuthenticationToken(loginForm.getMemberEmail(), loginForm.getMemberPassword());
+//        UsernamePasswordAuthenticationToken authenticationToken =
+//                new UsernamePasswordAuthenticationToken(loginForm.getMemberEmail(), loginForm.getMemberPassword());
+//
+//        Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
+//        SecurityContextHolder.getContext().setAuthentication(authentication);
 
-        Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
-        SecurityContextHolder.getContext().setAuthentication(authentication);
+        memberService.loadUserByUsername(loginForm.getMemberEmail());
 
         String token = tokenProvider.createToken(authentication);
 
@@ -60,8 +71,8 @@ public class MemberController {
         httpHeaders.add(JwtFilter.AUTHORIZATION_HEADER, "Bearer " + token);
 
         MemberDto memberDto = (MemberDto) authentication.getPrincipal();
-        MemberResponse memberResponse = MemberResponse.from(memberDto, token);
+        LoginResponse loginResponse = LoginResponse.of(memberDto, token);
 
-        return new ResultResponse<>(HttpStatus.OK,ResultCode.SUCCESS.getCode(), ResultCode.SUCCESS.getMessage(), memberResponse);
+        return new ResultResponse<>(HttpStatus.OK, ResultCode.SUCCESS.getCode(), ResultCode.SUCCESS.getMessage(), loginResponse);
     }
 }

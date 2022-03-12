@@ -69,8 +69,8 @@ class BoardServiceTest {
 
     @Test
     void deleteBoards() throws SQLException {
-        int i = boardRepository.deleteByIds(33l, 35l);
-        System.out.println(i);
+//        int i = boardRepository.deleteByDeleteBoardDto(33l, 35l);
+//        System.out.println(i);
     }
 
     @Test

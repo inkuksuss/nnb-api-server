@@ -32,12 +32,12 @@ public class MemberServiceTest {
                 memberPassword("123").
                 build();
         build.setMemberPassword(passwordEncoder.encode(build.getMemberPassword()));
-        memberService.addMember(build);
+//        memberService.addMember(build);
     }
 
     @Test
     void loadedByUserName() {
-        UserDetails userDetails = memberService.loadUserByUsername("44433@naver.com");
-        log.info("userDetails = {}" , userDetails.toString());
+//        UserDetails userDetails = memberService.loadUserByUsername("44433@naver.com");
+//        log.info("userDetails = {}" , userDetails.toString());
     }
 }

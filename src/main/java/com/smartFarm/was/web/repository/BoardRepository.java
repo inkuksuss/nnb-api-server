@@ -1,7 +1,8 @@
 package com.smartFarm.was.web.repository;
 
 
-import com.smartFarm.was.domain.dto.board.UpdateBoardDetailDto;
+import com.smartFarm.was.domain.dto.board.DeleteBoardDto;
+import com.smartFarm.was.domain.dto.board.UpdateBoardDto;
 import com.smartFarm.was.domain.dto.board.BoardDetailDto;
 import com.smartFarm.was.domain.response.board.BoardResponse;
 import com.smartFarm.was.domain.entity.Board;
@@ -24,7 +25,7 @@ public interface BoardRepository {
 
     Optional<BoardDetailDto> findByIdDetail(long boardId) throws SQLException;
 
-    int deleteByIds(long boardId, long memberId) throws SQLException;
+    int deleteByDeleteBoardDto(DeleteBoardDto deleteBoardDto) throws SQLException;
 
-    int updateByUpdateForm(UpdateBoardDetailDto updateBoardDetail) throws SQLException;
+    int updateByUpdateForm(UpdateBoardDto updateBoardDto) throws SQLException;
 }

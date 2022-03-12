@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Repository;
 
 import java.sql.SQLException;
+import java.util.Optional;
 
 @Repository
 public class MemberRepositoryImpl implements MemberRepository {
@@ -26,7 +27,8 @@ public class MemberRepositoryImpl implements MemberRepository {
     }
 
     @Override
-    public Member findByEmail(String memberEmail) {
-        return sqlSession.selectOne(mapperLocation + "MemberRepository.findByEmail", memberEmail);
+    public Optional<Member> findByEmail(String memberEmail) {
+        Member member = sqlSession.selectOne(mapperLocation + "MemberRepository.findByEmail", memberEmail);
+        return Optional.ofNullable(member);
     }
 }

@@ -14,6 +14,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Component;
 
+import javax.annotation.PostConstruct;
 import java.security.Key;
 import java.util.Arrays;
 import java.util.Collection;
@@ -22,7 +23,7 @@ import java.util.stream.Collectors;
 
 @Slf4j
 @Component
-public class TokenProvider implements InitializingBean {
+public class TokenProvider {
 
     private static final String AUTHORITIES_KEY = "auth";
     private static final String MEMBER = "member";
@@ -32,7 +33,7 @@ public class TokenProvider implements InitializingBean {
 
     private Key key;
 
-    @Override
+    @PostConstruct
     public void afterPropertiesSet() {
         byte[] keyBytes = Decoders.BASE64.decode(secret);
         this.key = Keys.hmacShaKeyFor(keyBytes);
@@ -51,11 +52,11 @@ public class TokenProvider implements InitializingBean {
 
         long now = (new Date()).getTime();
         Date validity = new Date(now + this.tokenValidityInMilliSeconds);
-        MemberDto memberContext = (MemberDto) authentication.getPrincipal();
+        MemberDto memberDto = (MemberDto) authentication.getPrincipal();
 
         return Jwts.builder()
-                .setSubject(memberContext.getUsername())
-                .claim(MEMBER, memberContext.getMember())
+                .setSubject(memberDto.getUsername())
+                .claim(MEMBER, memberDto.getMember())
                 .claim(AUTHORITIES_KEY, authorities)
                 .signWith(key, SignatureAlgorithm.HS512)
                 .setExpiration(validity)
