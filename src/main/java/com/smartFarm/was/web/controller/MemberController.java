@@ -19,6 +19,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -57,13 +58,19 @@ public class MemberController {
     @PostMapping("/login")
     public ResultResponse login(@RequestBody @Validated LoginForm loginForm) throws Exception {
 
-//        UsernamePasswordAuthenticationToken authenticationToken =
-//                new UsernamePasswordAuthenticationToken(loginForm.getMemberEmail(), loginForm.getMemberPassword());
-//
-//        Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
+        UsernamePasswordAuthenticationToken authenticationToken =
+                new UsernamePasswordAuthenticationToken(loginForm.getMemberEmail(), loginForm.getMemberPassword());
+
+        Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
 //        SecurityContextHolder.getContext().setAuthentication(authentication);
 
-        memberService.loadUserByUsername(loginForm.getMemberEmail());
+//        MemberDto memberDto = (MemberDto) memberService.loadUserByUsername(loginForm.getMemberEmail());
+//
+//        boolean matches = passwordEncoder.matches(memberDto.getPassword(), loginForm.getMemberPassword());
+//
+//        if (matches) {
+//            new Authentication(loginForm.getMemberEmail(), loginForm.getMemberPassword())
+//        }
 
         String token = tokenProvider.createToken(authentication);
 
