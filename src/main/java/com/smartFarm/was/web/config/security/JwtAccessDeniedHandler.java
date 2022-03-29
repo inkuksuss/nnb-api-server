@@ -14,6 +14,6 @@ public class JwtAccessDeniedHandler implements AccessDeniedHandler {
     @Override
     public void handle(HttpServletRequest request, HttpServletResponse response, AccessDeniedException accessDeniedException) {
         log.warn("message={}", request);
-        throw new AccessDeniedException("권한이 없습니다.");
+        throw new AccessDeniedException("접근할 수 없는 페이지입니다.");
     }
 }

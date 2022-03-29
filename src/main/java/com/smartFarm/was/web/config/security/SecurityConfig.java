@@ -1,15 +1,12 @@
 package com.smartFarm.was.web.config.security;
 
+import com.smartFarm.was.domain.entity.sub.Authority;
 import com.smartFarm.was.web.config.security.filter.JwtFilter;
 import com.smartFarm.was.web.config.security.provider.TokenProvider;
-import com.smartFarm.was.web.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
@@ -49,12 +46,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter implements WebM
         return new JwtFilter(tokenProvider);
     }
 
-//    @Override
-//    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-//        auth.userDetailsService(member -> )
-//        super.configure(auth);
-//    }
-
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
@@ -62,10 +53,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter implements WebM
 
                 .and()
                     .csrf().disable()
-                    .antMatcher("/**")
-                    .authorizeRequests()
-                    .anyRequest()
-                    .permitAll()
+                .authorizeRequests()
+                    .antMatchers("/admin/**").hasRole(Authority.ADMIN.getAlias())
+                    .antMatchers("/login", "/join").hasRole(Authority.ANONYMOUS.getAlias())
+                    .antMatchers("/**").hasAnyRole(Authority.MEMBER.getRole(), Authority.ANONYMOUS.getAlias())
 
                 .and()
                     .addFilterBefore(jwtFilter(), UsernamePasswordAuthenticationFilter.class)
@@ -78,6 +69,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter implements WebM
                 .exceptionHandling()
                 .authenticationEntryPoint(new JwtAuthenticationEntryPoint())
                 .accessDeniedHandler(new JwtAccessDeniedHandler());
+
+        http.anonymous().principal("anonymous").authorities("ROLE_ANONYMOUS");
     }
     @Override
     public void addCorsMappings(CorsRegistry registry) {

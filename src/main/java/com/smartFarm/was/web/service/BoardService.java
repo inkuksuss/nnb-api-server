@@ -34,7 +34,7 @@ public class BoardService {
     public long addBoard(AddBoardForm addBoardForm, Long memberId) throws SQLException {
         Board board = Board.of(addBoardForm, memberId);
 
-        boardRepository.add(board);
+        boardRepository.insertBoard(board);
 
         return board.getBoardId();
     }
@@ -42,19 +42,19 @@ public class BoardService {
     @Transactional(readOnly = true)
     public List<BoardResponse> getNoticeBoards() throws SQLException {
 
-        return boardRepository.findAllNotice();
+        return boardRepository.selectAllNotices();
     }
 
     @Transactional(readOnly = true)
     public List<BoardResponse> getFAQBoards() throws SQLException {
 
-        return boardRepository.findAllFAQ();
+        return boardRepository.selectAllFAQs();
     }
 
     @Transactional(readOnly = true)
-    public BoardDetailResponse findBoardDetail(long boardId, long memberId) throws Exception {
+    public BoardDetailResponse getBoardDetail(long boardId, long memberId) throws Exception {
 
-        BoardDetailDto boardDetailDto = boardRepository.findByIdDetail(boardId)
+        BoardDetailDto boardDetailDto = boardRepository.selectDetailById(boardId)
                 .orElseThrow(() -> new NotFoundException(messageSource.getMessage("fail.find", new Object[]{BOARD_TYPE}, null)));
 
         if (boardDetailDto.getBoardStatus().equals(Status.DELETE.getStatusValue())) return BoardDetailResponse.of(Status.DELETE.isOwner(), boardDetailDto);
@@ -65,23 +65,23 @@ public class BoardService {
     }
 
     @Transactional
-    public void delete(long boardId, long memberId) throws SQLException {
+    public void removeBoard(long boardId, long memberId) throws SQLException {
 
         DeleteBoardDto deleteBoardDto = new DeleteBoardDto(boardId, memberId, Status.DELETE.getStatusValue());
 
-        int result = boardRepository.deleteByDeleteBoardDto(deleteBoardDto);
+        int result = boardRepository.deleteBoardByDeleteBoardDto(deleteBoardDto);
 
         if (result != 1) throw new RuntimeException(messageSource.getMessage("fail.delete", new Object[]{BOARD_TYPE}, null));
     }
 
     @Transactional
-    public Optional<BoardDetailDto> update(UpdateBoardDto updateBoardDto) throws Exception {
+    public Optional<BoardDetailDto> changeBoard(UpdateBoardDto updateBoardDto) throws Exception {
 
         long boardId = updateBoardDto.getBoardId();
 
-        if (boardRepository.updateByUpdateForm(updateBoardDto) != 1) return Optional.empty();
+        if (boardRepository.updateBoardByUpdateForm(updateBoardDto) != 1) return Optional.empty();
 
-        return Optional.of(boardRepository.findByIdDetail(boardId).orElseThrow(() -> new NotFoundException("게시물을 찾을 수 없습니다.")));
+        return Optional.of(boardRepository.selectDetailById(boardId).orElseThrow(() -> new NotFoundException("게시물을 찾을 수 없습니다.")));
     }
 }
 

@@ -21,11 +21,18 @@ import java.sql.SQLException;
 @RestControllerAdvice
 public class ExControllerAdvice {
 
-    @ResponseStatus(HttpStatus.UNAUTHORIZED)
+    @ResponseStatus(HttpStatus.FORBIDDEN)
     @ExceptionHandler(IllegalStateException.class)
+    public ResultResponse forbiddenExHandle(IllegalStateException e) {
+        log.error("[exceptionHandle] ex", e);
+        return new ResultResponse(HttpStatus.FORBIDDEN, ResultCode.FORBIDDEN.getCode(), e.getMessage());
+    }
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(AccessDeniedException.class)
     public ResultResponse accessDeniedExHandle(AccessDeniedException e) {
         log.error("[exceptionHandle] ex", e);
-        return new ResultResponse(HttpStatus.UNAUTHORIZED, ResultCode.UNAUTHORIZED.getCode(), e.getMessage());
+        return new ResultResponse(HttpStatus.BAD_REQUEST, ResultCode.DENIED.getCode(), e.getMessage());
     }
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)

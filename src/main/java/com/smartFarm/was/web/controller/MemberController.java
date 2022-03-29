@@ -37,7 +37,7 @@ public class MemberController {
     private final TokenProvider tokenProvider;
     private final MessageSource messageSource;
 
-    // 회원가입
+
     @PostMapping("/join")
     public ResultResponse join(@RequestBody @Validated JoinForm joinForm) throws Exception {
 
@@ -54,7 +54,6 @@ public class MemberController {
         return new ResultResponse<>(HttpStatus.OK, ResultCode.SUCCESS.getCode(), ResultCode.SUCCESS.getMessage(), null);
     }
 
-    // 로그인
     @PostMapping("/login")
     public ResultResponse login(@RequestBody @Validated LoginForm loginForm) throws Exception {
 
@@ -62,15 +61,6 @@ public class MemberController {
                 new UsernamePasswordAuthenticationToken(loginForm.getMemberEmail(), loginForm.getMemberPassword());
 
         Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
-//        SecurityContextHolder.getContext().setAuthentication(authentication);
-
-//        MemberDto memberDto = (MemberDto) memberService.loadUserByUsername(loginForm.getMemberEmail());
-//
-//        boolean matches = passwordEncoder.matches(memberDto.getPassword(), loginForm.getMemberPassword());
-//
-//        if (matches) {
-//            new Authentication(loginForm.getMemberEmail(), loginForm.getMemberPassword())
-//        }
 
         String token = tokenProvider.createToken(authentication);
 

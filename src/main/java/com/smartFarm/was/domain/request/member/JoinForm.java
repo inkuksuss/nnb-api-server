@@ -1,17 +1,19 @@
 package com.smartFarm.was.domain.request.member;
 
 
-import lombok.Builder;
-import lombok.Getter;
+import lombok.*;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
+import java.io.Serializable;
 import java.sql.Timestamp;
 
 @Getter
 @Builder
-public class JoinForm {
+@NoArgsConstructor
+@AllArgsConstructor
+public class JoinForm implements Serializable {
+
 
     @NotEmpty(message = "이름을 입력해주세요.")
     private String memberName;
@@ -32,7 +34,7 @@ public class JoinForm {
     @NotEmpty(message = "개인정보동의 해주세요.")
     private String privacyConsent;
 
-    @NotEmpty(message = "생년월일을 입력해주세요.")
+//    @NotEmpty(message = "생년월일을 입력해주세요.")
     private Timestamp memberBirthday;
 
     @NotEmpty(message = "권한이 올바르지 않습니다.")

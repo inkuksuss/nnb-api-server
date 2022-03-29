@@ -8,8 +8,10 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public enum Authority {
 
-    ADMIN("ROLE_ADMIN"),
-    MEMBER("ROLE_MEMBER");
+    ADMIN("ROLE_ADMIN", "ADMIN"),
+    MEMBER("ROLE_MEMBER", "MEMBER"),
+    ANONYMOUS("ROLE_ANONYMOUS", "ANONYMOUS");
 
     private final String role;
+    private final String alias;
 }
