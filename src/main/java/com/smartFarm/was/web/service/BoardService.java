@@ -2,6 +2,7 @@ package com.smartFarm.was.web.service;
 
 
 import com.smartFarm.was.domain.dto.board.DeleteBoardDto;
+import com.smartFarm.was.domain.entity.Member;
 import com.smartFarm.was.domain.entity.sub.Status;
 import com.smartFarm.was.domain.response.board.BoardDetailResponse;
 import com.smartFarm.was.domain.dto.board.UpdateBoardDto;
@@ -10,6 +11,8 @@ import com.smartFarm.was.domain.response.board.BoardResponse;
 import com.smartFarm.was.domain.entity.Board;
 import com.smartFarm.was.web.repository.BoardRepository;
 import com.smartFarm.was.domain.request.board.AddBoardForm;
+import com.smartFarm.was.web.utils.MemberAuthenticationUtils;
+import com.smartFarm.was.web.utils.SqlReturnUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.javassist.NotFoundException;
@@ -34,7 +37,7 @@ public class BoardService {
     public long addBoard(AddBoardForm addBoardForm, Long memberId) throws SQLException {
         Board board = Board.of(addBoardForm, memberId);
 
-        boardRepository.insertBoard(board);
+        boardRepository.addBoard(board);
 
         return board.getBoardId();
     }
@@ -42,46 +45,69 @@ public class BoardService {
     @Transactional(readOnly = true)
     public List<BoardResponse> getNoticeBoards() throws SQLException {
 
-        return boardRepository.selectAllNotices();
+        return boardRepository.getNoticeBoards();
     }
 
     @Transactional(readOnly = true)
     public List<BoardResponse> getFAQBoards() throws SQLException {
 
-        return boardRepository.selectAllFAQs();
+        return boardRepository.getFAQBoards();
     }
 
     @Transactional(readOnly = true)
-    public BoardDetailResponse getBoardDetail(long boardId, long memberId) throws Exception {
+    public BoardDetailResponse getBoardDetail(long boardId) throws Exception {
 
-        BoardDetailDto boardDetailDto = boardRepository.selectDetailById(boardId)
+        BoardDetailDto boardDetailDto = boardRepository.getBoardDetail(boardId)
                 .orElseThrow(() -> new NotFoundException(messageSource.getMessage("fail.find", new Object[]{BOARD_TYPE}, null)));
 
-        if (boardDetailDto.getBoardStatus().equals(Status.DELETE.getStatusValue())) return BoardDetailResponse.of(Status.DELETE.isOwner(), boardDetailDto);
-        else if (boardDetailDto.getMemberId() == memberId) return BoardDetailResponse.of(Status.OWNER.isOwner(), boardDetailDto);
-        else if (boardDetailDto.getBoardStatus().equals(Status.PUBLIC.getStatusValue())) return BoardDetailResponse.of(Status.PUBLIC.isOwner(), boardDetailDto);
-        else if (boardDetailDto.getBoardStatus().equals(Status.PRIVATE.getStatusValue())) return BoardDetailResponse.of(Status.PRIVATE.isOwner(), boardDetailDto);
-        else throw new IllegalArgumentException(messageSource.getMessage("fail", null, null));
+        if (MemberAuthenticationUtils.isMember()) {
+            Member member = MemberAuthenticationUtils.getMemberAuthentication();
+
+            if (boardDetailDto.getBoardStatus().equals(Status.DELETE.getStatusValue())) {
+                return BoardDetailResponse.of(Status.DELETE.isOwner(), boardDetailDto);
+            } else if (boardDetailDto.getMemberId() == member.getMemberId())  {
+                return BoardDetailResponse.of(Status.OWNER.isOwner(), boardDetailDto);
+            } else if (boardDetailDto.getBoardStatus().equals(Status.PUBLIC.getStatusValue())) {
+                return BoardDetailResponse.of(Status.PUBLIC.isOwner(), boardDetailDto);
+            } else if (boardDetailDto.getBoardStatus().equals(Status.PRIVATE.getStatusValue())) {
+                 return BoardDetailResponse.of(Status.PRIVATE.isOwner(), boardDetailDto);
+            } else {
+                throw new IllegalArgumentException(messageSource.getMessage("fail", null, null));
+            }
+        } else if (MemberAuthenticationUtils.isAnonymous()) {
+
+            if (boardDetailDto.getBoardStatus().equals(Status.PUBLIC)) {
+                return BoardDetailResponse.of(Status.PUBLIC.isOwner(), boardDetailDto);
+            } else {
+                throw new IllegalStateException(messageSource.getMessage("fail", null, null));
+            }
+        } else {
+            throw new IllegalStateException(messageSource.getMessage("fail", null, null));
+        }
     }
 
     @Transactional
-    public void removeBoard(long boardId, long memberId) throws SQLException {
+    public void deleteBoard(long boardId) throws SQLException {
 
-        DeleteBoardDto deleteBoardDto = new DeleteBoardDto(boardId, memberId, Status.DELETE.getStatusValue());
+        Member member = MemberAuthenticationUtils.getMemberAuthentication();
 
-        int result = boardRepository.deleteBoardByDeleteBoardDto(deleteBoardDto);
+        DeleteBoardDto deleteBoardDto = new DeleteBoardDto(boardId, member.getMemberId(), Status.DELETE.getStatusValue());
 
-        if (result != 1) throw new RuntimeException(messageSource.getMessage("fail.delete", new Object[]{BOARD_TYPE}, null));
+        int result = boardRepository.deleteBoard(deleteBoardDto);
+
+        if (SqlReturnUtils.changeFail(result)) throw new RuntimeException(messageSource.getMessage("fail.delete", new Object[]{BOARD_TYPE}, null));
     }
 
     @Transactional
-    public Optional<BoardDetailDto> changeBoard(UpdateBoardDto updateBoardDto) throws Exception {
+    public Optional<BoardDetailDto> updateBoard(UpdateBoardDto updateBoardDto) throws Exception {
 
         long boardId = updateBoardDto.getBoardId();
 
-        if (boardRepository.updateBoardByUpdateForm(updateBoardDto) != 1) return Optional.empty();
+        int result = boardRepository.updateBoard(updateBoardDto);
 
-        return Optional.of(boardRepository.selectDetailById(boardId).orElseThrow(() -> new NotFoundException("게시물을 찾을 수 없습니다.")));
+        if (SqlReturnUtils.changeFail(result)) return Optional.empty();
+
+        return Optional.of(boardRepository.getBoardDetail(boardId).orElseThrow(() -> new NotFoundException("게시물을 찾을 수 없습니다.")));
     }
 }
 

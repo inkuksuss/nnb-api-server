@@ -67,28 +67,27 @@ public class BoardController {
     @GetMapping("/detail/{id}")
     public ResultResponse getBoardDetail(@PathVariable("id") long boardId) throws Exception {
 
-        if (MemberAuthenticationUtils.isMember()) {
-            Member member = MemberAuthenticationUtils.getMemberAuthentication();
+        BoardDetailResponse boardDetailResponse = boardService.getBoardDetail(boardId);
 
-            BoardDetailResponse boardDetailResponse = boardService.getBoardDetail(boardId, member.getMemberId());
-
-            if (boardDetailResponse.getBoardStatus().equals(Status.DELETE.getStatusValue())) {
-                return new ResultResponse<>(HttpStatus.BAD_REQUEST, ResultCode.DENIED.getCode(), "삭제된 게시물입니다.");
-            }
-
-            if (boardDetailResponse.getBoardStatus().equals(Status.PRIVATE.getStatusValue())) {
-                return new ResultResponse<>(HttpStatus.BAD_REQUEST, ResultCode.DENIED.getCode(), "비공개 게시물입니다.");
-            }
-
-            return new ResultResponse<>(HttpStatus.OK, ResultCode.SUCCESS.getCode(), ResultCode.SUCCESS.getMessage(), boardDetailResponse);
+        if (boardDetailResponse.getBoardStatus().equals(Status.DELETE.getStatusValue())) {
+            return new ResultResponse<>(HttpStatus.BAD_REQUEST, ResultCode.DENIED.getCode(), "삭제된 게시물입니다.");
         }
+
+        if (boardDetailResponse.getBoardStatus().equals(Status.PRIVATE.getStatusValue())) {
+            return new ResultResponse<>(HttpStatus.BAD_REQUEST, ResultCode.DENIED.getCode(), "비공개 게시물입니다.");
+        }
+
+        return new ResultResponse<>(HttpStatus.OK, ResultCode.SUCCESS.getCode(), ResultCode.SUCCESS.getMessage(), boardDetailResponse);
     }
 
     @GetMapping("/delete/{id}")
     public ResultResponse removeBoard(HttpServletRequest httpServletRequest, @PathVariable("id") long boardId) throws Exception {
-        Member member = (Member) httpServletRequest.getAttribute("member");
 
-        boardService.removeBoard(boardId, member.getMemberId());
+        if (MemberAuthenticationUtils.isAnonymous()) {
+            return new ResultResponse<>(HttpStatus.FORBIDDEN, ResultCode.FORBIDDEN.getCode(), "로그인 후 이용 가능한 서비스입니다.");
+        }
+
+        boardService.deleteBoard(boardId);
 
         return new ResultResponse(HttpStatus.OK, ResultCode.SUCCESS.getCode(), ResultCode.SUCCESS.getMessage());
     }
@@ -98,7 +97,12 @@ public class BoardController {
                                       @RequestBody UpdateBoardForm updateBoardForm,
                                       @PathVariable("id") long boardId) throws Exception
     {
-        Member member = (Member) httpServletRequest.getAttribute("member");
+
+        if (MemberAuthenticationUtils.isAnonymous()) {
+            return new ResultResponse<>(HttpStatus.FORBIDDEN, ResultCode.FORBIDDEN.getCode(), "로그인 후 이용 가능한 서비스입니다.");
+        }
+
+        Member member = MemberAuthenticationUtils.getMemberAuthentication();
 
         UpdateBoardDto updateBoardDto = UpdateBoardDto.builder()
                 .boardId(boardId)
@@ -110,7 +114,7 @@ public class BoardController {
                 .boardLastUpdated(new Timestamp(System.currentTimeMillis()))
                 .build();
 
-        Optional<BoardDetailDto> updatedDetail = boardService.changeBoard(updateBoardDto);
+        Optional<BoardDetailDto> updatedDetail = boardService.updateBoard(updateBoardDto);
 
         Map<String, BoardDetailDto> mapper = new HashMap<>();
         mapper.put("detail", updatedDetail.get());

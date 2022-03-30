@@ -17,15 +17,15 @@ import java.util.Optional;
 @Repository
 public interface BoardRepository {
 
-    List<BoardResponse> selectAllNotices() throws SQLException;
+    List<BoardResponse> getNoticeBoards() throws SQLException;
 
-    List<BoardResponse> selectAllFAQs() throws SQLException;
+    List<BoardResponse> getFAQBoards() throws SQLException;
 
-    void insertBoard(Board board) throws SQLException;
+    void addBoard(Board board) throws SQLException;
 
-    Optional<BoardDetailDto> selectDetailById(long boardId) throws SQLException;
+    Optional<BoardDetailDto> getBoardDetail(long boardId) throws SQLException;
 
-    int deleteBoardByDeleteBoardDto(DeleteBoardDto deleteBoardDto) throws SQLException;
+    int deleteBoard(DeleteBoardDto deleteBoardDto) throws SQLException;
 
-    int updateBoardByUpdateForm(UpdateBoardDto updateBoardDto) throws SQLException;
+    int updateBoard(UpdateBoardDto updateBoardDto) throws SQLException;
 }

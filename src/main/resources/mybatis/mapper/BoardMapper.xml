@@ -5,7 +5,7 @@
 
 <mapper namespace="com.smartFarm.was.web.repository.BoardRepository">
 
-    <select id="findAllNotice" resultType="com.smartFarm.was.domain.response.board.BoardResponse">
+    <select id="getNoticeBoards" resultType="com.smartFarm.was.domain.response.board.BoardResponse">
         SELECT
             board_title,
             board_created,
@@ -18,7 +18,7 @@
         ORDER BY board_created DESC
     </select>
 
-    <select id="findAllFAQ" resultType="com.smartFarm.was.domain.response.board.BoardResponse">
+    <select id="getFAQBoards" resultType="com.smartFarm.was.domain.response.board.BoardResponse">
         SELECT
             board_title,
             board_created,
@@ -31,7 +31,7 @@
         ORDER BY board_created DESC
     </select>
 
-    <insert id="add" parameterType="com.smartFarm.was.domain.entity.Board" useGeneratedKeys="true" keyProperty="boardId">
+    <insert id="addBoard" parameterType="com.smartFarm.was.domain.entity.Board" useGeneratedKeys="true" keyProperty="boardId">
         INSERT INTO board
             (
              member_id,
@@ -75,7 +75,7 @@
         <result property="commentCreated" column="comment_created" />
     </resultMap>
 
-    <select id="findByIdDetail" parameterType="long" resultMap="BoardDetailMap">
+    <select id="getBoardDetail" parameterType="long" resultMap="BoardDetailMap">
         SELECT
                board.board_id,
                board.member_id,
@@ -102,7 +102,7 @@
         WHERE board.board_id = #{boardId}
     </select>
 
-    <update id="deleteByDeleteBoardDto" parameterType="com.smartFarm.was.domain.dto.board.DeleteBoardDto">
+    <update id="deleteBoard" parameterType="com.smartFarm.was.domain.dto.board.DeleteBoardDto">
         UPDATE
             board
         SET
@@ -111,7 +111,7 @@
             board_id = #{boardId} AND member_id = #{memberId}
     </update>
 
-    <update id="updateByUpdateForm" parameterType="com.smartFarm.was.domain.request.board.UpdateBoardForm">
+    <update id="updateBoard" parameterType="com.smartFarm.was.domain.request.board.UpdateBoardForm">
         UPDATE
             board
         SET
