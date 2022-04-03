@@ -3,12 +3,12 @@ package com.smartFarm.was.web.config.security;
 import com.smartFarm.was.domain.entity.sub.Authority;
 import com.smartFarm.was.web.config.security.filter.JwtFilter;
 import com.smartFarm.was.web.config.security.provider.TokenProvider;
+import com.smartFarm.was.web.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -18,13 +18,13 @@ import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 
-@Configuration
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 @RequiredArgsConstructor
 public class SecurityConfig extends WebSecurityConfigurerAdapter implements WebMvcConfigurer {
 
     private final TokenProvider tokenProvider;
+    private final MemberService memberService;
 
     @Bean
     public JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint() {
@@ -46,6 +46,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter implements WebM
         return new JwtFilter(tokenProvider);
     }
 
+    @Bean
+    public JwtAuthenticationProvider jwtAuthenticationProvider() {
+        return new JwtAuthenticationProvider(memberService, this.passwordEncoder());
+    }
+
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
@@ -53,24 +58,31 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter implements WebM
 
                 .and()
                     .csrf().disable()
-                .authorizeRequests()
+                    .authorizeRequests()
                     .antMatchers("/admin/**").hasRole(Authority.ADMIN.getAlias())
                     .antMatchers("/login", "/join").hasRole(Authority.ANONYMOUS.getAlias())
                     .antMatchers("/**").hasAnyRole(Authority.MEMBER.getRole(), Authority.ANONYMOUS.getAlias())
 
                 .and()
                     .addFilterBefore(jwtFilter(), UsernamePasswordAuthenticationFilter.class)
-                    .headers().frameOptions().sameOrigin();
-        http
-                .sessionManagement()
-                .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+                    .headers().frameOptions().sameOrigin()
 
-        http
-                .exceptionHandling()
-                .authenticationEntryPoint(new JwtAuthenticationEntryPoint())
-                .accessDeniedHandler(new JwtAccessDeniedHandler());
+                .and()
+                    .sessionManagement()
+                    .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
 
-        http.anonymous().principal("anonymous").authorities("ROLE_ANONYMOUS");
+                .and()
+                    .exceptionHandling()
+                    .authenticationEntryPoint(new JwtAuthenticationEntryPoint())
+                    .accessDeniedHandler(new JwtAccessDeniedHandler())
+
+                .and()
+                    .anonymous()
+                    .principal(Authority.ANONYMOUS.getAlias())
+                    .authorities(Authority.ANONYMOUS.getRole())
+
+                .and()
+                    .authenticationProvider(jwtAuthenticationProvider());
     }
     @Override
     public void addCorsMappings(CorsRegistry registry) {

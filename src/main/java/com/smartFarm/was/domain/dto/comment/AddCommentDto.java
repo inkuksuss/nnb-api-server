@@ -21,9 +21,9 @@ public class AddCommentDto {
 
     private AddCommentDto() {}
 
-    public static AddCommentDto of(AddCommentForm addCommentForm, long boardId, long memberId) {
+    public static AddCommentDto of(AddCommentForm addCommentForm, long memberId) {
         AddCommentDto addCommentDto = new AddCommentDto();
-        addCommentDto.boardId = boardId;
+        addCommentDto.boardId = addCommentForm.getBoardId();
         addCommentDto.memberId = memberId;
         addCommentDto.commentContent = addCommentForm.getCommentContent();
         addCommentDto.commentStatus = addCommentForm.getCommentStatus();

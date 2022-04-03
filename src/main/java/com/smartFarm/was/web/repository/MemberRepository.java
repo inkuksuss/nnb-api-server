@@ -7,7 +7,7 @@ import java.util.Optional;
 
 public interface MemberRepository {
 
-    void saveMember(Member member) throws SQLException;
+    void addMember(Member member) throws SQLException;
 
     Optional<Member> findByEmail(String memberEmail);
 }

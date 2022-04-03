@@ -35,13 +35,13 @@ class BoardControllerTest {
     @Test
     void addBoard() throws SQLException {
         Long memberId = 34l;
-        AddBoardForm addBoardForm = AddBoardForm.builder()
-                .boardTitle("hello3")
-                .boardContent("안녕3")
-                .boardStatus("public")
-                .categoryId(2L)
-                .build();
-        boardService.addBoard(addBoardForm, memberId);
+//        AddBoardForm addBoardForm = AddBoardForm.builder()
+//                .boardTitle("hello3")
+//                .boardContent("안녕3")
+//                .boardStatus("public")
+//                .categoryId(2L)
+//                .build();
+//        boardService.addBoard(addBoardForm);
     }
 
     @Test

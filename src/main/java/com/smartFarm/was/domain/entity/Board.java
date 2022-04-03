@@ -31,6 +31,5 @@ public class Board {
         return board;
     }
 
-    private Board() {
-    }
+    private Board() {}
 }

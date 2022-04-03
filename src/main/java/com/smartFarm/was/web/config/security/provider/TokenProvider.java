@@ -1,6 +1,7 @@
 package com.smartFarm.was.web.config.security.provider;
 
 
+import com.smartFarm.was.domain.entity.sub.Authority;
 import com.smartFarm.was.web.config.security.JwtAuthenticationToken;
 import com.smartFarm.was.domain.dto.member.MemberDto;
 import io.jsonwebtoken.*;
@@ -25,7 +26,6 @@ import java.util.stream.Collectors;
 public class TokenProvider {
 
     private static final String AUTHORITIES_KEY = "auth";
-    private static final String MEMBER = "member";
 
     private final String secret;
     private final long tokenValidityInMilliSeconds;
@@ -55,7 +55,7 @@ public class TokenProvider {
 
         return Jwts.builder()
                 .setSubject(memberDto.getUsername())
-                .claim(MEMBER, memberDto.getMember())
+                .claim(Authority.MEMBER.getAlias(), memberDto.getMember())
                 .claim(AUTHORITIES_KEY, authorities)
                 .signWith(key, SignatureAlgorithm.HS512)
                 .setExpiration(validity)
@@ -75,7 +75,7 @@ public class TokenProvider {
                         .map(SimpleGrantedAuthority::new)
                         .collect(Collectors.toList());
 
-        return new JwtAuthenticationToken(claims.get(MEMBER), "", authorities);
+        return new JwtAuthenticationToken(claims.get(Authority.MEMBER.getAlias()), "", authorities);
     }
 
     public boolean validateToken(String token) {

@@ -33,6 +33,10 @@ public class MemberAuthenticationUtils {
         return getMemberFromAuthentication(getAuthentication());
     }
 
+    public static long getMemberIdByMemberAuthentication() {
+        return getMemberAuthentication().getMemberId();
+    }
+
     private static Authentication getAuthentication() {
         return SecurityContextHolder.getContext().getAuthentication();
     }

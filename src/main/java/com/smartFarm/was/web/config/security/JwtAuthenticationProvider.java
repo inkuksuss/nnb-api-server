@@ -7,7 +7,6 @@ import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 
@@ -16,6 +15,7 @@ public class JwtAuthenticationProvider implements AuthenticationProvider {
 
     private final MemberService memberService;
     private final PasswordEncoder passwordEncoder;
+
 
     @Override
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
@@ -33,6 +33,7 @@ public class JwtAuthenticationProvider implements AuthenticationProvider {
 
     @Override
     public boolean supports(Class<?> authentication) {
-        return false;
+
+        return JwtAuthenticationToken.class.isAssignableFrom(authentication);
     }
 }

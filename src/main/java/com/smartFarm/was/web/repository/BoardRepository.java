@@ -28,4 +28,6 @@ public interface BoardRepository {
     int deleteBoard(DeleteBoardDto deleteBoardDto) throws SQLException;
 
     int updateBoard(UpdateBoardDto updateBoardDto) throws SQLException;
+
+    Optional<Board> getBoardById(long boardId) throws SQLException;
 }

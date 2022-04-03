@@ -34,7 +34,7 @@ public class JoinForm implements Serializable {
     @NotEmpty(message = "개인정보동의 해주세요.")
     private String privacyConsent;
 
-//    @NotEmpty(message = "생년월일을 입력해주세요.")
+    @NotEmpty(message = "생년월일을 입력해주세요.")
     private Timestamp memberBirthday;
 
     @NotEmpty(message = "권한이 올바르지 않습니다.")

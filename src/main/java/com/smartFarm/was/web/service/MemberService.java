@@ -49,12 +49,12 @@ public class MemberService implements UserDetailsService {
     @Transactional
     public void addMember(JoinForm joinForm) throws Exception {
 
-        if (memberRepository.findByEmail(joinForm.getMemberEmail()).isEmpty()) {
-            throw new ExistedMemberException(messageSource.getMessage("duplicate.parameter", new Object[]{"이메일"}, null));
-        }
+        memberRepository.findByEmail(joinForm.getMemberEmail())
+                .orElseThrow(() -> new ExistedMemberException(messageSource.getMessage("duplicate.parameter", new Object[]{"이메일"}, null)));
 
         Member member = Member.from(joinForm);
-        memberRepository.saveMember(member);
+
+        memberRepository.addMember(member);
     }
 }
 

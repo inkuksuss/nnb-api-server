@@ -5,7 +5,7 @@
 
 <mapper namespace="com.smartFarm.was.web.repository.CommentRepository">
 
-    <insert id="add" parameterType="com.smartFarm.was.domain.dto.comment.AddCommentDto">
+    <insert id="addComment" parameterType="com.smartFarm.was.domain.dto.comment.AddCommentDto">
         INSERT INTO comment (
                             board_id,
                             member_id,
@@ -20,25 +20,52 @@
                 #{commentStatus},
                 #{commentCreated}
                 )
-        <selectKey keyProperty="commentId,boardId,memberId,memberName,commentContent,commentCreated,commentLastUpdated,commentStatus" order="AFTER" resultType="com.smartFarm.was.domain.dto.comment.AddCommentDto">
-            SELECT
-                   comment_id,
-                   board_id,
-                   comment.member_id,
-                   member_name,
-                   comment_content,
-                   comment_created,
-                   comment_last_updated,
-                   comment_status
-            FROM comment
-                INNER JOIN member
-                    ON member.member_id = comment.member_id
-            WHERE
-                  board_id = #{boardId}
-                  AND comment.member_id = #{memberId}
-                  AND comment_created = #{commentCreated}
-
-        </selectKey>
     </insert>
+
+    <select id="getComment" parameterType="com.smartFarm.was.domain.dto.comment.GetCommentDto" resultType="com.smartFarm.was.domain.dto.comment.GetCommentDto">
+        SELECT
+               comment_id,
+               comment.member_id,
+               member.member_name,
+               comment_content,
+               comment_status,
+               comment_created,
+               comment_last_updated
+        FROM comment
+            LEFT JOIN member
+                ON comment.member_id = member.member_id
+        WHERE comment_status = 'public'
+        <if test="isOwner == true">
+            OR comment_status = 'private'
+        </if>
+        <if test="memberId != null and memberId != ''">
+            AND comment.member_id = #{memberId}
+        </if>
+        <if test="boardId != null and boardId != ''">
+            AND board_id = #{boardId}
+        </if>
+        <if test="commentId != null and commentId != ''">
+            AND comment_id = #{commentId}
+        </if>
+    </select>
 </mapper>
-<!--        keyColumn="comment_id,board_id,member_id,comment_content,comment_created,comment_last_updated,comment_status"-->
+
+<!--<selectKey keyProperty="commentId,boardId,memberId,memberName,commentContent,commentCreated,commentLastUpdated,commentStatus" order="AFTER" resultType="com.smartFarm.was.domain.dto.comment.AddCommentDto">-->
+<!--SELECT-->
+<!--comment_id,-->
+<!--board_id,-->
+<!--comment.member_id,-->
+<!--member_name,-->
+<!--comment_content,-->
+<!--comment_created,-->
+<!--comment_last_updated,-->
+<!--comment_status-->
+<!--FROM comment-->
+<!--LEFT JOIN member-->
+<!--ON member.member_id = comment.member_id-->
+<!--WHERE-->
+<!--board_id = #{boardId}-->
+<!--AND comment.member_id = #{memberId}-->
+<!--AND comment_created = #{commentCreated}-->
+
+<!--</selectKey>-->

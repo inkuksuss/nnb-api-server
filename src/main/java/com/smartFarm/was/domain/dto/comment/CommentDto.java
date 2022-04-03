@@ -15,4 +15,5 @@ public class CommentDto {
     private final String commentContent;
     private final String commentStatus;
     private final Timestamp commentCreated;
+    private final Timestamp commentLastUpdated;
 }

@@ -4,12 +4,12 @@ import lombok.*;
 
 @AllArgsConstructor
 @Getter
-@Builder
 @ToString
 public class AddBoardForm {
 
-    private String boardTitle;
-    private String boardContent;
-    private String boardStatus;
-    private Long categoryId;
+    private final String boardTitle;
+    private final String boardContent;
+    private final String boardStatus;
+    private final long categoryId;
+    private final long memberId;
 }

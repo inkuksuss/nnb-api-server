@@ -1,6 +1,7 @@
 package com.smartFarm.was.web.service;
 
 
+import com.smartFarm.was.domain.dto.mapping.BoardMemberMappingDto;
 import com.smartFarm.was.domain.dto.board.DeleteBoardDto;
 import com.smartFarm.was.domain.entity.Member;
 import com.smartFarm.was.domain.entity.sub.Status;
@@ -10,7 +11,6 @@ import com.smartFarm.was.domain.dto.board.BoardDetailDto;
 import com.smartFarm.was.domain.response.board.BoardResponse;
 import com.smartFarm.was.domain.entity.Board;
 import com.smartFarm.was.web.repository.BoardRepository;
-import com.smartFarm.was.domain.request.board.AddBoardForm;
 import com.smartFarm.was.web.utils.MemberAuthenticationUtils;
 import com.smartFarm.was.web.utils.SqlReturnUtils;
 import lombok.RequiredArgsConstructor;
@@ -34,8 +34,7 @@ public class BoardService {
     private final MessageSource messageSource;
 
     @Transactional
-    public long addBoard(AddBoardForm addBoardForm, Long memberId) throws SQLException {
-        Board board = Board.of(addBoardForm, memberId);
+    public long addBoard(Board board) throws SQLException {
 
         boardRepository.addBoard(board);
 
@@ -99,15 +98,20 @@ public class BoardService {
     }
 
     @Transactional
-    public Optional<BoardDetailDto> updateBoard(UpdateBoardDto updateBoardDto) throws Exception {
-
-        long boardId = updateBoardDto.getBoardId();
+    public void updateBoard(UpdateBoardDto updateBoardDto) throws Exception {
 
         int result = boardRepository.updateBoard(updateBoardDto);
 
-        if (SqlReturnUtils.changeFail(result)) return Optional.empty();
+        if (SqlReturnUtils.changeFail(result)) throw new RuntimeException(messageSource.getMessage("fail.update", new Object[]{BOARD_TYPE}, null));
+    }
 
-        return Optional.of(boardRepository.getBoardDetail(boardId).orElseThrow(() -> new NotFoundException("게시물을 찾을 수 없습니다.")));
+    @Transactional
+    public boolean checkOwnerById(BoardMemberMappingDto boardMemberMapperDto) throws Exception {
+        Board board = boardRepository.getBoardById(boardMemberMapperDto.getBoardId())
+                .orElseThrow(() -> new NotFoundException(messageSource.getMessage("fail.find", new Object[]{BOARD_TYPE}, null)));
+
+        if (board.getMemberId() == boardMemberMapperDto.getMemberId()) return true;
+        else return false;
     }
 }
 

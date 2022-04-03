@@ -7,6 +7,7 @@ import com.smartFarm.was.domain.response.member.LoginResponse;
 import com.smartFarm.was.domain.dto.member.MemberDto;
 import com.smartFarm.was.domain.response.ResultResponse;
 import com.smartFarm.was.domain.request.member.JoinForm;
+import com.smartFarm.was.web.config.security.JwtAuthenticationToken;
 import com.smartFarm.was.web.config.security.filter.JwtFilter;
 import com.smartFarm.was.web.config.security.provider.TokenProvider;
 import com.smartFarm.was.web.service.MemberService;
@@ -57,10 +58,10 @@ public class MemberController {
     @PostMapping("/login")
     public ResultResponse login(@RequestBody @Validated LoginForm loginForm) throws Exception {
 
-        UsernamePasswordAuthenticationToken authenticationToken =
-                new UsernamePasswordAuthenticationToken(loginForm.getMemberEmail(), loginForm.getMemberPassword());
+        JwtAuthenticationToken jwtAuthenticationToken =
+                new JwtAuthenticationToken(loginForm.getMemberEmail(), loginForm.getMemberPassword());
 
-        Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
+        Authentication authentication = authenticationManagerBuilder.getObject().authenticate(jwtAuthenticationToken);
 
         String token = tokenProvider.createToken(authentication);
 

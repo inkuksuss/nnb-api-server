@@ -19,12 +19,12 @@ class CommentServiceImplTest {
     @Autowired
     CommentRepository commentRepository;
 
-    @Test
-    void addComment() throws SQLException {
-        AddCommentForm addCommentForm = new AddCommentForm("fffaaaf", Status.PUBLIC.getStatusValue());
-        AddCommentDto comment = AddCommentDto.of(addCommentForm, 33l, 34l);
-        commentRepository.add(comment);
-        log.info("add = {}", comment.toString());
-
-    }
+//    @Test
+//    void addComment() throws SQLException {
+//        AddCommentForm addCommentForm = new AddCommentForm("fffaaaf", Status.PUBLIC.getStatusValue());
+//        AddCommentDto comment = AddCommentDto.from(addCommentForm);
+//        commentRepository.add(comment);
+//        log.info("add = {}", comment.toString());
+//
+//    }
 }

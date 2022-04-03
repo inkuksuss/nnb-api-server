@@ -18,12 +18,12 @@ public class WebConfig implements WebMvcConfigurer {
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        registry.addInterceptor(new setMemberAuthorityInterceptor()).order(1)
-                .addPathPatterns("/board/add", "/board/detail/**", "/board/update/**", "/board/delete/**")
-                .excludePathPatterns("/css/**", "/*.ico", "/error");
-
-        registry.addInterceptor(new addMemberByAuthorityInterceptor()).order(2)
-                .addPathPatterns("/board/add", "/board/detail/**", "/board/update/**", "/board/delete/**")
-                .excludePathPatterns("/css/**", "/*.ico", "/error");
+//        registry.addInterceptor(new setMemberAuthorityInterceptor()).order(1)
+//                .addPathPatterns("/board/add", "/board/detail/**", "/board/update/**", "/board/delete/**")
+//                .excludePathPatterns("/css/**", "/*.ico", "/error");
+//
+//        registry.addInterceptor(new addMemberByAuthorityInterceptor()).order(2)
+//                .addPathPatterns("/board/add", "/board/detail/**", "/board/update/**", "/board/delete/**")
+//                .excludePathPatterns("/css/**", "/*.ico", "/error");
     }
 }

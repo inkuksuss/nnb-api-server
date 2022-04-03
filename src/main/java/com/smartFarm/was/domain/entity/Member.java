@@ -1,5 +1,6 @@
 package com.smartFarm.was.domain.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.smartFarm.was.domain.request.member.JoinForm;
 import lombok.*;
 
@@ -11,6 +12,7 @@ public class Member implements Serializable {
 
     private long memberId;
     private String memberName;
+    @JsonIgnore
     private String memberPassword;
     private String memberEmail;
     private String memberPhone;
