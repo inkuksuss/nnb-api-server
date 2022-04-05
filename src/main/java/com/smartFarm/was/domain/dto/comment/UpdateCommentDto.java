@@ -1,20 +1,18 @@
 package com.smartFarm.was.domain.dto.comment;
 
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
-import lombok.ToString;
 
 import java.sql.Timestamp;
 
-@ToString
+
 @Getter @Setter
-@RequiredArgsConstructor
-public class CommentDto {
+public class UpdateCommentDto {
 
     private long commentId;
+    private long boardId;
     private long memberId;
-    private String memberName;
     private String commentContent;
     private String commentStatus;
     private Timestamp commentCreated;

@@ -62,7 +62,7 @@ public class BoardService {
         if (MemberAuthenticationUtils.isMember()) {
             Member member = MemberAuthenticationUtils.getMemberAuthentication();
 
-            if (boardDetailDto.getBoardStatus().equals(Status.DELETE.getStatusValue())) {
+            if (boardDetailDto.getBoardStatus() == Status.DELETE.getStatusValue()) {
                 return BoardDetailResponse.of(Status.DELETE.isOwner(), boardDetailDto);
             } else if (boardDetailDto.getMemberId() == member.getMemberId())  {
                 return BoardDetailResponse.of(Status.OWNER.isOwner(), boardDetailDto);
@@ -86,23 +86,27 @@ public class BoardService {
     }
 
     @Transactional
-    public void deleteBoard(long boardId) throws SQLException {
+    public void deleteBoard(long boardId) {
 
         Member member = MemberAuthenticationUtils.getMemberAuthentication();
 
         DeleteBoardDto deleteBoardDto = new DeleteBoardDto(boardId, member.getMemberId(), Status.DELETE.getStatusValue());
 
-        int result = boardRepository.deleteBoard(deleteBoardDto);
-
-        if (SqlReturnUtils.changeFail(result)) throw new RuntimeException(messageSource.getMessage("fail.delete", new Object[]{BOARD_TYPE}, null));
+        try {
+            boardRepository.deleteBoard(deleteBoardDto);
+        } catch (SQLException e) {
+            throw new RuntimeException(messageSource.getMessage("fail.delete", new Object[]{BOARD_TYPE}, null));
+        }
     }
 
     @Transactional
-    public void updateBoard(UpdateBoardDto updateBoardDto) throws Exception {
+    public void updateBoard(UpdateBoardDto updateBoardDto) {
 
-        int result = boardRepository.updateBoard(updateBoardDto);
-
-        if (SqlReturnUtils.changeFail(result)) throw new RuntimeException(messageSource.getMessage("fail.update", new Object[]{BOARD_TYPE}, null));
+        try {
+            boardRepository.updateBoard(updateBoardDto);
+        } catch (SQLException e) {
+            throw new RuntimeException(messageSource.getMessage("fail.update", new Object[]{BOARD_TYPE}, null));
+        }
     }
 
     @Transactional

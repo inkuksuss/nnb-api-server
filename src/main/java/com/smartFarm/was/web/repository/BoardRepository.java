@@ -25,9 +25,9 @@ public interface BoardRepository {
 
     Optional<BoardDetailDto> getBoardDetail(long boardId) throws SQLException;
 
-    int deleteBoard(DeleteBoardDto deleteBoardDto) throws SQLException;
+    void deleteBoard(DeleteBoardDto deleteBoardDto) throws SQLException;
 
-    int updateBoard(UpdateBoardDto updateBoardDto) throws SQLException;
+    void updateBoard(UpdateBoardDto updateBoardDto) throws SQLException;
 
     Optional<Board> getBoardById(long boardId) throws SQLException;
 }

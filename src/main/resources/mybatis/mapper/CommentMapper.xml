@@ -5,6 +5,30 @@
 
 <mapper namespace="com.smartFarm.was.web.repository.CommentRepository">
 
+    <select id="getComment" parameterType="com.smartFarm.was.domain.dto.comment.GetCommentDto" resultType="com.smartFarm.was.domain.dto.comment.CommentDto">
+        SELECT
+        comment_id,
+        comment.member_id,
+        member.member_name,
+        comment_content,
+        comment_status,
+        comment_created,
+        comment_last_updated
+        FROM comment
+        LEFT JOIN member
+        ON comment.member_id = member.member_id
+        WHERE (comment_status = 'public' OR comment_status = 'private')
+        <if test="memberId != null and memberId != ''">
+            AND comment.member_id = #{memberId}
+        </if>
+        <if test="boardId != null and boardId != ''">
+            AND board_id = #{boardId}
+        </if>
+        <if test="commentId != null and commentId != ''">
+            AND comment_id = #{commentId}
+        </if>
+    </select>
+
     <insert id="addComment" parameterType="com.smartFarm.was.domain.dto.comment.AddCommentDto">
         INSERT INTO comment (
                             board_id,
@@ -22,32 +46,38 @@
                 )
     </insert>
 
-    <select id="getComment" parameterType="com.smartFarm.was.domain.dto.comment.GetCommentDto" resultType="com.smartFarm.was.domain.dto.comment.GetCommentDto">
-        SELECT
-               comment_id,
-               comment.member_id,
-               member.member_name,
-               comment_content,
-               comment_status,
-               comment_created,
-               comment_last_updated
-        FROM comment
-            LEFT JOIN member
-                ON comment.member_id = member.member_id
-        WHERE comment_status = 'public'
-        <if test="isOwner == true">
-            OR comment_status = 'private'
-        </if>
+    <update id="updateComment" parameterType="com.smartFarm.was.domain.dto.comment.UpdateCommentDto">
+        UPDATE
+            comment
+        SET
+            comment_content = #{commentContent},
+            comment_status = #{commentStatus},
+            comment_last_updated = #{commentLastUpdated}
+        WHERE
+            comment_id = #{commentId}
         <if test="memberId != null and memberId != ''">
             AND comment.member_id = #{memberId}
         </if>
         <if test="boardId != null and boardId != ''">
             AND board_id = #{boardId}
         </if>
-        <if test="commentId != null and commentId != ''">
-            AND comment_id = #{commentId}
+    </update>
+
+    <update id="deleteComment" parameterType="com.smartFarm.was.domain.dto.comment.DeleteCommentDto">
+        UPDATE
+            comment
+        SET
+            comment_status = #{commentStatus},
+            comment_last_updated = #{commentLastUpdated}
+        WHERE
+        comment_id = #{commentId}
+        <if test="memberId != null and memberId != ''">
+            AND comment.member_id = #{memberId}
         </if>
-    </select>
+        <if test="boardId != null and boardId != ''">
+            AND board_id = #{boardId}
+        </if>
+    </update>
 </mapper>
 
 <!--<selectKey keyProperty="commentId,boardId,memberId,memberName,commentContent,commentCreated,commentLastUpdated,commentStatus" order="AFTER" resultType="com.smartFarm.was.domain.dto.comment.AddCommentDto">-->

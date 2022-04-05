@@ -66,11 +66,11 @@ public class BoardController {
 
         BoardDetailResponse boardDetailResponse = boardService.getBoardDetail(boardId);
 
-        if (boardDetailResponse.getBoardStatus().equals(Status.DELETE.getStatusValue())) {
+        if (boardDetailResponse.getBoardStatus() == Status.DELETE.getStatusValue()) {
             return new ResultResponse<>(HttpStatus.BAD_REQUEST, ResultCode.DENIED.getCode(), "삭제된 게시물입니다.");
         }
 
-        if (boardDetailResponse.getBoardStatus().equals(Status.PRIVATE.getStatusValue())) {
+        if (boardDetailResponse.getBoardStatus() == Status.PRIVATE.getStatusValue()) {
             return new ResultResponse<>(HttpStatus.BAD_REQUEST, ResultCode.DENIED.getCode(), "비공개 게시물입니다.");
         }
 

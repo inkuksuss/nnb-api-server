@@ -2,9 +2,9 @@ package com.smartFarm.was.domain.request.board;
 
 import lombok.*;
 
-@AllArgsConstructor
 @Getter
 @ToString
+@RequiredArgsConstructor
 public class AddBoardForm {
 
     private final String boardTitle;

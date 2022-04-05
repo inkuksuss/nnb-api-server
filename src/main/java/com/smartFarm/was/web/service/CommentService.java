@@ -1,18 +1,17 @@
 package com.smartFarm.was.web.service;
 
-import com.smartFarm.was.domain.dto.comment.AddCommentDto;
-import com.smartFarm.was.domain.dto.comment.CommentDto;
-import com.smartFarm.was.domain.dto.comment.GetCommentDto;
+import com.smartFarm.was.domain.dto.comment.*;
 
 import java.sql.SQLException;
+import java.util.List;
 
 public interface CommentService {
 
-    AddCommentDto addComment(AddCommentDto addCommentDto) throws SQLException;
+    List<CommentDto> addComment(AddCommentDto addCommentDto) throws SQLException;
 
-    GetCommentDto getComment(CommentDto commentDto) throws SQLException;
+    List<CommentDto> getComment(GetCommentDto getCommentDto) throws SQLException;
 
-//    updateComment(UpdateCommentDto updateCommentDto) throws SQLException;
-//
-//    deleteComment(long commentId) throws SQLException;
+    List<CommentDto> updateComment(UpdateCommentDto updateCommentDto) throws SQLException;
+
+    List<CommentDto> deleteComment(DeleteCommentDto deleteCommentDto) throws SQLException;
 }

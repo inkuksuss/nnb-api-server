@@ -1,22 +1,22 @@
 package com.smartFarm.was.web.repository;
 
-import com.smartFarm.was.domain.dto.comment.AddCommentDto;
-import com.smartFarm.was.domain.dto.comment.GetCommentDto;
+import com.smartFarm.was.domain.dto.comment.*;
 import org.apache.ibatis.annotations.Mapper;
 import org.springframework.stereotype.Repository;
 
 import java.sql.SQLException;
+import java.util.List;
 
 @Mapper
 @Repository
 public interface CommentRepository {
 
-    int addComment(AddCommentDto addCommentDto) throws SQLException;
+    void addComment(AddCommentDto addCommentDto) throws SQLException;
 
-    GetCommentDto getComment(GetCommentDto getCommentDto) throws SQLException;
+    List<CommentDto> getComment(GetCommentDto getCommentDto) throws SQLException;
 
-    int updateComment(UpdateComm comment) throws SQLException;
+    void updateComment(UpdateCommentDto updateCommentDto) throws SQLException;
 
-    int deleteComment(AddCommentDto comment) throws SQLException;
+    void deleteComment(DeleteCommentDto deleteCommentDto) throws SQLException;
 }
 
