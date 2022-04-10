@@ -6,7 +6,6 @@ import com.smartFarm.was.domain.dto.comment.CommentDto;
 import com.smartFarm.was.domain.dto.comment.DeleteCommentDto;
 import com.smartFarm.was.domain.dto.comment.UpdateCommentDto;
 import com.smartFarm.was.domain.dto.mapping.BoardMemberMappingDto;
-import com.smartFarm.was.domain.entity.sub.Status;
 import com.smartFarm.was.domain.request.comment.AddCommentForm;
 import com.smartFarm.was.domain.request.comment.DeleteCommentForm;
 import com.smartFarm.was.domain.request.comment.UpdateCommentForm;
@@ -14,12 +13,14 @@ import com.smartFarm.was.domain.response.ResultCode;
 import com.smartFarm.was.domain.response.ResultResponse;
 import com.smartFarm.was.web.service.BoardService;
 import com.smartFarm.was.web.service.CommentService;
+import com.smartFarm.was.web.utils.FormValidationUtils;
 import com.smartFarm.was.web.utils.MemberAuthenticationUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -54,13 +55,13 @@ public class CommentController {
     }
 
     @PostMapping("/update/{commentId}")
-    public ResultResponse updateComment(@RequestBody UpdateCommentForm updateCommentForm, @PathVariable long commentId) throws Exception {
+    public ResultResponse updateComment(@RequestBody UpdateCommentForm updateCommentForm, @PathVariable Long commentId) throws Exception {
 
         if (MemberAuthenticationUtils.isAnonymous()) {
             return new ResultResponse<>(HttpStatus.FORBIDDEN, ResultCode.FORBIDDEN.getCode(), "로그인 후 이용 가능한 서비스입니다.");
         }
 
-        long memberId = MemberAuthenticationUtils.getMemberIdByMemberAuthentication();
+        Long memberId = MemberAuthenticationUtils.getMemberIdByMemberAuthentication();
         BoardMemberMappingDto boardMemberMappingDto = BoardMemberMappingDto.of(updateCommentForm.getBoardId(), memberId);
 
         List<CommentDto> commentDtoList;
@@ -84,32 +85,38 @@ public class CommentController {
     }
 
     @PostMapping("/delete/{commentId}")
-    public ResultResponse deleteComment(@RequestBody DeleteCommentForm deleteCommentForm, @PathVariable long commentId) throws Exception {
+    public ResultResponse deleteComment(@RequestBody DeleteCommentForm deleteCommentForm, @PathVariable Long commentId) throws Exception {
+
+        Long boardId = deleteCommentForm.getBoardId();
+
+        ArrayList<Long> idList = new ArrayList<>();
+        idList.add(commentId);
+        idList.add(boardId);
+
+        if (FormValidationUtils.illegalLongValue(idList)) {
+            return new ResultResponse<>(HttpStatus.NOT_FOUND, ResultCode.PAGE_NOT_FOUND.getCode(), "잘못된 경로입니다. ");
+        }
 
         if (MemberAuthenticationUtils.isAnonymous()) {
             return new ResultResponse<>(HttpStatus.FORBIDDEN, ResultCode.FORBIDDEN.getCode(), "로그인 후 이용 가능한 서비스입니다.");
         }
 
-        long memberId = MemberAuthenticationUtils.getMemberIdByMemberAuthentication();
-        BoardMemberMappingDto boardMemberMappingDto = BoardMemberMappingDto.of(deleteCommentForm.getBoardId(), memberId);
-
-        List<CommentDto> commentDtoList;
+        Long memberId = MemberAuthenticationUtils.getMemberIdByMemberAuthentication();
+        BoardMemberMappingDto boardMemberMappingDto = BoardMemberMappingDto.of(boardId, memberId);
 
         if (boardService.checkOwnerById(boardMemberMappingDto)) {
-            DeleteCommentDto deleteCommentDto = new DeleteCommentDto();
 
-            deleteCommentDto.setCommentId(commentId);
-            deleteCommentDto.setMemberId(memberId);
-            deleteCommentDto.setBoardId(deleteCommentForm.getBoardId());
-            deleteCommentDto.setCommentStatus(Status.DELETE.getStatusValue());
-            deleteCommentDto.setCommentLastUpdated(new Timestamp(System.currentTimeMillis()));
+            DeleteCommentDto deleteCommentDto = new DeleteCommentDto(commentId, boardId, memberId);
 
-            commentDtoList = commentService.deleteComment(deleteCommentDto);
+            List<CommentDto> commentDtoList = commentService.deleteComment(deleteCommentDto);
+
+            return new ResultResponse(HttpStatus.OK, ResultCode.SUCCESS.getCode(), ResultCode.SUCCESS.getMessage(), commentDtoList);
+
         } else {
-            return new ResultResponse(HttpStatus.BAD_REQUEST, ResultCode.FAIL.getCode(), "잘못된 요청입니다.");
-        }
 
-        return new ResultResponse(HttpStatus.OK, ResultCode.SUCCESS.getCode(), ResultCode.SUCCESS.getMessage(), commentDtoList);
+            return new ResultResponse(HttpStatus.BAD_REQUEST, ResultCode.FAIL.getCode(), "잘못된 요청입니다.");
+
+        }
     }
 }
 

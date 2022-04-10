@@ -7,5 +7,5 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class DeleteCommentForm {
 
-    private final long boardId;
+    private final Long boardId;
 }

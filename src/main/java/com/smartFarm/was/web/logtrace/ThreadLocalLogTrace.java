@@ -16,7 +16,7 @@ public class ThreadLocalLogTrace implements LogTrace {
     public TraceStatus begin(String message) {
         syncTraceId();
         TraceId traceId = traceIdHolder.get();
-        Long startTimeMs = System.currentTimeMillis();
+        long startTimeMs = System.currentTimeMillis();
         log.info("[{}] {}{}", traceId.getId(), addSpace(START_PREFIX, traceId.getLevel()), message);
         return new TraceStatus(traceId, startTimeMs, message);
     }
@@ -40,7 +40,7 @@ public class ThreadLocalLogTrace implements LogTrace {
     }
 
     private void complete(TraceStatus status, Exception e) {
-        Long stopTimeMs = System.currentTimeMillis();
+        long stopTimeMs = System.currentTimeMillis();
         long resultTimeMs = stopTimeMs - status.getStartTimeMs();
         TraceId traceId = status.getTraceId();
         if (e == null) {

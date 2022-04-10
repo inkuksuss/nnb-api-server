@@ -2,6 +2,7 @@ package com.smartFarm.was.web.service;
 
 import com.smartFarm.was.domain.dto.comment.*;
 import com.smartFarm.was.web.repository.CommentRepository;
+import com.smartFarm.was.web.utils.StatusCheckUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -16,16 +17,14 @@ public class CommentServiceImpl implements CommentService {
     private final CommentRepository commentRepository;
 
     @Override
-    public List<CommentDto> getComment(GetCommentDto getCommentDto) throws SQLException {
+    public List<CommentDto> getCommentList(GetCommentDto getCommentDto) throws SQLException {
+
+        List<CommentDto> commentDtoList = commentRepository.getCommentList(getCommentDto);
 
         if (getCommentDto.isOwner()) {
-            return commentRepository.getComment(getCommentDto);
+            return commentDtoList;
         } else {
-            List<CommentDto> filteredCommentDtoList = commentRepository.getComment(getCommentDto).stream()
-                    .map(el -> {
-                        if (el.getCommentStatus().equals("private")) el.setCommentContent("");
-                        return el;
-                    }).collect(Collectors.toList());
+            List<CommentDto> filteredCommentDtoList = filteredCommentList(commentDtoList);
 
             return filteredCommentDtoList;
         }
@@ -36,9 +35,9 @@ public class CommentServiceImpl implements CommentService {
 
         commentRepository.addComment(addCommentDto);
 
-        GetCommentDto getCommentDto = GetCommentDto.ownerFrom(addCommentDto.getBoardId());
+        GetCommentDto getCommentDto = GetCommentDto.forOwner(addCommentDto.getBoardId());
 
-        return commentRepository.getComment(getCommentDto);
+        return commentRepository.getCommentList(getCommentDto);
     }
 
     @Override
@@ -46,9 +45,9 @@ public class CommentServiceImpl implements CommentService {
 
         commentRepository.updateComment(updateCommentDto);
 
-        GetCommentDto getCommentDto = GetCommentDto.ownerFrom(updateCommentDto.getBoardId());
+        GetCommentDto getCommentDto = GetCommentDto.forOwner(updateCommentDto.getBoardId());
 
-        return commentRepository.getComment(getCommentDto);
+        return commentRepository.getCommentList(getCommentDto);
     }
 
     @Override
@@ -56,8 +55,24 @@ public class CommentServiceImpl implements CommentService {
 
         commentRepository.deleteComment(deleteCommentDto);
 
-        GetCommentDto getCommentDto = GetCommentDto.ownerFrom(deleteCommentDto.getBoardId());
+        GetCommentDto getCommentDto = GetCommentDto.forOwner(deleteCommentDto.getBoardId());
 
-        return commentRepository.getComment(getCommentDto);
+        return commentRepository.getCommentList(getCommentDto);
+    }
+
+    public List<CommentDto> filteredCommentList(List<CommentDto> commentDtoList) {
+
+        List<CommentDto> filteredCommentDtoList = commentDtoList.stream()
+                .map(comment -> doFiltering(comment)).collect(Collectors.toList());
+
+        return filteredCommentDtoList;
+    }
+
+    private CommentDto doFiltering(CommentDto commentDto) {
+        if (StatusCheckUtils.isPrivate(commentDto.getCommentStatus())) {
+            return CommentDto.getFiltered(commentDto);
+        } else {
+            return commentDto;
+        }
     }
 }

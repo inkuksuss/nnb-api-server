@@ -9,9 +9,11 @@ public interface CommentService {
 
     List<CommentDto> addComment(AddCommentDto addCommentDto) throws SQLException;
 
-    List<CommentDto> getComment(GetCommentDto getCommentDto) throws SQLException;
+    List<CommentDto> getCommentList(GetCommentDto getCommentDto) throws SQLException;
 
     List<CommentDto> updateComment(UpdateCommentDto updateCommentDto) throws SQLException;
 
     List<CommentDto> deleteComment(DeleteCommentDto deleteCommentDto) throws SQLException;
+
+    List<CommentDto> filteredCommentList(List<CommentDto> commentDtoList);
 }

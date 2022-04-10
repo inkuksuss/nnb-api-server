@@ -7,14 +7,20 @@ import lombok.Setter;
 import java.sql.Timestamp;
 
 
-@Getter @Setter
+@Getter
 public class DeleteCommentDto {
 
     private long commentId;
     private long boardId;
     private long memberId;
-    private String commentContent;
-    private String commentStatus;
-    private Timestamp commentCreated;
     private Timestamp commentLastUpdated;
+    private char stateDel;
+
+    public DeleteCommentDto(long commentId, long boardId, long memberId) {
+        this.commentId = commentId;
+        this.boardId = boardId;
+        this.memberId = memberId;
+        this.commentLastUpdated = new Timestamp(System.currentTimeMillis());
+        this.stateDel = 'Y';
+    }
 }

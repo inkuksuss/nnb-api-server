@@ -12,7 +12,7 @@ import javax.validation.constraints.NotEmpty;
 public class AddCommentForm {
 
     @NotEmpty(message = "이메일을 입력해주세요.")
-    private final long boardId;
+    private final Long boardId;
 
     @NotEmpty(message = "이메일을 입력해주세요.")
     private final String commentContent;

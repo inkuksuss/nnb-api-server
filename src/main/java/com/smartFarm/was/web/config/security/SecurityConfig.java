@@ -61,7 +61,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter implements WebM
                     .authorizeRequests()
                     .antMatchers("/admin/**").hasRole(Authority.ADMIN.getAlias())
                     .antMatchers("/login", "/join").hasRole(Authority.ANONYMOUS.getAlias())
-                    .antMatchers("/**").hasAnyRole(Authority.MEMBER.getRole(), Authority.ANONYMOUS.getAlias())
+                    .antMatchers("/**").hasAnyRole(Authority.MEMBER.getAlias(), Authority.ANONYMOUS.getAlias())
 
                 .and()
                     .addFilterBefore(jwtFilter(), UsernamePasswordAuthenticationFilter.class)

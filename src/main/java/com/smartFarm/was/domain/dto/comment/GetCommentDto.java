@@ -18,14 +18,14 @@ public class GetCommentDto {
 
     public GetCommentDto() {}
 
-    public static GetCommentDto ownerFrom(long boardId) {
+    public static GetCommentDto forOwner(long boardId) {
         GetCommentDto getCommentDto = new GetCommentDto();
         getCommentDto.boardId =  boardId;
         getCommentDto.isOwner = true;
         return getCommentDto;
     }
 
-    public static GetCommentDto guestFrom(long boardId) {
+    public static GetCommentDto forGuest(long boardId) {
         GetCommentDto getCommentDto = new GetCommentDto();
         getCommentDto.boardId =  boardId;
         getCommentDto.isOwner = false;

@@ -3,6 +3,7 @@ package com.smartFarm.was.domain.response.member;
 import com.smartFarm.was.domain.dto.member.MemberDto;
 import com.smartFarm.was.domain.entity.Member;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Getter
 public class LoginResponse {
@@ -16,4 +17,6 @@ public class LoginResponse {
         memberResponse.token = token;
         return memberResponse;
     }
+
+    public LoginResponse(){}
 }

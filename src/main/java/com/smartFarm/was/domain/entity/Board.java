@@ -18,6 +18,7 @@ public class Board {
     private String boardStatus;
     private Timestamp boardCreated;
     private Timestamp boardLastUpdated;
+    private char stateDel;
 
     public static Board of(AddBoardForm addBoardForm, long memberId) {
         Board board = new Board();
@@ -28,6 +29,8 @@ public class Board {
         board.boardStatus = addBoardForm.getBoardStatus();
         board.boardView = 0;
         board.boardCreated = new Timestamp(System.currentTimeMillis());
+        board.boardLastUpdated = new Timestamp(System.currentTimeMillis());
+        board.stateDel = 'N';
         return board;
     }
 

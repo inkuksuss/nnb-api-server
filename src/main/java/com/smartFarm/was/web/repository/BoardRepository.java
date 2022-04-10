@@ -1,9 +1,10 @@
 package com.smartFarm.was.web.repository;
 
 
+import com.smartFarm.was.domain.dto.board.AddBoardDto;
 import com.smartFarm.was.domain.dto.board.DeleteBoardDto;
 import com.smartFarm.was.domain.dto.board.UpdateBoardDto;
-import com.smartFarm.was.domain.dto.board.BoardDetailDto;
+import com.smartFarm.was.domain.dto.board.BoardDto;
 import com.smartFarm.was.domain.response.board.BoardResponse;
 import com.smartFarm.was.domain.entity.Board;
 import org.apache.ibatis.annotations.Mapper;
@@ -21,9 +22,9 @@ public interface BoardRepository {
 
     List<BoardResponse> getFAQBoards() throws SQLException;
 
-    void addBoard(Board board) throws SQLException;
+    void addBoard(AddBoardDto addBoardDto) throws SQLException;
 
-    Optional<BoardDetailDto> getBoardDetail(long boardId) throws SQLException;
+    Optional<BoardDto> getBoard(long boardId) throws SQLException;
 
     void deleteBoard(DeleteBoardDto deleteBoardDto) throws SQLException;
 

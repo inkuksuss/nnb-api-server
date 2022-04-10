@@ -34,7 +34,7 @@ class BoardControllerTest {
 
     @Test
     void addBoard() throws SQLException {
-        Long memberId = 34l;
+        long memberId = 34l;
 //        AddBoardForm addBoardForm = AddBoardForm.builder()
 //                .boardTitle("hello3")
 //                .boardContent("안녕3")

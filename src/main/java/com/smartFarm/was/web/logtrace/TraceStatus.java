@@ -3,10 +3,10 @@ package com.smartFarm.was.web.logtrace;
 public class TraceStatus {
 
     private TraceId traceId;
-    private Long startTimeMs;
+    private long startTimeMs;
     private String message;
 
-    public TraceStatus(TraceId traceId, Long startTimeMs, String message) {
+    public TraceStatus(TraceId traceId, long startTimeMs, String message) {
         this.traceId = traceId;
         this.startTimeMs = startTimeMs;
         this.message = message;
@@ -16,7 +16,7 @@ public class TraceStatus {
         return traceId;
     }
 
-    public Long getStartTimeMs() {
+    public long getStartTimeMs() {
         return startTimeMs;
     }
 

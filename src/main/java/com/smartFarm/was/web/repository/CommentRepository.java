@@ -13,7 +13,7 @@ public interface CommentRepository {
 
     void addComment(AddCommentDto addCommentDto) throws SQLException;
 
-    List<CommentDto> getComment(GetCommentDto getCommentDto) throws SQLException;
+    List<CommentDto> getCommentList(GetCommentDto getCommentDto) throws SQLException;
 
     void updateComment(UpdateCommentDto updateCommentDto) throws SQLException;
 

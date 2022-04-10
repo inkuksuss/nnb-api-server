@@ -1,18 +1,18 @@
 package com.smartFarm.was.web.service;
 
 
+import com.smartFarm.was.domain.dto.board.AddBoardDto;
+import com.smartFarm.was.domain.dto.comment.CommentDto;
 import com.smartFarm.was.domain.dto.mapping.BoardMemberMappingDto;
 import com.smartFarm.was.domain.dto.board.DeleteBoardDto;
 import com.smartFarm.was.domain.entity.Member;
-import com.smartFarm.was.domain.entity.sub.Status;
-import com.smartFarm.was.domain.response.board.BoardDetailResponse;
 import com.smartFarm.was.domain.dto.board.UpdateBoardDto;
-import com.smartFarm.was.domain.dto.board.BoardDetailDto;
+import com.smartFarm.was.domain.dto.board.BoardDto;
 import com.smartFarm.was.domain.response.board.BoardResponse;
 import com.smartFarm.was.domain.entity.Board;
 import com.smartFarm.was.web.repository.BoardRepository;
 import com.smartFarm.was.web.utils.MemberAuthenticationUtils;
-import com.smartFarm.was.web.utils.SqlReturnUtils;
+import com.smartFarm.was.web.utils.StatusCheckUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.javassist.NotFoundException;
@@ -31,14 +31,15 @@ public class BoardService {
     private static final String BOARD_TYPE = "게시물";
 
     private final BoardRepository boardRepository;
+    private final CommentService commentService;
     private final MessageSource messageSource;
 
     @Transactional
-    public long addBoard(Board board) throws SQLException {
+    public long addBoard(AddBoardDto addBoardDto) throws SQLException {
 
-        boardRepository.addBoard(board);
+        boardRepository.addBoard(addBoardDto);
 
-        return board.getBoardId();
+        return addBoardDto.getBoardId();
     }
 
     @Transactional(readOnly = true)
@@ -54,35 +55,70 @@ public class BoardService {
     }
 
     @Transactional(readOnly = true)
-    public BoardDetailResponse getBoardDetail(long boardId) throws Exception {
+    public BoardResponse getBoard(long boardId) throws Exception {
 
-        BoardDetailDto boardDetailDto = boardRepository.getBoardDetail(boardId)
+        BoardDto boardDto = boardRepository.getBoard(boardId)
                 .orElseThrow(() -> new NotFoundException(messageSource.getMessage("fail.find", new Object[]{BOARD_TYPE}, null)));
 
-        if (MemberAuthenticationUtils.isMember()) {
-            Member member = MemberAuthenticationUtils.getMemberAuthentication();
 
-            if (boardDetailDto.getBoardStatus() == Status.DELETE.getStatusValue()) {
-                return BoardDetailResponse.of(Status.DELETE.isOwner(), boardDetailDto);
-            } else if (boardDetailDto.getMemberId() == member.getMemberId())  {
-                return BoardDetailResponse.of(Status.OWNER.isOwner(), boardDetailDto);
-            } else if (boardDetailDto.getBoardStatus().equals(Status.PUBLIC.getStatusValue())) {
-                return BoardDetailResponse.of(Status.PUBLIC.isOwner(), boardDetailDto);
-            } else if (boardDetailDto.getBoardStatus().equals(Status.PRIVATE.getStatusValue())) {
-                 return BoardDetailResponse.of(Status.PRIVATE.isOwner(), boardDetailDto);
-            } else {
-                throw new IllegalArgumentException(messageSource.getMessage("fail", null, null));
-            }
-        } else if (MemberAuthenticationUtils.isAnonymous()) {
+        if (StatusCheckUtils.isDeleted(boardDto.getStateDel())) {
 
-            if (boardDetailDto.getBoardStatus().equals(Status.PUBLIC)) {
-                return BoardDetailResponse.of(Status.PUBLIC.isOwner(), boardDetailDto);
-            } else {
-                throw new IllegalStateException(messageSource.getMessage("fail", null, null));
-            }
+            return BoardResponse.caseDelete();
+
         } else {
-            throw new IllegalStateException(messageSource.getMessage("fail", null, null));
+
+            if (StatusCheckUtils.isPublic(boardDto.getBoardStatus())) {
+
+                if (MemberAuthenticationUtils.isMember()) {
+                    Member member = MemberAuthenticationUtils.getMemberAuthentication();
+                    BoardMemberMappingDto boardMemberMappingDto = BoardMemberMappingDto.of(boardId, member.getMemberId());
+
+                    if (checkOwnerById(boardMemberMappingDto)) {
+
+                        return BoardResponse.caseOwner(boardDto);
+
+                    } else {
+
+                        return filteredResponse(boardDto);
+
+                    }
+
+                } else {
+
+                    return filteredResponse(boardDto);
+
+                }
+
+            } else {
+
+                if (MemberAuthenticationUtils.isMember()) {
+                    Member member = MemberAuthenticationUtils.getMemberAuthentication();
+                    BoardMemberMappingDto boardMemberMappingDto = BoardMemberMappingDto.of(boardId, member.getMemberId());
+
+                    if (checkOwnerById(boardMemberMappingDto)) {
+
+                        return BoardResponse.caseOwner(boardDto);
+
+                    } else {
+
+                        return BoardResponse.casePrivate();
+                    }
+                } else {
+
+                    return BoardResponse.casePrivate();
+
+                }
+            }
         }
+    }
+
+    private BoardResponse filteredResponse(BoardDto boardDto) {
+        List<CommentDto> commentDtoList = boardDto.getCommentDtoList();
+
+        List<CommentDto> filteredCommentDtoList = commentService.filteredCommentList(commentDtoList);
+        boardDto.setCommentDtoList(filteredCommentDtoList);
+
+        return BoardResponse.casePublic(boardDto);
     }
 
     @Transactional
@@ -90,7 +126,7 @@ public class BoardService {
 
         Member member = MemberAuthenticationUtils.getMemberAuthentication();
 
-        DeleteBoardDto deleteBoardDto = new DeleteBoardDto(boardId, member.getMemberId(), Status.DELETE.getStatusValue());
+        DeleteBoardDto deleteBoardDto = new DeleteBoardDto(boardId, member.getMemberId());
 
         try {
             boardRepository.deleteBoard(deleteBoardDto);
@@ -114,8 +150,11 @@ public class BoardService {
         Board board = boardRepository.getBoardById(boardMemberMapperDto.getBoardId())
                 .orElseThrow(() -> new NotFoundException(messageSource.getMessage("fail.find", new Object[]{BOARD_TYPE}, null)));
 
-        if (board.getMemberId() == boardMemberMapperDto.getMemberId()) return true;
-        else return false;
+        if (board.getMemberId() == boardMemberMapperDto.getMemberId()) {
+            return true;
+        } else {
+            return false;
+        }
     }
 }
 

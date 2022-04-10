@@ -8,7 +8,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class UpdateBoardForm {
 
-    private final long categoryId;
+    private final Long categoryId;
     private final String boardTitle;
     private final String boardContent;
     private final String boardStatus;

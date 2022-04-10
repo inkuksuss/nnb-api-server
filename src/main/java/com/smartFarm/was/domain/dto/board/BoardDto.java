@@ -6,10 +6,10 @@ import lombok.*;
 import java.sql.Timestamp;
 import java.util.List;
 
-@Getter
 @ToString
+@Getter @Setter
 @RequiredArgsConstructor
-public class BoardDetailDto {
+public class BoardDto {
 
     private long boardId;
     private long boardView;
@@ -19,6 +19,7 @@ public class BoardDetailDto {
     private String boardTitle;
     private String categoryValue;
     private String boardStatus;
+    private char stateDel;
     private Timestamp boardCreated;
     private Timestamp boardLastUpdated;
     private List<CommentDto> commentDtoList;
