@@ -5,7 +5,7 @@
 
 <mapper namespace="com.smartFarm.was.web.repository.MemberRepository">
 
-    <insert id="saveMember" parameterType="com.smartFarm.was.domain.entity.Member">
+    <insert id="addMember" parameterType="com.smartFarm.was.domain.entity.Member">
         INSERT INTO MEMBER (member_authority,
                             member_name,
                             member_email,
@@ -15,7 +15,8 @@
                             member_address,
                             member_created,
                             member_last_updated,
-                            member_last_accessed)
+                            member_last_accessed,
+                            state_del)
                             VALUES (#{memberAuthority},
                                     #{memberName},
                                     #{memberEmail},
@@ -25,10 +26,13 @@
                                     #{memberAddress},
                                     #{memberCreated},
                                     #{memberLastUpdated},
-                                    #{memberLastAccessed})
+                                    #{memberLastAccessed},
+                                    #{stateDel})
     </insert>
 
     <select id="findByEmail" parameterType="String" resultType="com.smartFarm.was.domain.entity.Member">
-        SELECT * FROM MEMBER WHERE member_email = #{memberEmail}
+        SELECT * FROM MEMBER
+        WHERE member_email = #{memberEmail}
+        AND state_del = 'N'
     </select>
 </mapper>

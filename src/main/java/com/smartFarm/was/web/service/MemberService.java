@@ -30,6 +30,15 @@ public class MemberService implements UserDetailsService {
     private final MemberRepository memberRepository;
     private final MessageSource messageSource;
 
+    @Transactional
+    public void addMember(Member member) throws Exception {
+
+        if(memberRepository.findByEmail(member.getMemberEmail()).isPresent()) {
+            new ExistedMemberException(messageSource.getMessage("duplicate.parameter", new Object[]{"이메일"}, null));
+        } else {
+            memberRepository.addMember(member);
+        }
+    }
 
     @Override
     @Transactional(readOnly = true)
@@ -44,17 +53,6 @@ public class MemberService implements UserDetailsService {
         MemberDto memberDto = new MemberDto(member, roles);
 
         return memberDto;
-    }
-
-    @Transactional
-    public void addMember(JoinForm joinForm) throws Exception {
-
-        memberRepository.findByEmail(joinForm.getMemberEmail())
-                .orElseThrow(() -> new ExistedMemberException(messageSource.getMessage("duplicate.parameter", new Object[]{"이메일"}, null)));
-
-        Member member = Member.from(joinForm);
-
-        memberRepository.addMember(member);
     }
 }
 

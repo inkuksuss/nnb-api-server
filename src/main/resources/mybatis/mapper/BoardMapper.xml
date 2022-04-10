@@ -15,6 +15,7 @@
                  INNER JOIN member
                         ON board.member_id = member.member_id
         WHERE category_id = 1 AND board_status = 'public'
+        AND state_del = 'N'
         ORDER BY board_created DESC
     </select>
 
@@ -28,6 +29,7 @@
                  INNER JOIN member
                             ON board.member_id = member.member_id
         WHERE category_id = 2 AND board_status = 'public'
+        AND state_del = 'N'
         ORDER BY board_created DESC
     </select>
 

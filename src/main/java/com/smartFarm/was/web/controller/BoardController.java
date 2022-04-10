@@ -13,7 +13,6 @@ import com.smartFarm.was.domain.response.ResultResponse;
 import com.smartFarm.was.domain.response.board.BoardResponse;
 import com.smartFarm.was.domain.response.board.UpdateBoardResponse;
 import com.smartFarm.was.web.service.BoardService;
-import com.smartFarm.was.web.service.CommentService;
 import com.smartFarm.was.web.utils.MemberAuthenticationUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -31,7 +30,6 @@ import java.util.List;
 public class BoardController {
 
     private final BoardService boardService;
-    private final CommentService commentService;
 
     @GetMapping("/notice")
     public ResultResponse getNoticeBoards() throws Exception {

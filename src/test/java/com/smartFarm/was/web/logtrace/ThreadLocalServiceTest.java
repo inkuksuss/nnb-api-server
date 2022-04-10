@@ -2,7 +2,6 @@ package com.smartFarm.was.web.logtrace;
 
 import com.smartFarm.was.web.logtrace.code.ThreadLocalService;
 import lombok.extern.slf4j.Slf4j;
-import org.junit.jupiter.api.Test;
 
 
 @Slf4j
@@ -10,7 +9,6 @@ public class ThreadLocalServiceTest {
 
     private ThreadLocalService threadLocalService = new ThreadLocalService();
 
-    @Test
     void field() {
         log.info("main start");
         Runnable userA = () -> {

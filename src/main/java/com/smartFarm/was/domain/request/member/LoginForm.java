@@ -2,6 +2,7 @@ package com.smartFarm.was.domain.request.member;
 
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 
@@ -9,13 +10,15 @@ import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
 
 @Getter @Setter
-@RequiredArgsConstructor
+//@RequiredArgsConstructor
 public class LoginForm {
 
     @Email
     @NotEmpty(message = "이메일을 입력해주세요.")
-    private final String memberEmail;
+    private  String memberEmail;
 
     @NotEmpty(message = "비밀번호를 입력해주세요.")
-    private final String memberPassword;
+    private  String memberPassword;
+
+    public LoginForm() {}
 }

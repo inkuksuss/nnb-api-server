@@ -7,6 +7,7 @@ import lombok.*;
 import java.io.Serializable;
 import java.sql.Timestamp;
 
+@ToString
 @Getter
 public class Member implements Serializable {
 
@@ -23,6 +24,7 @@ public class Member implements Serializable {
     private Timestamp memberCreated;
     private Timestamp memberLastUpdated;
     private Timestamp memberLastAccessed;
+    private char stateDel;
 
     public static Member from(JoinForm joinForm) {
         Member member = new Member();
@@ -38,6 +40,7 @@ public class Member implements Serializable {
         member.memberCreated = now;
         member.memberLastUpdated = now;
         member.memberLastAccessed = now;
+        member.stateDel = 'N';
         return member;
     }
 
@@ -59,24 +62,6 @@ public class Member implements Serializable {
     }
 
     private Member() {}
-
-    @Override
-    public String toString() {
-        return "Member{" +
-                "memberId=" + memberId +
-                ", memberName='" + memberName + '\'' +
-                ", memberPassword='" + memberPassword + '\'' +
-                ", memberEmail='" + memberEmail + '\'' +
-                ", memberPhone='" + memberPhone + '\'' +
-                ", memberAddress='" + memberAddress + '\'' +
-                ", privacyConsent='" + privacyConsent + '\'' +
-                ", memberAuthority='" + memberAuthority + '\'' +
-                ", memberBirthday=" + memberBirthday +
-                ", memberCreated=" + memberCreated +
-                ", memberLastUpdated=" + memberLastUpdated +
-                ", memberLastAccessed=" + memberLastAccessed +
-                '}';
-    }
 }
 
 // "memberPhone": "01026727162",

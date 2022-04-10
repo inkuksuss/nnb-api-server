@@ -1,5 +1,6 @@
 package com.smartFarm.was.web.controller;
 
+import com.smartFarm.was.domain.entity.Member;
 import com.smartFarm.was.domain.entity.sub.Authority;
 import com.smartFarm.was.domain.request.member.LoginForm;
 import com.smartFarm.was.domain.response.ResultCode;
@@ -43,13 +44,15 @@ public class MemberController {
 
         String memberAuthority = joinForm.getMemberAuthority();
 
-        if (!(Authority.ADMIN.getRole().equals(memberAuthority) || Authority.MEMBER.getRole().equals(memberAuthority))) {
+        if (!Authority.MEMBER.getRole().equals(memberAuthority) && !Authority.ADMIN.getRole().equals(memberAuthority)) {
             throw new IllegalArgumentException(messageSource.getMessage("illegal.parameter", new Object[]{"권한"}, null));
         }
 
-        memberService.addMember(joinForm);
+        Member member = Member.from(joinForm);
 
-        return new ResultResponse<>(HttpStatus.OK, ResultCode.SUCCESS.getCode(), ResultCode.SUCCESS.getMessage(), null);
+        memberService.addMember(member);
+
+        return new ResultResponse<>(HttpStatus.OK, ResultCode.SUCCESS.getCode(), ResultCode.SUCCESS.getMessage());
     }
 
     @PostMapping("/login")
