@@ -20,7 +20,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.sql.Timestamp;
-import java.util.ArrayList;
 import java.util.List;
 
 
@@ -90,11 +89,7 @@ public class CommentController {
 
         Long boardId = deleteCommentForm.getBoardId();
 
-        ArrayList<Long> idList = new ArrayList<>();
-        idList.add(commentId);
-        idList.add(boardId);
-
-        if (FormValidationUtils.illegalLongValue(idList)) {
+        if (FormValidationUtils.illegalLongValues(new Long[] {boardId, commentId})) {
             return new ResultResponse<>(HttpStatus.NOT_FOUND, ResultCode.PAGE_NOT_FOUND.getCode(), "잘못된 경로입니다. ");
         }
 

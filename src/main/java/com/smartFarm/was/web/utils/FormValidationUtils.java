@@ -15,7 +15,7 @@ public class FormValidationUtils {
         }
     }
 
-    public static boolean illegalLongValue(List<Long> values) {
+    public static boolean illegalLongValues(Long[] values) {
 
         boolean result = false;
 

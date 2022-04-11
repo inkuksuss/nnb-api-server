@@ -7,10 +7,7 @@
 
     <select id="getNoticeBoards" resultType="com.smartFarm.was.domain.response.board.BoardResponse">
         SELECT
-            board_title,
-            board_created,
-            board_view,
-            member_name
+            *
         FROM board
                  INNER JOIN member
                         ON board.member_id = member.member_id
@@ -21,10 +18,7 @@
 
     <select id="getFAQBoards" resultType="com.smartFarm.was.domain.response.board.BoardResponse">
         SELECT
-            board_title,
-            board_created,
-            board_view,
-            member_name
+            *
         FROM board
                  INNER JOIN member
                             ON board.member_id = member.member_id
