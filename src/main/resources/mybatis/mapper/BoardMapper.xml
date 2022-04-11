@@ -12,6 +12,7 @@
             board_status,
             board_last_updated,
             board_view,
+            board.member_id,
             member_name
         FROM board
                  INNER JOIN member
@@ -28,6 +29,7 @@
             board_status,
             board_last_updated,
             board_view,
+            board.member_id,
             member_name
         FROM board
                  INNER JOIN member
