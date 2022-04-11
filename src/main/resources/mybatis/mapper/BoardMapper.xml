@@ -20,7 +20,7 @@
                         ON board.member_id = member.member_id
         WHERE category_id = 1
         AND board.state_del = 'N'
-        ORDER BY board_created DESC
+        ORDER BY board_last_updated ASC
     </select>
 
     <select id="getFAQBoards" resultType="com.smartFarm.was.domain.response.board.BoardResponse">
