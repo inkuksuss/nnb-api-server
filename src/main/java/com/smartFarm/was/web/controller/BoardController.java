@@ -2,7 +2,6 @@ package com.smartFarm.was.web.controller;
 
 import com.smartFarm.was.domain.dto.board.AddBoardDto;
 import com.smartFarm.was.domain.dto.mapping.BoardMemberMappingDto;
-import com.smartFarm.was.domain.entity.Member;
 import com.smartFarm.was.domain.response.ResultCode;
 import com.smartFarm.was.domain.response.board.AddBoardResponse;
 import com.smartFarm.was.domain.request.board.AddBoardForm;
@@ -33,7 +32,7 @@ public class BoardController {
 
     private final BoardService boardService;
 
-    @GetMapping("/notice/{}")
+    @GetMapping("/notice")
     public ResultResponse getNoticeBoards() throws Exception {
         List<BoardResponse> boardResponsesList = boardService.getNoticeBoards();
 

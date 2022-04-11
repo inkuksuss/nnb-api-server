@@ -78,6 +78,7 @@ public class CommentController {
 
             commentDtoList = commentService.updateComment(updateCommentDto);
         } else {
+
             return new ResultResponse(HttpStatus.BAD_REQUEST, ResultCode.FAIL.getCode(), "잘못된 요청입니다.");
         }
 

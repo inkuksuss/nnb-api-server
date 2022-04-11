@@ -15,7 +15,7 @@
                  INNER JOIN member
                         ON board.member_id = member.member_id
         WHERE category_id = 1
-        AND state_del = 'N'
+        AND board.state_del = 'N'
         ORDER BY board_created DESC
     </select>
 
@@ -29,7 +29,7 @@
                  INNER JOIN member
                             ON board.member_id = member.member_id
         WHERE category_id = 2
-        AND state_del = 'N'
+        AND board.state_del = 'N'
         ORDER BY board_created DESC
     </select>
 
