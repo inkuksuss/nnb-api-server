@@ -72,6 +72,7 @@
         <result property="boardContent" column="board_content" />
         <result property="boardStatus" column="board_status" />
         <result property="boardView" column="board_view" />
+        <result property="stateDel" column="state_del" />
         <result property="categoryValue" column="category_value" />
         <result property="boardCreated" column="board_created" />
         <result property="boardLastUpdated" column="board_last_updated" />
@@ -97,6 +98,7 @@
                board_last_updated,
                board_status,
                board_view,
+               board.state_del,
                category_value,
                comment.comment_id,
                comment.member_id,

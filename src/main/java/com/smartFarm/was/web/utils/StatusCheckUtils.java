@@ -2,6 +2,7 @@ package com.smartFarm.was.web.utils;
 
 import com.smartFarm.was.domain.entity.sub.Status;
 
+
 public class StatusCheckUtils {
 
     private StatusCheckUtils() {}
@@ -16,7 +17,7 @@ public class StatusCheckUtils {
 
     public static boolean isDeleted(String value) {
         if (!FormValidationUtils.illegalStringValue(value)) {
-            return value.equals(Status.DELETE);
+            return value.equals(Status.DELETE.name());
         } else {
             return false;
         }
@@ -24,7 +25,7 @@ public class StatusCheckUtils {
 
     public static boolean isPublic(String value) {
         if (!FormValidationUtils.illegalStringValue(value)) {
-            return value.equals(Status.PUBLIC);
+            return value.equals(Status.PUBLIC.name());
         } else {
             return false;
         }
@@ -32,7 +33,7 @@ public class StatusCheckUtils {
 
     public static boolean isPrivate(String value) {
         if (!FormValidationUtils.illegalStringValue(value)) {
-            return value.equals(Status.PRIVATE);
+            return value.equals(Status.PRIVATE.name());
         } else {
             return false;
         }
@@ -40,7 +41,7 @@ public class StatusCheckUtils {
 
     public static boolean isOwner(String value) {
         if (!FormValidationUtils.illegalStringValue(value)) {
-            return value.equals(Status.OWNER);
+            return value.equals(Status.OWNER.name());
         } else {
             return false;
         }
