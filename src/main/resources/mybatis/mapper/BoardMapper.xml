@@ -7,6 +7,7 @@
 
     <select id="getNoticeBoards" resultType="com.smartFarm.was.domain.response.board.BoardResponse">
         SELECT
+            board_id,
             board_title,
             board_content,
             board_status,
@@ -24,6 +25,7 @@
 
     <select id="getFAQBoards" resultType="com.smartFarm.was.domain.response.board.BoardResponse">
         SELECT
+            board_id,
             board_title,
             board_content,
             board_status,
@@ -103,8 +105,8 @@
                comment.comment_created,
                comment.comment_status
         FROM board
-                 LEFT JOIN board_category
-                           ON board.category_id = board_category.category_id
+                 LEFT JOIN category
+                           ON board.category_id = category.category_id
                  LEFT JOIN member
                            ON board.member_id = member.member_id
                  LEFT JOIN comment
