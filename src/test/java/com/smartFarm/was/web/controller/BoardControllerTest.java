@@ -1,8 +1,7 @@
 package com.smartFarm.was.web.controller;
 
-import com.smartFarm.was.domain.request.board.AddBoardForm;
 import com.smartFarm.was.domain.response.board.BoardResponse;
-import com.smartFarm.was.web.service.BoardService;
+import com.smartFarm.was.web.service.impl.BoardServiceImpl;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.javassist.NotFoundException;
 import org.junit.jupiter.api.Test;
@@ -18,7 +17,7 @@ import java.util.List;
 class BoardControllerTest {
 
     @Autowired
-    BoardService boardService;
+    BoardServiceImpl boardService;
 
     @Test
     void noticeBoards() throws SQLException {

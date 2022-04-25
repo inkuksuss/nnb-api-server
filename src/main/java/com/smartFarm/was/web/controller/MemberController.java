@@ -11,7 +11,7 @@ import com.smartFarm.was.domain.request.member.JoinForm;
 import com.smartFarm.was.web.config.security.JwtAuthenticationToken;
 import com.smartFarm.was.web.config.security.filter.JwtFilter;
 import com.smartFarm.was.web.config.security.provider.TokenProvider;
-import com.smartFarm.was.web.service.MemberService;
+import com.smartFarm.was.web.service.impl.MemberService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.MessageSource;
@@ -38,7 +38,7 @@ public class MemberController {
 
 
     @PostMapping("/join")
-    public ResultResponse join(@RequestBody @Validated JoinForm joinForm) throws Exception {
+    public ResultResponse<Void> addMember(@RequestBody @Validated JoinForm joinForm) throws Exception {
 
         joinForm.setMemberPassword(passwordEncoder.encode(joinForm.getMemberPassword()));
 
@@ -50,13 +50,11 @@ public class MemberController {
 
         Member member = Member.from(joinForm);
 
-        memberService.addMember(member);
-
-        return new ResultResponse<>(HttpStatus.OK, ResultCode.SUCCESS.getCode(), ResultCode.SUCCESS.getMessage());
+        return memberService.addMember(member);
     }
 
     @PostMapping("/login")
-    public ResultResponse login(@RequestBody @Validated LoginForm loginForm) throws Exception {
+    public ResultResponse<LoginResponse> login(@RequestBody @Validated LoginForm loginForm) throws Exception {
 
         JwtAuthenticationToken jwtAuthenticationToken =
                 new JwtAuthenticationToken(loginForm.getMemberEmail(), loginForm.getMemberPassword());

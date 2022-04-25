@@ -17,4 +17,6 @@ public class UpdateCommentDto {
     private String commentStatus;
     private Timestamp commentCreated;
     private Timestamp commentLastUpdated;
+
+    private boolean isOwnerFlag;
 }

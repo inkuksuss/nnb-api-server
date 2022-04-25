@@ -3,7 +3,6 @@ package com.smartFarm.was.web.controller;
 import com.smartFarm.was.domain.dto.board.AddBoardDto;
 import com.smartFarm.was.domain.dto.mapping.BoardMemberMappingDto;
 import com.smartFarm.was.domain.response.ResultCode;
-import com.smartFarm.was.domain.response.board.AddBoardResponse;
 import com.smartFarm.was.domain.request.board.AddBoardForm;
 import com.smartFarm.was.domain.dto.board.UpdateBoardDto;
 import com.smartFarm.was.domain.request.board.UpdateBoardForm;
@@ -11,9 +10,6 @@ import com.smartFarm.was.domain.response.ResultResponse;
 import com.smartFarm.was.domain.response.board.BoardResponse;
 import com.smartFarm.was.domain.response.board.UpdateBoardResponse;
 import com.smartFarm.was.web.service.BoardService;
-import com.smartFarm.was.web.utils.FormValidationUtils;
-import com.smartFarm.was.web.utils.MemberAuthenticationUtils;
-import com.smartFarm.was.web.utils.StatusCheckUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -22,6 +18,9 @@ import org.springframework.web.bind.annotation.*;
 
 import java.sql.Timestamp;
 import java.util.List;
+
+import static com.smartFarm.was.web.utils.FormValidationUtils.*;
+import static com.smartFarm.was.web.utils.MemberAuthenticationUtils.*;
 
 
 @Slf4j
@@ -33,96 +32,72 @@ public class BoardController {
     private final BoardService boardService;
 
     @GetMapping("/notice")
-    public ResultResponse getNoticeBoards() throws Exception {
-        List<BoardResponse> boardResponsesList = boardService.getNoticeBoards();
-
-        return new ResultResponse(HttpStatus.OK, ResultCode.SUCCESS.getCode(), ResultCode.SUCCESS.getMessage(), boardResponsesList);
+    public ResultResponse<List<BoardResponse>> getNoticeBoards() throws Exception {
+        return boardService.getNoticeBoards();
     }
 
     @GetMapping("/faq")
-    public ResultResponse getFaqBoards() throws Exception {
-        List<BoardResponse> boardResponsesList = boardService.getFAQBoards();
-
-        return new ResultResponse(HttpStatus.OK, ResultCode.SUCCESS.getCode(), ResultCode.SUCCESS.getMessage(), boardResponsesList);
+    public ResultResponse<List<BoardResponse>> getFaqBoards() throws Exception {
+        return boardService.getFAQBoards();
     }
 
     @PostMapping("/add")
-    public ResultResponse addBoard(@RequestBody @Validated AddBoardForm addBoardForm) throws Exception {
+    public ResultResponse<Long> addBoard(@RequestBody @Validated AddBoardForm addBoardForm) throws Exception {
 
-        if (MemberAuthenticationUtils.isAnonymous()) {
+        if (isAnonymous()) {
             return new ResultResponse<>(HttpStatus.FORBIDDEN, ResultCode.FORBIDDEN.getCode(), "로그인 후 이용 가능한 서비스입니다.");
         }
 
-        AddBoardDto addBoardDto = AddBoardDto.of(addBoardForm, MemberAuthenticationUtils.getMemberIdByMemberAuthentication());
+        AddBoardDto addBoardDto = AddBoardDto.of(addBoardForm, getMemberIdByMemberAuthentication());
 
-        long boardId = boardService.addBoard(addBoardDto);
-
-        return new ResultResponse(HttpStatus.OK, ResultCode.SUCCESS.getCode(), ResultCode.SUCCESS.getMessage(), new AddBoardResponse(boardId));
+        return boardService.addBoard(addBoardDto);
     }
 
     @GetMapping("/detail/{boardId}")
-    public ResultResponse getBoard(@PathVariable Long boardId) throws Exception {
+    public ResultResponse<BoardResponse> getBoard(@PathVariable Long boardId) throws Exception {
 
-        if (FormValidationUtils.illegalLongValue(boardId)) {
-            return new ResultResponse(HttpStatus.BAD_REQUEST, ResultCode.PAGE_NOT_FOUND.getCode(), ResultCode.PAGE_NOT_FOUND.getMessage());
+        if (illegalLongValue(boardId)) {
+            return new ResultResponse<>(HttpStatus.BAD_REQUEST, ResultCode.PAGE_NOT_FOUND.getCode(), ResultCode.PAGE_NOT_FOUND.getMessage());
         }
 
-        BoardResponse boardResponse = boardService.getBoard(boardId);
-
-        String result = boardResponse.getResult();
-
-        if (StatusCheckUtils.isDeleted(result)) {
-
-            return new ResultResponse<>(HttpStatus.BAD_REQUEST, ResultCode.DENIED.getCode(), "삭제된 게시물입니다.");
-
-        } else if (StatusCheckUtils.isPrivate(result)) {
-
-            return new ResultResponse<>(HttpStatus.BAD_REQUEST, ResultCode.DENIED.getCode(), "비공개 게시물입니다.");
-
-        } else {
-
-            return new ResultResponse<>(HttpStatus.OK, ResultCode.SUCCESS.getCode(), ResultCode.SUCCESS.getMessage(), boardResponse);
-
-        }
+        return boardService.getBoard(boardId);
     }
 
     @GetMapping("/delete/{boardId}")
-    public ResultResponse deleteBoard(@PathVariable @Validated Long boardId) throws Exception {
+    public ResultResponse<Void> deleteBoard(@PathVariable @Validated Long boardId) throws Exception {
 
-        if (FormValidationUtils.illegalLongValue(boardId)) {
-            return new ResultResponse(HttpStatus.BAD_REQUEST, ResultCode.PAGE_NOT_FOUND.getCode(), ResultCode.PAGE_NOT_FOUND.getMessage());
+        if (illegalLongValue(boardId)) {
+            return new ResultResponse<>(HttpStatus.BAD_REQUEST, ResultCode.PAGE_NOT_FOUND.getCode(), ResultCode.PAGE_NOT_FOUND.getMessage());
         }
 
-        if (MemberAuthenticationUtils.isAnonymous()) {
+        if (isAnonymous()) {
             return new ResultResponse<>(HttpStatus.FORBIDDEN, ResultCode.FORBIDDEN.getCode(), "로그인 후 이용 가능한 서비스입니다.");
         }
 
-        long memberId = MemberAuthenticationUtils.getMemberIdByMemberAuthentication();
+        long memberId = getMemberIdByMemberAuthentication();
         BoardMemberMappingDto boardMemberMappingDto = BoardMemberMappingDto.of(boardId, memberId);
 
         boolean isOwner = boardService.checkOwnerById(boardMemberMappingDto);
 
         if (isOwner) {
-            boardService.deleteBoard(boardId);
+            return boardService.deleteBoard(boardId);
         } else {
-            return new ResultResponse(HttpStatus.BAD_REQUEST, ResultCode.FAIL.getCode(), "잘못된 요청입니다.");
+            return new ResultResponse<>(HttpStatus.BAD_REQUEST, ResultCode.FAIL.getCode(), "잘못된 요청입니다.");
         }
-
-        return new ResultResponse(HttpStatus.OK, ResultCode.SUCCESS.getCode(), ResultCode.SUCCESS.getMessage());
     }
 
     @PostMapping("/update/{boardId}")
-    public ResultResponse updateBoard(@RequestBody @Validated UpdateBoardForm updateBoardForm, @PathVariable Long boardId) throws Exception {
+    public ResultResponse<Long> updateBoard(@RequestBody @Validated UpdateBoardForm updateBoardForm, @PathVariable Long boardId) throws Exception {
 
-        if (FormValidationUtils.illegalLongValue(boardId)) {
-            return new ResultResponse(HttpStatus.BAD_REQUEST, ResultCode.PAGE_NOT_FOUND.getCode(), ResultCode.PAGE_NOT_FOUND.getMessage());
+        if (illegalLongValue(boardId)) {
+            return new ResultResponse<>(HttpStatus.BAD_REQUEST, ResultCode.PAGE_NOT_FOUND.getCode(), ResultCode.PAGE_NOT_FOUND.getMessage());
         }
 
-        if (MemberAuthenticationUtils.isAnonymous()) {
+        if (isAnonymous()) {
             return new ResultResponse<>(HttpStatus.FORBIDDEN, ResultCode.FORBIDDEN.getCode(), "로그인 후 이용 가능한 서비스입니다.");
         }
 
-        BoardMemberMappingDto boardMemberMappingDto = BoardMemberMappingDto.of(boardId, MemberAuthenticationUtils.getMemberIdByMemberAuthentication());
+        BoardMemberMappingDto boardMemberMappingDto = BoardMemberMappingDto.of(boardId, getMemberIdByMemberAuthentication());
 
         boolean isOwner = boardService.checkOwnerById(boardMemberMappingDto);
 
@@ -130,7 +105,7 @@ public class BoardController {
 
             UpdateBoardDto updateBoardDto = UpdateBoardDto.builder()
                     .boardId(boardId)
-                    .memberId(MemberAuthenticationUtils.getMemberIdByMemberAuthentication())
+                    .memberId(getMemberIdByMemberAuthentication())
                     .categoryId(updateBoardForm.getCategoryId())
                     .boardTitle(updateBoardForm.getBoardTitle())
                     .boardContent(updateBoardForm.getBoardContent())
@@ -138,14 +113,12 @@ public class BoardController {
                     .boardLastUpdated(new Timestamp(System.currentTimeMillis()))
                     .build();
 
-            boardService.updateBoard(updateBoardDto);
+            return boardService.updateBoard(updateBoardDto);
 
         } else {
 
-            return new ResultResponse(HttpStatus.BAD_REQUEST, ResultCode.FAIL.getCode(), "잘못된 요청입니다.");
+            return new ResultResponse<>(HttpStatus.BAD_REQUEST, ResultCode.FAIL.getCode(), "잘못된 요청입니다.");
 
         }
-
-        return new ResultResponse(HttpStatus.OK, ResultCode.SUCCESS.getCode(), ResultCode.SUCCESS.getMessage(), new UpdateBoardResponse(boardId));
     }
 }

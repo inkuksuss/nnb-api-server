@@ -13,7 +13,7 @@ public class GetCommentDto {
     private long memberId;
     private long boardId;
     private long commentId;
-    private boolean isOwner;
+    private boolean isOwnerFlag;
     private List<CommentDto> commentDtoList;
 
     public GetCommentDto() {}
@@ -21,14 +21,14 @@ public class GetCommentDto {
     public static GetCommentDto forOwner(long boardId) {
         GetCommentDto getCommentDto = new GetCommentDto();
         getCommentDto.boardId =  boardId;
-        getCommentDto.isOwner = true;
+        getCommentDto.isOwnerFlag = true;
         return getCommentDto;
     }
 
     public static GetCommentDto forGuest(long boardId) {
         GetCommentDto getCommentDto = new GetCommentDto();
         getCommentDto.boardId =  boardId;
-        getCommentDto.isOwner = false;
+        getCommentDto.isOwnerFlag = false;
         return getCommentDto;
     }
 }

@@ -1,7 +1,7 @@
 package com.smartFarm.was.web.config.security;
 
 import com.smartFarm.was.domain.dto.member.MemberDto;
-import com.smartFarm.was.web.service.MemberService;
+import com.smartFarm.was.web.service.impl.MemberService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.BadCredentialsException;

@@ -1,11 +1,11 @@
 package com.smartFarm.was.web.service;
 
 import com.smartFarm.was.domain.request.member.JoinForm;
+import com.smartFarm.was.web.service.impl.MemberService;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.sql.Timestamp;

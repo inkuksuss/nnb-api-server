@@ -7,25 +7,24 @@
 
     <select id="getCommentList" parameterType="com.smartFarm.was.domain.dto.comment.GetCommentDto" resultType="com.smartFarm.was.domain.dto.comment.CommentDto">
         SELECT
-        comment_id,
-        comment.member_id,
-        member.member_name,
-        comment_content,
-        comment_status,
-        comment_created,
-        comment_last_updated
-        FROM comment
-        LEFT JOIN member
-        ON comment.member_id = member.member_id
+        c.comment_id,
+        c.member_id,
+        m.member_name,
+        c.comment_content,
+        c.comment_status,
+        c.comment_created,
+        c.comment_last_updated
+        FROM comment c
+        LEFT JOIN member m ON c.member_id = m.member_id
         WHERE state_del = 'N'
         <if test="memberId != null and memberId != ''">
-            AND comment.member_id = #{memberId}
+            AND c.member_id = #{memberId}
         </if>
         <if test="boardId != null and boardId != ''">
-            AND board_id = #{boardId}
+            AND c.board_id = #{boardId}
         </if>
         <if test="commentId != null and commentId != ''">
-            AND comment_id = #{commentId}
+            AND c.comment_id = #{commentId}
         </if>
     </select>
 

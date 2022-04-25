@@ -3,7 +3,7 @@ package com.smartFarm.was.web.config.security;
 import com.smartFarm.was.domain.entity.sub.Authority;
 import com.smartFarm.was.web.config.security.filter.JwtFilter;
 import com.smartFarm.was.web.config.security.provider.TokenProvider;
-import com.smartFarm.was.web.service.MemberService;
+import com.smartFarm.was.web.service.impl.MemberService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;

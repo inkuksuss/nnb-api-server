@@ -8,10 +8,10 @@ import java.sql.Timestamp;
 @Getter
 public class AddBoardDto {
 
-    private long boardId;
-    private long memberId;
-    private long categoryId;
-    private long boardView;
+    private Long boardId;
+    private Long memberId;
+    private Long categoryId;
+    private int boardView;
     private String boardTitle;
     private String boardContent;
     private String boardStatus;
@@ -21,9 +21,10 @@ public class AddBoardDto {
 
     private AddBoardDto() {}
 
-    public static AddBoardDto of(AddBoardForm addBoardForm, long memberId) {
+    public static AddBoardDto of(AddBoardForm addBoardForm, Long memberId) {
 
         AddBoardDto addBoardDto = new AddBoardDto();
+        Timestamp currentTime = new Timestamp(System.currentTimeMillis());
 
         addBoardDto.memberId = memberId;
         addBoardDto.categoryId = addBoardForm.getCategoryId();
@@ -31,8 +32,8 @@ public class AddBoardDto {
         addBoardDto.boardContent = addBoardForm.getBoardContent();
         addBoardDto.boardStatus = addBoardForm.getBoardStatus();
         addBoardDto.boardView = 0;
-        addBoardDto.boardCreated = new Timestamp(System.currentTimeMillis());
-        addBoardDto.boardLastUpdated = new Timestamp(System.currentTimeMillis());
+        addBoardDto.boardCreated = currentTime;
+        addBoardDto.boardLastUpdated = currentTime;
         addBoardDto.stateDel = 'N';
 
         return addBoardDto;

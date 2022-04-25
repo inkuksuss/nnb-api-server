@@ -19,9 +19,11 @@ public class AddCommentDto {
     private Timestamp commentCreated;
     private Timestamp commentLastUpdated;
 
+    private boolean isOwnerFlag;
+
     private AddCommentDto() {}
 
-    public static AddCommentDto of(AddCommentForm addCommentForm, long memberId) {
+    public static AddCommentDto of(AddCommentForm addCommentForm, long memberId, boolean isOwnerFlag) {
         AddCommentDto addCommentDto = new AddCommentDto();
         addCommentDto.boardId = addCommentForm.getBoardId();
         addCommentDto.memberId = memberId;
@@ -29,6 +31,7 @@ public class AddCommentDto {
         addCommentDto.commentStatus = addCommentForm.getCommentStatus();
         addCommentDto.commentCreated = new Timestamp(System.currentTimeMillis());
         addCommentDto.commentLastUpdated = null;
+        addCommentDto.isOwnerFlag = isOwnerFlag;
         return addCommentDto;
     }
 }

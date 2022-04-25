@@ -1,14 +1,18 @@
-package com.smartFarm.was.web.service;
+package com.smartFarm.was.web.service.impl;
 
 import com.smartFarm.was.domain.entity.Member;
 import com.smartFarm.was.domain.entity.sub.Authority;
+import com.smartFarm.was.domain.entity.sub.Status;
 import com.smartFarm.was.domain.request.member.JoinForm;
+import com.smartFarm.was.domain.response.ResultCode;
+import com.smartFarm.was.domain.response.ResultResponse;
 import com.smartFarm.was.web.repository.MemberRepository;
 import com.smartFarm.was.web.exception.custom.ExistedMemberException;
 import com.smartFarm.was.domain.dto.member.MemberDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.MessageSource;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -31,12 +35,18 @@ public class MemberService implements UserDetailsService {
     private final MessageSource messageSource;
 
     @Transactional
-    public void addMember(Member member) throws Exception {
+    public ResultResponse<Void> addMember(Member member) throws Exception {
 
         if(memberRepository.findByEmail(member.getMemberEmail()).isPresent()) {
-            new ExistedMemberException(messageSource.getMessage("duplicate.parameter", new Object[]{"이메일"}, null));
+            throw new ExistedMemberException(messageSource.getMessage("duplicate.parameter", new Object[]{"이메일"}, null));
         } else {
-            memberRepository.addMember(member);
+            int result = memberRepository.addMember(member);
+
+            if (result == 1) {
+                return new ResultResponse<>(HttpStatus.OK, ResultCode.SUCCESS.getCode(), ResultCode.SUCCESS.getMessage());
+            } else {
+                return new ResultResponse<>(HttpStatus.BAD_REQUEST, ResultCode.FAIL.getCode(), ResultCode.FAIL.getMessage());
+            }
         }
     }
 

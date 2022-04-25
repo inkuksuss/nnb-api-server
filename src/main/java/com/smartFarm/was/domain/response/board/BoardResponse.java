@@ -10,7 +10,6 @@ import java.util.List;
 
 @Getter
 public class BoardResponse {
-    private String result;
     private long boardId;
     private long boardView;
     private long memberId;
@@ -22,13 +21,14 @@ public class BoardResponse {
     private Timestamp boardCreated;
     private Timestamp boardLastUpdated;
     private List<CommentDto> commentDtoList;
+    private boolean isOwnerFlag;
 
     private BoardResponse() {}
 
     public static BoardResponse casePublic(BoardDto boardDto) {
 
         BoardResponse boardResponse = new BoardResponse();
-        boardResponse.result = Status.PUBLIC.name();
+        boardResponse.isOwnerFlag = false;
         boardResponse.boardId = boardDto.getBoardId();
         boardResponse.boardView = boardDto.getBoardView();
         boardResponse.memberId = boardDto.getMemberId();
@@ -47,7 +47,7 @@ public class BoardResponse {
     public static BoardResponse caseOwner(BoardDto boardDto) {
 
         BoardResponse boardResponse = new BoardResponse();
-        boardResponse.result = Status.OWNER.name();
+        boardResponse.isOwnerFlag = true;
         boardResponse.boardId = boardDto.getBoardId();
         boardResponse.boardView = boardDto.getBoardView();
         boardResponse.memberId = boardDto.getMemberId();
@@ -59,22 +59,6 @@ public class BoardResponse {
         boardResponse.boardCreated = boardDto.getBoardCreated();
         boardResponse.boardLastUpdated = boardDto.getBoardLastUpdated();
         boardResponse.commentDtoList = boardDto.getCommentDtoList();
-
-        return boardResponse;
-    }
-
-    public static BoardResponse caseDelete() {
-
-        BoardResponse boardResponse = new BoardResponse();
-        boardResponse.result = Status.DELETE.name();
-
-        return boardResponse;
-    }
-
-    public static BoardResponse casePrivate() {
-
-        BoardResponse boardResponse = new BoardResponse();
-        boardResponse.result = Status.PRIVATE.name();
 
         return boardResponse;
     }

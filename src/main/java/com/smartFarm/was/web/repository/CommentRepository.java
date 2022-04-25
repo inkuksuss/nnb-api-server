@@ -11,12 +11,12 @@ import java.util.List;
 @Repository
 public interface CommentRepository {
 
-    void addComment(AddCommentDto addCommentDto) throws SQLException;
+    int addComment(AddCommentDto addCommentDto) throws SQLException;
 
     List<CommentDto> getCommentList(GetCommentDto getCommentDto) throws SQLException;
 
-    void updateComment(UpdateCommentDto updateCommentDto) throws SQLException;
+    int updateComment(UpdateCommentDto updateCommentDto) throws SQLException;
 
-    void deleteComment(DeleteCommentDto deleteCommentDto) throws SQLException;
+    int deleteComment(DeleteCommentDto deleteCommentDto) throws SQLException;
 }
 

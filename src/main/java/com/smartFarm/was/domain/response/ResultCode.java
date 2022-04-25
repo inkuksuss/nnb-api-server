@@ -18,11 +18,13 @@ public enum ResultCode {
     UNAUTHORIZED(8001, "UNAUTHORIZED"),
     MEMBER_NOT_FOUND(8002, "MEMBER_NOT_FOUND"),
     EXISTED_MEMBER(8003, "EXISTED_MEMBER"),
+    DELETED_CONTENTS(8004, "DELETED_CONTENTS"),
+    PRIVATE_CONTENTS(8005, "PRIVATE_CONTENTS"),
 
     INVALID_PARAMETER(7001, "INVALID_PARAMETER");
 
-    private int code;
-    private String message;
+    private final int code;
+    private final String message;
 
     ResultCode(int code, String message) {
         this.code = code;

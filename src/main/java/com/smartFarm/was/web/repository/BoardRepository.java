@@ -22,13 +22,13 @@ public interface BoardRepository {
 
     List<BoardResponse> getFAQBoards() throws SQLException;
 
-    void addBoard(AddBoardDto addBoardDto) throws SQLException;
+    int addBoard(AddBoardDto addBoardDto) throws SQLException;
 
     Optional<BoardDto> getBoard(long boardId) throws SQLException;
 
-    void deleteBoard(DeleteBoardDto deleteBoardDto) throws SQLException;
+    int deleteBoard(DeleteBoardDto deleteBoardDto) throws SQLException;
 
-    void updateBoard(UpdateBoardDto updateBoardDto) throws SQLException;
+    int updateBoard(UpdateBoardDto updateBoardDto) throws SQLException;
 
     Optional<Board> getBoardById(long boardId) throws SQLException;
 }
