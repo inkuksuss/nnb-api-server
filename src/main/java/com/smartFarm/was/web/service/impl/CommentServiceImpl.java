@@ -89,7 +89,6 @@ public class CommentServiceImpl implements CommentService {
     @Override
     public ResultResponse<List<CommentDto>> deleteComment(DeleteCommentDto deleteCommentDto) throws SQLException {
 
-
         boolean isOwnerFlag = deleteCommentDto.isOwnerFlag();
         int result = commentRepository.deleteComment(deleteCommentDto);
 
