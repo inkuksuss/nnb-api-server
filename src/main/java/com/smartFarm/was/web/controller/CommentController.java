@@ -13,8 +13,6 @@ import com.smartFarm.was.domain.response.ResultCode;
 import com.smartFarm.was.domain.response.ResultResponse;
 import com.smartFarm.was.web.service.impl.BoardServiceImpl;
 import com.smartFarm.was.web.service.CommentService;
-import com.smartFarm.was.web.utils.FormValidationUtils;
-import com.smartFarm.was.web.utils.MemberAuthenticationUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
