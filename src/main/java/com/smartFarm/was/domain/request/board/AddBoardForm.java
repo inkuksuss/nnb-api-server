@@ -21,6 +21,5 @@ public class AddBoardForm {
     @NotNull(message = "존재하지 않는 정보입니다.")
     private Long categoryId;
 
-    @NotNull(message = "존재하지 않는 정보입니다.")
     private Long memberId;
 }

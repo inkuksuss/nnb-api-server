@@ -1,7 +1,10 @@
 package com.smartFarm.was.domain.request.farm;
 
+import lombok.Getter;
+
 import java.sql.Timestamp;
 
+@Getter
 public class GetFarmForm {
 
     /**

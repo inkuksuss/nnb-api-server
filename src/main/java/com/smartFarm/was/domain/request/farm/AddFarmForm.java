@@ -9,4 +9,7 @@ public class AddFarmForm {
     private String farmName;
     private String farmAddress;
     private String farmKind;
+
+    private String fmStatus;
+    private String fmAuthority;
 }

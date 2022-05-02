@@ -3,15 +3,15 @@ package com.smartFarm.was.web.controller;
 
 import com.smartFarm.was.domain.dto.farm.FarmDto;
 import com.smartFarm.was.domain.request.farm.AddFarmForm;
+import com.smartFarm.was.domain.request.farm.GetFarmForm;
 import com.smartFarm.was.domain.request.farm.UpdateFarmForm;
 import com.smartFarm.was.domain.response.ResultCode;
 import com.smartFarm.was.domain.response.ResultResponse;
 import com.smartFarm.was.web.service.FarmService;
-import com.smartFarm.was.web.utils.FormValidationUtils;
-import com.smartFarm.was.web.utils.MemberAuthenticationUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import java.sql.SQLException;
 import java.util.List;
 
 import static com.smartFarm.was.web.utils.FormValidationUtils.*;
@@ -28,7 +28,7 @@ public class FarmController {
     }
 
     @GetMapping("/me")
-    public ResultResponse<List<FarmDto>> getMyFarmList() {
+    public ResultResponse<List<FarmDto>> getMyFarmList() throws Exception{
         if (isAnonymous()) {
             return new ResultResponse<>(HttpStatus.FORBIDDEN, ResultCode.FORBIDDEN.getCode(), ResultCode.FORBIDDEN.getMessage());
         }
@@ -40,59 +40,69 @@ public class FarmController {
     }
 
     @GetMapping("/getFarmList")
-    public ResultResponse<List<FarmDto>> getFarmList() {
-        if (isAnonymous()) {
-            return new ResultResponse<>(HttpStatus.FORBIDDEN, ResultCode.FORBIDDEN.getCode(), ResultCode.FORBIDDEN.getMessage());
-        }
+    public ResultResponse<List<FarmDto>> getFarmList(GetFarmForm form) throws Exception {
 
-        if (isMember()) {
-            long memberIdByMemberAuthentication = getMemberIdByMemberAuthentication();
-        }
+        FarmDto farmDto = createFarmDto(form);
+
+        return farmService.getFarmList(farmDto);
     }
 
-    @PostMapping("/add")
-    public ResultResponse<Long> addFarm(@RequestBody AddFarmForm form) {
-        if (isAnonymous()) {
-            return new ResultResponse<>(HttpStatus.FORBIDDEN, ResultCode.FORBIDDEN.getCode(), ResultCode.FORBIDDEN.getMessage());
-        }
-
-        FarmDto addFarmDto = createAddFarmDto(form);
-
-        return farmService.addFarm(addFarmDto);
-    }
-
-    private FarmDto createAddFarmDto(AddFarmForm form) {
+    private FarmDto createFarmDto(GetFarmForm form) {
         FarmDto farmDto = new FarmDto();
-        farmDto.setFFarmAddress(form.getFarmAddress());
-        farmDto.setFFarmKind(form.getFarmKind());
-        farmDto.setFFarmName(form.getFarmName());
-        farmDto.setFFarmType(form.getFarmType());
+        if (!illegalString(form.getFarmAddress())) {
+            farmDto.setFarmAddress(form.getFarmAddress());
+        }
+        if (!illegalString(form.getFarmType())) {
+            farmDto.setFarmType(form.getFarmType());
+        }
+        if (!illegalString(form.getFarmKind())) {
+            farmDto.setFarmKind(form.getFarmKind());
+        }
+        if (!illegalString(form.getFarmName())) {
+            farmDto.setFarmName(form.getFarmName());
+        }
+        if (!illegalString(form.getFmAuthority())) {
+            farmDto.setFmAuthority(form.getFmAuthority());
+        }
+        if (!illegalString(form.getFmStatus())) {
+            farmDto.setFmStatus(form.getFmStatus());
+        }
         return farmDto;
     }
 
-    @PostMapping("/update/{farmId}")
-    public ResultResponse<Long> updateFarm(@PathVariable Long farmId, @RequestBody UpdateFarmForm form) {
+    @PostMapping("/add")
+    public ResultResponse<Long> addFarm(@RequestBody AddFarmForm form) throws Exception {
         if (isAnonymous()) {
             return new ResultResponse<>(HttpStatus.FORBIDDEN, ResultCode.FORBIDDEN.getCode(), ResultCode.FORBIDDEN.getMessage());
         }
 
-        FarmDto formDto = createUpdateFarmDto(form, farmId);
+        return farmService.addFarm(form);
+    }
 
-        return farmService.updateFarm(formDto);
+    @PostMapping("/update/{farmId}")
+    public ResultResponse<Long> updateFarm(@PathVariable Long farmId, @RequestBody UpdateFarmForm form) throws SQLException {
+        if (isAnonymous()) {
+            return new ResultResponse<>(HttpStatus.FORBIDDEN, ResultCode.FORBIDDEN.getCode(), ResultCode.FORBIDDEN.getMessage());
+        }
+
+        FarmDto farmDto = createUpdateFarmDto(form, farmId);
+
+        return farmService.updateFarm(farmDto);
     }
 
     private FarmDto createUpdateFarmDto(UpdateFarmForm form, Long farmId) {
         FarmDto farmDto = new FarmDto();
-        farmDto.setFFarmAddress(form.getFarmAddress());
-        farmDto.setFFarmKind(form.getFarmKind());
-        farmDto.setFFarmName(form.getFarmName());
-        farmDto.setFFarmType(form.getFarmType());
-        farmDto.setFFarmId(farmId);
+        farmDto.setFarmAddress(form.getFarmAddress());
+        farmDto.setFarmKind(form.getFarmKind());
+        farmDto.setFarmName(form.getFarmName());
+        farmDto.setFarmType(form.getFarmType());
+        farmDto.setFarmId(farmId);
+        farmDto.setFmStatus(form.getFmFarmStatus());
         return farmDto;
     }
 
     @GetMapping("/delete/{farmId}")
-    public ResultResponse<Void> deleteForm(@PathVariable Long farmId) {
+    public ResultResponse<Void> deleteForm(@PathVariable Long farmId) throws Exception {
         if (isAnonymous()) {
             return new ResultResponse<>(HttpStatus.FORBIDDEN, ResultCode.FORBIDDEN.getCode(), ResultCode.FORBIDDEN.getMessage());
         }

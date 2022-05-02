@@ -14,7 +14,7 @@
         f.farm_kind
         f.farm_status,
         f.farm_type,
-        f.state_del,
+        f.state_del as farmStateDel,
         fm.fm_status,
         fm.fm_authority,
         m.member_authority,
@@ -23,13 +23,13 @@
         m.member_phone,
         m.member_birthday,
         m.member_last_updated,
-        m.state_del
+        m.state_del as memberStateDel
         FROM member_farm fm
-        LEFT JOIN farm f ON fm.farm_id = f.farm_id
-        LEFT JOIN member m ON fm.member_id = m.member_id
+        LEFT JOIN farm f ON fm.fm_farm_id = f.farm_id
+        LEFT JOIN member m ON fm.fm_member_id = m.member_id
         WHERE f.state_del = 'N' AND fm.state_del = 'N'
         <if test="fmMemberId != null and fmMemberId > 0">
-            AND fm.member_id = #{fmMemberId}
+            AND fm.fm_member_id = #{fmMemberId}
         </if>
         <if test="fmStatus != null and fmStatus != ''">
             AND fm.fm_status = #{fmStatus}
@@ -37,20 +37,20 @@
         <if test="fmAuthority != null and fmAuthority != ''">
             AND fm.fm_authority = #{fmAuthority}
         </if>
-        <if test="fFarmName != null and fFarmName != ''">
-            AND f.farm_name = #{fFarmName}
+        <if test="farmName != null and farmName != ''">
+            AND f.farm_name = #{farmName}
         </if>
-        <if test="fFarmKind != null and fFarmKind != ''">
-            AND f.farm_kind = #{fFarmKind}
+        <if test="farmKind != null and farmKind != ''">
+            AND f.farm_kind = #{farmKind}
         </if>
-        <if test="fFarmType != null and fFarmType != ''">
-            AND f.farm_type = #{fFarmType}
+        <if test="farmType != null and farmType != ''">
+            AND f.farm_type = #{farmType}
         </if>
-        <if test="fFarmAddress != null and fFarmAddress != ''">
-            AND f.farm_address = #{fFarmAddress}
+        <if test="farmAddress != null and farmAddress != ''">
+            AND f.farm_address = #{farmAddress}
         </if>
-        <if test="mMemberName != null and mMemberName != ''">
-            AND m.member_name = #{mMemberName}
+        <if test="memberName != null and memberName != ''">
+            AND m.member_name = #{memberName}
         </if>
         <if test="keyword != null and keyword != ''">
             AND
@@ -71,45 +71,41 @@
         f.farm_name
         f.farm_kind
         f.farm_status,
-        f.state_del,
+        f.state_del as farmStateDel,
         m.member_authority,
         m.member_name,
         m.member_email,
         m.member_phone,
         m.member_birthday,
         m.member_last_updated,
-        m.state_del
+        m.state_del as memberStateDel
         FROM member_farm fm
-        LEFT JOIN farm f ON fm.farm_id = f.farm_id
-        LEFT JOIN member m ON fm.member_id = m.member_id
+        LEFT JOIN farm f ON fm.fm_farm_id = f.farm_id
+        LEFT JOIN member m ON fm.fm_member_id = m.member_id
         WHERE f.state_del = 'N' AND f.state_del = 'N' AND m.state_del = 'N'
         <if test="fmMemberId != null and fmMemberId > 0">
-            AND fm.member_id = #{fmMemberId}
+            AND fm.fm_member_id = #{fmMemberId}
         </if>
         <if test="fmFarmId != null and fmFarmId > 0">
-            AND fm.farm_id = #{fmFarmId}
+            AND fm.fm_farm_id = #{fmFarmId}
         </if>
     </select>
 
-
-
-
     <insert id="addFarmMapping" parameterType="com.smartFarm.was.domain.dto.farm.FarmDto">
         INSERT INTO member_farm (
-            member_id,
-            farm_id,
+            fm_member_id,
+            fm_farm_id,
             fm_created,
             fm_authority,
             fm_status,
             state_del
-        )
-        VALUES (
-                   #{fmMemberId},
-                   #{fmFarmId},
-                   #{fmCreated},
-                   #{fmAuthority},
-                   #{fmStatus},
-                   #{fmStateDel}
+        ) VALUES (
+                #{fmMemberId},
+                #{fmFarmId},
+                #{fmCreated},
+                #{fmAuthority},
+                #{fmStatus},
+                #{fmStateDel}
                )
     </insert>
 
@@ -123,19 +119,19 @@
             farm_created
         )
         VALUES (
-            #{fFarm_type},
-            #{fFarmName},
-            #{fFarmAddress},
-            #{fState_del},
-            #{fFarm_kind},
-            #{fFarmCreated}
+            #{farmType},
+            #{farmName},
+            #{farmAddress},
+            #{farmStateDel},
+            #{farmKind},
+            #{farmCreated}
                )
     </insert>
 
     <update id="updateFarmMapping" parameterType="com.smartFarm.was.domain.dto.farm.FarmDto">
         UPDATE member_farm SET
             <if test="fmMemberId != null and fmMemberId > 0">
-                member_id = #{fmMemberId}
+                fm_member_id = #{fmMemberId}
             </if>
             <if test="fmFarmId != null and fmFarmId > 0">
                 farm_id = #{fmFarmId}
@@ -144,36 +140,31 @@
             fm_authority = #{fmAuthority},
             fm_status = #{fmStatus}
             WHERE state_del = 'N'
-            <if test="fmMemberId != null and fmMemberId > 0">
                 AND member_id = #{fmMemberId}
-            </if>
-            <if test="fmFarmId != null and fmFarmId > 0">
                 AND farm_id = #{fmFarmId}
-            </if>
     </update>
 
     <update id="updateFarm" parameterType="com.smartFarm.was.domain.dto.farm.FarmDto">
         UPDATE
         farm
         SET
-            farm_type = #{fFarmType},
-            farm_name = #{fFarmName},
-            farm_address = #{fFarmAddress},
-            farm_kind = #{fFarmKind},
-        WHERE
-        state_del = 'N'
-        AND farm_id = '#{fFarmId}'
+            farm_type = #{farmType},
+            farm_name = #{farmName},
+            farm_address = #{farmAddress},
+            farm_kind = #{farmKind},
+        WHERE state_del = 'N'
+        AND farm_id = #{farmId}
     </update>
 
     <update id="deleteFarmMapping" parameterType="com.smartFarm.was.domain.dto.farm.FarmDto">
         UPDATE member_farm SET
-        state_del = #{mfStateDel}
+        state_del = #{fmStateDel}
         WHERE state_del = 'N'
         <if test="fmMemberId != null and fmMemberId > 0">
-            AND member_id = #{fmMemberId}
+            AND fm_member_id = #{fmMemberId}
         </if>
         <if test="fmFarmId != null and fmFarmId > 0">
-            AND farm_id = #{fmFarmId}
+            AND fm_farm_id = #{fmFarmId}
         </if>
     </update>
 
@@ -181,7 +172,7 @@
         UPDATE
             farm
         SET
-            state_del = #{fStateDel}
+            state_del = #{farmStateDel}
             WHERE
             state_del = 'N'
             <if test="fmFarmId != null and fmFarmId > 0">
